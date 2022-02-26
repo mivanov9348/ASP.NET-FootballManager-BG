@@ -1,0 +1,96 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<style>
+
+    body {
+        background-color: black;
+    }
+
+    .title {
+        margin-top: 100px;
+        color: gold;
+        width: 100%;
+        font-size: 50px;
+        text-align: center;
+        font-family: 'OLD SPORT 01 COLLEGE NCV';
+    }
+
+    .Options {
+        margin-top: 20px;
+        color: gold;
+        width: 100%;
+        font-size: 40px;
+        text-align: center;
+        font-family: 'OLD SPORT 01 COLLEGE NCV';
+    }
+
+        .Options a {
+            text-decoration: none;
+            font-family: 'OLD SPORT 01 COLLEGE NCV';
+            padding: 6px 8px 6px 16px;
+            color: grey;
+            text-align: center;
+        }
+
+            .Options a:hover {
+                text-decoration: none;
+                font-family: 'OLD SPORT 01 COLLEGE NCV';
+                padding: 6px 8px 6px 16px;
+                color: gold;
+            }
+
+    hr {
+        color: white;
+    }
+
+</style>
+
+<body>
+
+    <h1 class="title">FOOTBALL MANAGER</h1>
+    <form method="get">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="Options">
+                <hr />
+                <a asp-action="NewGame">
+                    <span class="nav-text">
+                        New Game
+                    </span>
+                </a>
+                <hr />
+                <a asp-area="Identity" asp-page="/Account/Login">
+                    <span class="nav-text">
+                        Load Game
+                    </span>
+                </a>
+                <hr>
+                <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <span class="nav-text">
+                        Logout
+                    </span>
+                </a>
+            </div>
+
+        }
+        else
+        {
+            <div class="Options">
+                <hr />
+                <a asp-area="Identity" asp-page="/Account/Login">
+                    <span class="nav-text">
+                        Login
+                    </span>
+                </a>
+                <br>
+                <a asp-area="Identity" asp-page="/Account/Register">
+                    <span class="nav-text">
+                        Register
+                    </span>
+                </a>
+            </div>
+        }
+    </form>
+</body>

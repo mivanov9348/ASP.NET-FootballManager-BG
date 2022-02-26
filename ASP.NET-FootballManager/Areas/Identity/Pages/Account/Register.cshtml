@@ -1,0 +1,62 @@
+﻿@page
+@model RegisterModel
+
+
+<style>
+
+    body {
+        background-color: black;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+    .Title {
+        margin-top: 100px;
+        color: gold;
+        width: 100%;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    .col-md-4 {
+        margin-left: 400px;
+        text-align: center;
+    }
+
+</style>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2 class="Title">Register</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.Email"></label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-floating">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.Password"></label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-floating">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.ConfirmPassword"></label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <hr />
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <p>
+                <a asp-area="Identity" asp-page="/Account/Login">Already have a account?</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

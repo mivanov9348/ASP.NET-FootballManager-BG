@@ -1,0 +1,106 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<style>
+
+    .sidebar {
+        height: 1000px;
+        width: 160px;
+        position: fixed;
+        z-index: -5;
+        top: 0;
+        left: 0;
+        float: left;
+        background-color: #111;
+        overflow-x: hidden;
+        padding-top: 20px;
+        border: 0px 0px 5px solid grey;
+    }
+
+        .sidebar a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 20px;
+            color: white;
+            display: block;
+            float: left;
+            font-family: 'Felix Titling';
+        }
+
+        .sidebar li {
+            margin-top: 20px;
+        }
+
+        .sidebar input:hover {
+            box-shadow: 0px 0px 10px white;
+            color: white;
+            border: 3px solid black;
+            width: 100%;
+        }
+
+    label {
+        text-align: center;
+        color: gray;
+        margin-left: 5px;
+        font-size: 16px;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+</style>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web:300">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500" />
+</head>
+
+
+<body>
+    <aside class="sidebar">
+        <label>Football Manager</label>
+        <hr />
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-area="Identity" asp-page="/Account/Register">
+                <span class="nav-text">
+                    Home
+                </span>
+            </a>
+
+            <a asp-area="Identity" asp-page="/Account/Register">
+                <span class="nav-text">
+                    Register
+                </span>
+            </a>
+
+            <a asp-area="Identity" asp-page="/Account/Login">
+                <span class="nav-text">
+                    Login
+                </span>
+            </a>
+
+        }
+        else
+        {
+            <a asp-area="Identity" asp-page="/Account/Login">
+                <span class="nav-text">
+                    Login
+                </span>
+            </a>
+
+
+            <a asp-area="Identity" asp-page="/Account/Register">
+                <span class="nav-text">
+                    Register
+                </span>
+            </a>
+        }
+
+    </aside>
+</body>
+
+
+</html>
