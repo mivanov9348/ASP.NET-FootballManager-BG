@@ -6,7 +6,7 @@ namespace ASP.NET_FootballManager.Services.Manager
     {
 
 
-        void CreateNewManager(NewGameViewModel ngvm,string userId);
+        void CreateNewManager(NewManagerViewModel ngvm,string userId);
 
 
     }

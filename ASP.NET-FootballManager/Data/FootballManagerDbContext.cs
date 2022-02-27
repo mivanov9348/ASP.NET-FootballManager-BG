@@ -12,17 +12,15 @@
         public DbSet<Player> Players { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Position> Positions { get; set; }
+        public DbSet<Game> Games { get; set; }
         public DbSet<League> Leagues { get; set; }
         public DbSet<VirtualTeam> VirtualTeams { get; set; }
-
+        public DbSet<Inbox> Inboxes { get; set; }
 
         public FootballManagerDbContext(DbContextOptions<FootballManagerDbContext> options)
             : base(options)
         {
-
-
         }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
@@ -98,6 +96,10 @@
                     .WithOne(x => x.Team)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                team.HasMany(x => x.Games)
+                    .WithOne(x => x.Team)
+                    .OnDelete(DeleteBehavior.Restrict);
+
             });
 
             builder.Entity<Position>(pos =>
@@ -148,6 +150,10 @@
                   .WithMany(x => x.Players)
                   .HasForeignKey(x => x.LeagueId);
 
+                pl.HasOne(x => x.Manager)
+                  .WithMany(x => x.Players)
+                  .HasForeignKey(x => x.ManagerId);
+
             });
 
             builder.Entity<Manager>(gp =>
@@ -166,6 +172,14 @@
                   .WithOne(x => x.Manager)
                  .OnDelete(DeleteBehavior.Restrict);
 
+                gp.HasMany(x => x.Games)
+                  .WithOne(x => x.Manager)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+                gp.HasMany(x => x.Players)
+                  .WithOne(x => x.Manager)
+                  .OnDelete(DeleteBehavior.Restrict);           
+
                 gp.HasOne<IdentityUser>()
                   .WithOne()
                   .HasForeignKey<Manager>(x => x.UserId);
@@ -182,11 +196,37 @@
 
                 vt.HasOne(x => x.Manager)
                   .WithMany(x => x.VirtualTeams)
-                  .HasForeignKey(x => x.TeamId);
+                  .HasForeignKey(x => x.ManagerId);
 
             });
 
+            builder.Entity<Game>(game =>
+            {
+                game.HasKey(x => x.Id);
 
+                game.HasOne(x => x.Team)
+                  .WithMany(x => x.Games)
+                  .HasForeignKey(x => x.TeamId);
+
+                game.HasOne(x => x.Manager)
+                  .WithMany(x => x.Games)
+                  .HasForeignKey(x => x.ManagerId);
+
+                game.HasMany(x => x.Inboxes)
+                    .WithOne(x => x.Game)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            });
+
+            builder.Entity<Inbox>(inbox =>
+            {
+                inbox.HasKey(x => x.Id);
+
+                inbox.HasOne(x => x.Game)
+                     .WithMany(x => x.Inboxes)
+                     .HasForeignKey(x => x.GameId);
+
+            });
             base.OnModelCreating(builder);
         }
     }

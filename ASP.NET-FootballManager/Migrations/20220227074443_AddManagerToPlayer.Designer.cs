@@ -4,6 +4,7 @@ using ASP.NET_FootballManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_FootballManager.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220227074443_AddManagerToPlayer")]
+    partial class AddManagerToPlayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,33 +77,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Inbox", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Day")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("Inboxes");
                 });
 
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.League", b =>
@@ -603,17 +578,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Inbox", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Game", "Game")
-                        .WithMany("Inboxes")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-                });
-
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.League", b =>
                 {
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
@@ -804,11 +768,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Navigation("Players");
 
                     b.Navigation("Teams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Game", b =>
-                {
-                    b.Navigation("Inboxes");
                 });
 
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.League", b =>

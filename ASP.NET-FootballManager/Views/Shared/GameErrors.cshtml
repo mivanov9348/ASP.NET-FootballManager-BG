@@ -1,0 +1,29 @@
+﻿@model ErrorViewModel
+
+<style>
+
+    body {
+        background-color: black;
+    }
+
+    .Border {
+        margin-top: 50px;
+        box-shadow: 0px 0px 20px red;
+    }
+
+    input {
+        margin-left: 600px;
+        box-shadow: 0px 0px 20px white;
+        font-size:25px;
+        font-weight:bolder;
+    }
+
+</style>
+
+<form method="get">
+    <div class="Border">
+        <p style="color:red;font-size:30px">@Model.ErrorMessage</p>
+        <input type="submit" value="Back" asp-action="NewGame" />
+    </div>
+</form>
+

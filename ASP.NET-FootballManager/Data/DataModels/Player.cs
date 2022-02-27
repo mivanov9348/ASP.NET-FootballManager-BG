@@ -27,6 +27,8 @@
         public Team Team { get; set; }
         public int LeagueId { get; set; }
         public League League { get; set; }
+        public int ManagerId { get; set; }
+        public Manager Manager { get; set; }
 
     }
 }

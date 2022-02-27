@@ -6,6 +6,9 @@
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
+<h1 style="color:red">@Model.ErrorMessage</h1>
+
+
 @if (Model?.ShowRequestId ?? false)
 {
     <p>

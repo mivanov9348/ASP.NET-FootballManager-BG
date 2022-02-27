@@ -1,6 +1,8 @@
 using ASP.NET_FootballManager.Data;
 using ASP.NET_FootballManager.Services.Common;
+using ASP.NET_FootballManager.Services.Game;
 using ASP.NET_FootballManager.Services.Manager;
+using ASP.NET_FootballManager.Services.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +15,8 @@ builder.Services.AddDbContext<FootballManagerDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<ICommonService, CommonService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
+builder.Services.AddScoped<IGameService, GameService>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(o =>
 {

@@ -7,7 +7,7 @@
         public int Id { get; set; }
         public int TeamId { get; set; }
         public Team Team { get; set; }
-        public int GamePlayerID { get; set; }
+        public int ManagerId { get; set; }
         public Manager Manager { get; set; }
         public int Matches { get; set; }
         public int Wins { get; set; }

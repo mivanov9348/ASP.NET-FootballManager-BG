@@ -18,12 +18,15 @@
         public Nation Nation { get; set; }
         public int? CurrentTeamId { get; set; }
         public Team CurrentTeam { get; set; }
-       
+
         [Required]
         public string UserId { get; set; }
         public IdentityUser User { get; set; }
 
         public List<VirtualTeam> VirtualTeams { get; set; } = new List<VirtualTeam>();
+        public List<Game> Games { get; set; } = new List<Game>();
+        public List<Player> Players { get; set; } = new List<Player>();
+   
 
     }
 

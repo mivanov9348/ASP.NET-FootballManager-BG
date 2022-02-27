@@ -1,10 +1,10 @@
-﻿@model NewGameViewModel
+﻿@model NewManagerViewModel
 
 <style>
 
     body {
         background-color: black;
-        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        font-family:'OLD SPORT 01 COLLEGE NCV';
     }
 
     .FormInput {
@@ -38,29 +38,33 @@
 
 <label>Create Manager</label>
 
-<div class="FormInput">
-    <hr />
-    <input type="text" asp-for="@Model.FirstName" placeholder="First Name" />
-    <br />
-    <input type="text" asp-for="@Model.LastName" placeholder="Last Name" />
-    <br />
-    <input type="date" asp-for="@Model.BornDate" placeholder="Birth Date" />
-    <hr />
-    <select asp-for="@Model.NationId">
-        <option value="0">Select Nationality</option>
-        @foreach (var item in @Model.Nations)
-        {
-            <option value="@item.Id">@item.Name</option>
-        }
-    </select>
-    <hr />
-    <select asp-for="@Model.TeamId">
-        <option value="0">Select Team</option>
-        @foreach (var item in @Model.Teams)
-        {
-            <option value="@item.Id">@item.Name</option>
-        }
-    </select>
-    <hr />
-    <input class="SubmitBtn" type="submit" value="Start Game" />
-</div>
+<form method="get">
+    <div class="FormInput">
+        <hr />
+        <input type="text" asp-for="@Model.FirstName" placeholder="First Name" />
+        <br />
+        <input type="text" asp-for="@Model.LastName" placeholder="Last Name" />
+        <br />
+        <input type="date" asp-for="@Model.BornDate" placeholder="Birth Date" />
+        <hr />
+        <select asp-for="@Model.NationId">
+            <option value="0">Select Nationality</option>
+            @foreach (var item in @Model.Nations)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+        <hr />
+        <select asp-for="@Model.TeamId">
+            <option value="0">Select Team</option>
+            @foreach (var item in @Model.Teams)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+        <hr />
+
+        <input class="SubmitBtn" type="submit" asp-action="StartGame" value="Start Game" />
+
+    </div>
+</form>

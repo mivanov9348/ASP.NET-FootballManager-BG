@@ -1,0 +1,49 @@
+﻿@model InboxViewModel
+
+<partial name="_SideBar" />
+
+<style>
+
+    body {
+        background-color: grey;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+    .News {
+        box-shadow: 0px 0px 30px black;
+        margin-left: 100px;
+    }
+
+    .type {
+        font-style: italic;
+    }
+
+    .Title {
+        margin-left: 600px;
+        text-align: center;
+        font-size: 50px;
+        color: white;
+    }
+
+    hr {
+        margin-left: 100px;
+    }
+
+    .text {
+        color: white;
+    }
+
+</style>
+
+<body>
+    <label class="Title">NEWS</label>
+    <hr />
+    @foreach (var item in @Model.News)
+    {
+        <div class="News">
+            <p class="type">Year: @item.Year Day: @item.Day</p>
+            <p class="text">@item.Message</p>
+        </div>
+        <hr />
+    }
+</body>

@@ -12,7 +12,7 @@
             this.data = data;
         }
 
-        public void CreateNewManager(NewGameViewModel ngvm, string userId)
+        public void CreateNewManager(NewManagerViewModel ngvm, string userId)
         {
             var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == ngvm.NationId);
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == ngvm.TeamId);
@@ -32,7 +32,7 @@
             };
 
             this.data.Managers.Add(newManager);
-            this.data.SaveChanges();
+                this.data.SaveChanges();
         }
     }
 }

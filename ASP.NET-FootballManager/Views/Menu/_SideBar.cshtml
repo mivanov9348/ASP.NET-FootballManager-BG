@@ -7,7 +7,7 @@
     .sidebar {
         height: 1000px;
         width: 160px;
-        position: fixed;
+        margin-left: -115px;
         z-index: -5;
         top: 0;
         left: 0;
@@ -32,7 +32,7 @@
             margin-top: 20px;
         }
 
-        .sidebar input:hover {
+        .sidebar a:hover {
             box-shadow: 0px 0px 10px white;
             color: white;
             border: 3px solid black;
@@ -49,58 +49,64 @@
 
 </style>
 
-<html>
-
 <head>
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web:300">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500" />
 </head>
 
+<div class="sidebar">
+    <label>Football Manager</label>
+    <hr />
 
-<body>
-    <aside class="sidebar">
-        <label>Football Manager</label>
-        <hr />
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <a asp-area="Identity" asp-page="/Account/Register">
-                <span class="nav-text">
-                    Home
-                </span>
-            </a>
+    <a asp-action="Inbox" asp-controller="Menu">
+        <span class="nav-text">
+            Inbox
+        </span>
+    </a>
+    <hr />
+    <a asp-action="NextMatch" asp-controller="Menu">
+        <span class="nav-text">
+            Next Match
+        </span>
+    </a>
+    <hr />
+    <a asp-action="Standings" asp-controller="Menu">
+        <span class="nav-text">
+            Standings
+        </span>
+    </a>
+    <hr />
+    <a asp-action="Fixtures" asp-controller="Menu">
+        <span class="nav-text">
+            Fixtures
+        </span>
+    </a>
+    <hr />
 
-            <a asp-area="Identity" asp-page="/Account/Register">
-                <span class="nav-text">
-                    Register
-                </span>
-            </a>
+    <a asp-action="TeamStats" asp-controller="Menu">
+        <span class="nav-text">
+            Team Stats
+        </span>
+    </a>
 
-            <a asp-area="Identity" asp-page="/Account/Login">
-                <span class="nav-text">
-                    Login
-                </span>
-            </a>
+    <hr />
 
-        }
-        else
-        {
-            <a asp-area="Identity" asp-page="/Account/Login">
-                <span class="nav-text">
-                    Login
-                </span>
-            </a>
+    <a asp-action="Player Stats" asp-controller="Menu">
+        <span class="nav-text">
+            Players Stats
+        </span>
+    </a>
 
+    <hr />
+    <a asp-action="Transfers" asp-controller="Menu">
+        <span class="nav-text">
+            Transfers
+        </span>
+    </a>
+    <hr />
 
-            <a asp-area="Identity" asp-page="/Account/Register">
-                <span class="nav-text">
-                    Register
-                </span>
-            </a>
-        }
-
-    </aside>
-</body>
+</div>
 
 
-</html>
+

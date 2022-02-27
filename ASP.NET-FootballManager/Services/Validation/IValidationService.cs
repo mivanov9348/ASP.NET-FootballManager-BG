@@ -5,7 +5,7 @@ namespace ASP.NET_FootballManager.Services.Validation
     public interface IValidationService
     {
 
-        (bool isValid, string ErrorMessage) NewManagerValidator(NewGameViewModel ngvm);
+        (bool isValid, string ErrorMessage) NewManagerValidator(NewManagerViewModel ngvm);
 
 
 

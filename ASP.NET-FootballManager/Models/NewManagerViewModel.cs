@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ASP.NET_FootballManager.Models
 {
-    public class NewGameViewModel
+    public class NewManagerViewModel
     {
         [MinLength(3)]
         [MaxLength(20)]
