@@ -31,12 +31,24 @@
         }
         public IActionResult Index()
         {
-            return View();
+            CurrentUser();
+
+            if (UserId == null)
+            {
+                return View();
+            }
+
+            bool isExistGame = gameService.isExistGame(UserId);
+            if (isExistGame)
+            {
+                return View(new GameViewModel { ExistGame = true });
+            }
+            return View(new GameViewModel { ExistGame = false });
         }
         public IActionResult NewGame()
         {
             CurrentUser();
-            bool isExistGame = commonService.isExistGame(UserId);
+            bool isExistGame = gameService.isExistGame(UserId);
 
             if (isExistGame)
             {
@@ -52,20 +64,19 @@
         public IActionResult StartGame(NewManagerViewModel ngvm)
         {
             CurrentUser();
-            bool isExistGame = commonService.isExistGame(UserId);
+            bool isExistGame = gameService.isExistGame(UserId);
 
             if (isExistGame)
             {
-                commonService.DeleteCurrentManager(UserId);
+                managerService.DeleteCurrentManager(UserId);
             }
 
             (bool isValid, string ErrorMessage) = validationService.NewManagerValidator(ngvm);
 
             if (isValid)
             {
-                managerService.CreateNewManager(ngvm, UserId);
-                var currentManager = commonService.GetCurrentManager(UserId);
-                gameService.CreateNewGame(currentManager);
+                var currentManager = managerService.CreateNewManager(ngvm, UserId);
+                gameService.StartNewGame(currentManager);               
                 return RedirectToAction("Inbox", "Menu");
             }
 
@@ -74,6 +85,7 @@
                 ErrorMessage = ErrorMessage
             });
         }
+
         public IActionResult ExistingGame()
         {
             return View();
@@ -81,7 +93,11 @@
 
         private void CurrentUser()
         {
-            UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (this.User.Identity.IsAuthenticated != false)
+            {
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

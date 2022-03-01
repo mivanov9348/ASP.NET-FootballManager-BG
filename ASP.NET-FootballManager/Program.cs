@@ -1,6 +1,7 @@
 using ASP.NET_FootballManager.Data;
 using ASP.NET_FootballManager.Services.Common;
 using ASP.NET_FootballManager.Services.Game;
+using ASP.NET_FootballManager.Services.League;
 using ASP.NET_FootballManager.Services.Manager;
 using ASP.NET_FootballManager.Services.Validation;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,7 @@ builder.Services.AddScoped<ICommonService, CommonService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<ILeagueService, LeagueService>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(o =>
 {

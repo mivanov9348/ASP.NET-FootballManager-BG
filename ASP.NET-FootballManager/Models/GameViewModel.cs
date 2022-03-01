@@ -7,7 +7,7 @@
 
         public int Team { get; set; }
 
-
+        public bool ExistGame { get; set; }
 
 
 

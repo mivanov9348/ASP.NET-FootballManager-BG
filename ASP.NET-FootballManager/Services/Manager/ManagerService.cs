@@ -12,7 +12,7 @@
             this.data = data;
         }
 
-        public void CreateNewManager(NewManagerViewModel ngvm, string userId)
+        public Manager CreateNewManager(NewManagerViewModel ngvm, string userId)
         {
             var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == ngvm.NationId);
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == ngvm.TeamId);
@@ -30,9 +30,13 @@
                 User = currentUser,
                 UserId = currentUser.Id
             };
-
+            
             this.data.Managers.Add(newManager);
-                this.data.SaveChanges();
+            this.data.SaveChanges();
+            return newManager;
         }
+        public void DeleteCurrentManager(string UserId) => this.data.Managers.Remove(this.data.Managers.FirstOrDefault(x => x.UserId == UserId));
+        public List<Manager> GetAllManagers() => this.data.Managers.ToList();
+        public Manager GetCurrentManager(string userId) => this.data.Managers.FirstOrDefault(x => x.UserId == userId);
     }
 }

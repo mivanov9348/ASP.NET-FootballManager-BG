@@ -16,6 +16,10 @@
         public int Age { get; set; }
         public int Matches { get; set; }
         public int Goals { get; set; }
+        public int Attack { get; set; }
+        public int Defense { get; set; }
+        public int Speed { get; set; }
+        public int Overall { get; set; }
         public int Saves { get; set; }
         public int PositionId { get; set; }
         public Position Position { get; set; }
@@ -24,11 +28,11 @@
         public int CityId { get; set; }
         public City City { get; set; }
         public int TeamId { get; set; }
-        public Team Team { get; set; }
+        public VirtualTeam Team { get; set; }
         public int LeagueId { get; set; }
         public League League { get; set; }
-        public int ManagerId { get; set; }
-        public Manager Manager { get; set; }
+        public int GameId { get; set; }
+        public Game Game { get; set; }
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@model GameViewModel
 
 <style>
 
@@ -54,16 +55,18 @@
         @if (SignInManager.IsSignedIn(User))
         {
             <div class="Options">
+                @if (@Model.ExistGame)
+                {
+                    <a asp-action="Inbox" asp-controller="Menu">
+                        <span class="nav-text">
+                            Continue Game
+                        </span>
+                    </a>
+                }
                 <hr />
                 <a asp-action="NewGame">
                     <span class="nav-text">
                         New Game
-                    </span>
-                </a>
-                <hr />
-                <a asp-action="LoadGame">
-                    <span class="nav-text">
-                        Load Game
                     </span>
                 </a>
                 <hr>

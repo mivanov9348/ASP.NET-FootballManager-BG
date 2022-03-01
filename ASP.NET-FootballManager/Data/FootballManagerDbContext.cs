@@ -88,10 +88,6 @@
                     .WithOne(x => x.CurrentTeam)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                team.HasMany(x => x.Players)
-                    .WithOne(x => x.Team)
-                    .OnDelete(DeleteBehavior.Restrict);
-
                 team.HasMany(x => x.VirtualTeams)
                     .WithOne(x => x.Team)
                     .OnDelete(DeleteBehavior.Restrict);
@@ -128,6 +124,9 @@
                       .WithOne(x => x.League)
                       .OnDelete(DeleteBehavior.Restrict);
 
+                league.HasMany(x => x.VirtualTeams)
+                      .WithOne(x => x.League)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Player>(pl =>
@@ -142,6 +141,10 @@
                   .WithMany(x => x.Players)
                  .HasForeignKey(x => x.CityId);
 
+                pl.HasOne(x => x.Game)
+                  .WithMany(x => x.Players)
+                  .HasForeignKey(x => x.GameId);
+
                 pl.HasOne(x => x.Team)
                   .WithMany(x => x.Players)
                   .HasForeignKey(x => x.TeamId);
@@ -149,10 +152,6 @@
                 pl.HasOne(x => x.League)
                   .WithMany(x => x.Players)
                   .HasForeignKey(x => x.LeagueId);
-
-                pl.HasOne(x => x.Manager)
-                  .WithMany(x => x.Players)
-                  .HasForeignKey(x => x.ManagerId);
 
             });
 
@@ -168,17 +167,9 @@
                  .WithMany(x => x.Managers)
                  .HasForeignKey(x => x.CurrentTeamId);
 
-                gp.HasMany(x => x.VirtualTeams)
-                  .WithOne(x => x.Manager)
-                 .OnDelete(DeleteBehavior.Restrict);
-
                 gp.HasMany(x => x.Games)
                   .WithOne(x => x.Manager)
                   .OnDelete(DeleteBehavior.Restrict);
-
-                gp.HasMany(x => x.Players)
-                  .WithOne(x => x.Manager)
-                  .OnDelete(DeleteBehavior.Restrict);           
 
                 gp.HasOne<IdentityUser>()
                   .WithOne()
@@ -194,9 +185,17 @@
                   .WithMany(x => x.VirtualTeams)
                   .HasForeignKey(x => x.TeamId);
 
-                vt.HasOne(x => x.Manager)
+                vt.HasOne(x => x.Game)
                   .WithMany(x => x.VirtualTeams)
-                  .HasForeignKey(x => x.ManagerId);
+                  .HasForeignKey(x => x.GameId);
+
+                vt.HasOne(x => x.League)
+                 .WithMany(x => x.VirtualTeams)
+                 .HasForeignKey(x => x.LeagueId);
+
+                vt.HasMany(x => x.Players)
+                   .WithOne(x => x.Team)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             });
 
@@ -213,6 +212,14 @@
                   .HasForeignKey(x => x.ManagerId);
 
                 game.HasMany(x => x.Inboxes)
+                    .WithOne(x => x.Game)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                game.HasMany(x => x.VirtualTeams)
+                    .WithOne(x => x.Game)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                game.HasMany(x => x.Players)
                     .WithOne(x => x.Game)
                     .OnDelete(DeleteBehavior.Restrict);
 

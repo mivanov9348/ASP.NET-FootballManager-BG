@@ -9,7 +9,8 @@
         public int NationId { get; set; }
         public Nation Nation { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
-        public List<Team> Teams { get; set; } = new List<Team>();  
+        public List<Team> Teams { get; set; } = new List<Team>();
+        public List<VirtualTeam> VirtualTeams { get; set; } = new List<VirtualTeam>();
 
     }
 }
