@@ -4,6 +4,8 @@
     public class InboxViewModel
     {
         public List<Inbox> News { get; set; } = new List<Inbox>();
+        public int MessageId { get; set; }
+
         public string Type { get; set; }
         public string Message { get; set; }
         public int Year { get; set; }

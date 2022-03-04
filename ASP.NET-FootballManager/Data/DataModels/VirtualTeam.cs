@@ -24,5 +24,9 @@
         public int EuroCups { get; set; }
 
         public ICollection<Player> Players { get; set; } = new HashSet<Player>();
+
+        public virtual ICollection<Fixture> HomeMatches { get; set; } = new HashSet<Fixture>();
+
+        public virtual ICollection<Fixture> AwayMatches { get; set; } = new HashSet<Fixture>();
     }
 }

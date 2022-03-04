@@ -16,6 +16,7 @@
         public DbSet<League> Leagues { get; set; }
         public DbSet<VirtualTeam> VirtualTeams { get; set; }
         public DbSet<Inbox> Inboxes { get; set; }
+        public DbSet<Fixture> Fixtures { get; set; }
 
         public FootballManagerDbContext(DbContextOptions<FootballManagerDbContext> options)
             : base(options)
@@ -127,6 +128,10 @@
                 league.HasMany(x => x.VirtualTeams)
                       .WithOne(x => x.League)
                       .OnDelete(DeleteBehavior.Restrict);
+
+                league.HasMany(x => x.Fixtures)
+                      .WithOne(x => x.League)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Player>(pl =>
@@ -197,6 +202,14 @@
                    .WithOne(x => x.Team)
                    .OnDelete(DeleteBehavior.Restrict);
 
+                vt.HasMany(x => x.HomeMatches)
+                  .WithOne(c => c.HomeTeam)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+                vt.HasMany(x => x.AwayMatches)
+                  .WithOne(c => c.AwayTeam)
+                  .OnDelete(DeleteBehavior.Restrict);
+
             });
 
             builder.Entity<Game>(game =>
@@ -234,6 +247,29 @@
                      .HasForeignKey(x => x.GameId);
 
             });
+
+            builder.Entity<Fixture>(fixture =>
+            {
+                fixture.HasKey(x => x.Id);
+
+                fixture.HasOne(x => x.HomeTeam)
+                         .WithMany(x => x.HomeMatches)
+                         .HasForeignKey(x => x.HomeTeamId)
+                         .OnDelete(DeleteBehavior.Restrict);
+
+                fixture.HasOne(x => x.AwayTeam)
+                        .WithMany(x => x.AwayMatches)
+                        .HasForeignKey(x => x.AwayTeamId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                fixture.HasOne(x => x.League)
+                       .WithMany(x => x.Fixtures)
+                       .HasForeignKey(x => x.LeagueId)
+                       .OnDelete(DeleteBehavior.Restrict);
+
+
+            });
+
             base.OnModelCreating(builder);
         }
     }

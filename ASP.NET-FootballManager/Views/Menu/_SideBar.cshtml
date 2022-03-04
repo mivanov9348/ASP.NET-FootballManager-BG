@@ -4,6 +4,7 @@
 
 <style>
 
+
     .sidebar {
         height: 1000px;
         width: 160px;
@@ -11,9 +12,8 @@
         z-index: -5;
         top: 0;
         left: 0;
-        float: left;
+        overflow: hidden;
         background-color: #111;
-        overflow-x: hidden;
         padding-top: 20px;
         border: 0px 0px 5px solid grey;
     }
@@ -92,7 +92,7 @@
 
     <hr />
 
-    <a asp-action="Player Stats" asp-controller="Menu">
+    <a asp-action="PlayersStats" asp-controller="Menu">
         <span class="nav-text">
             Players Stats
         </span>

@@ -12,5 +12,7 @@
         public List<Team> Teams { get; set; } = new List<Team>();
         public List<VirtualTeam> VirtualTeams { get; set; } = new List<VirtualTeam>();
 
+        public virtual ICollection<Fixture> Fixtures { get; set; } = new HashSet<Fixture>();
+
     }
 }

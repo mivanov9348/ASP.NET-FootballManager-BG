@@ -1,0 +1,74 @@
+﻿@model FixturesViewModel
+
+<style>
+
+    body {
+        background-color: black;
+        font-weight: bolder;
+    }
+
+    .buttons {
+        margin-top: -970px;
+        margin-left: 80px;
+    }
+
+    th {
+        color: darkseagreen;
+    }
+
+    td:nth-child(1) {
+        color: darkseagreen;
+    }
+
+
+    table {
+        margin-left: 80px;
+        margin-top: 10px;
+        box-shadow: 0px 0px 30px white;
+        border: 4px solid black;
+    }
+
+</style>
+
+<partial name="_SideBar.cshtml" />
+
+<body>
+    <div class="buttons">
+        <form method="get">         
+            <select class="select" asp-for="@Model.LeagueId">
+                <option style="color:red">Choose League</option>
+                @foreach (var item in @Model.Leagues)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+
+            <input type="submit" value="Choose" asp-action="Fixtures" />
+        </form>
+    </div>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Round</th>
+                <th scope="col">HT</th>
+                <th scope="col">HG</th>
+                <th scope="col">AG</th>
+                <th scope="col">AT</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @Model.Fixtures)
+            {
+
+                <tr>
+                    <td>@item.Round</td>
+                    <td>@item.HomeTeamName</td>
+                    <td>@item.HomeTeamGoal</td>
+                    <td>@item.AwayTeamGoal</td>
+                    <td>@item.AwayTeamName</td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</body>

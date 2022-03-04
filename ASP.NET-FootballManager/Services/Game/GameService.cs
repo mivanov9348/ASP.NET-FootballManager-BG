@@ -3,15 +3,18 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Database.ImportDto;
     using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Services.League;
     using Newtonsoft.Json;
 
     public class GameService : IGameService
     {
         private readonly FootballManagerDbContext data;
+        private readonly ILeagueService leagueService;
         private Random rnd;
-        public GameService(FootballManagerDbContext data)
+        public GameService(FootballManagerDbContext data, ILeagueService leagueService)
         {
             this.data = data;
+            this.leagueService = leagueService;
             rnd = new Random();
         }
         public bool isExistGame(string UserId)
@@ -24,6 +27,7 @@
             return false;
         }
         public Game GetCurrentGame(int id) => this.data.Games.FirstOrDefault(x => x.ManagerId == id);
+        public List<VirtualTeam> CurrentGameTeams(Game currentGame) => this.data.VirtualTeams.ToList();
         public void StartNewGame(Manager currentManager)
         {
             var currentGame = CreateNewGame(currentManager);
@@ -32,6 +36,7 @@
             {
                 GeneratePlayers(currentGame, team);
             }
+            leagueService.GenerateFixtures(currentGame);               
 
         }
         private List<VirtualTeam> GenerateTeams(Game game)
@@ -44,8 +49,8 @@
                 TeamId = x.Id,
                 Name = x.Name,
                 Game = game,
-                GameId = game.Id,              
-                LeagueId = x.LeagueId              
+                GameId = game.Id,
+                LeagueId = x.LeagueId
 
             }).ToList();
 
@@ -70,7 +75,7 @@
                 Day = 1,
                 ManagerId = manager.Id
             };
-            
+
             this.data.Games.Add(newGame);
             this.data.SaveChanges();
 
@@ -95,7 +100,6 @@
             FillPlayersByPosition(forwards, game, team, "Striker");
 
         }
-        
         private (int goalkeepers, int defenders, int midfielders, int forwards) GetCountForPosition()
         {
             var goalkeepers = 1;
@@ -121,14 +125,14 @@
                     Nation = nation,
                     NationId = nation.Id,
                     Speed = speed,
-                    Attack = attack, 
-                    Defense=defense,
-                    Overall = overall,                 
+                    Attack = attack,
+                    Defense = defense,
+                    Overall = overall,
                     LeagueId = team.LeagueId,
                     Position = positionType,
                     PositionId = positionType.Id,
                     Team = team,
-                    TeamId = team.Id,   
+                    TeamId = team.Id,
                     Matches = 0,
                     Goals = 0,
                     Saves = 0,
@@ -185,10 +189,5 @@
 
         }
 
-
-        public void GenerateFixtures()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

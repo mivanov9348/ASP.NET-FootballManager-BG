@@ -16,7 +16,6 @@
         private readonly IManagerService managerService;
         private readonly IGameService gameService;
         private string UserId;
-
         public HomeController(ILogger<HomeController> logger,
             IGameService gameService,
             IManagerService managerService,
@@ -96,8 +95,7 @@
             if (this.User.Identity.IsAuthenticated != false)
             {
                 UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            }
-
+            }                
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
