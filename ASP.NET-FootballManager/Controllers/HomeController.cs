@@ -8,6 +8,10 @@
     using System.Security.Claims;
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
+    using ASP.NET_FootballManager.Services.Team;
+    using ASP.NET_FootballManager.Services.League;
+    using ASP.NET_FootballManager.Services.Player;
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,18 +19,27 @@
         private readonly IValidationService validationService;
         private readonly IManagerService managerService;
         private readonly IGameService gameService;
+        private readonly ITeamService teamService;
+        private readonly ILeagueService leagueService;
+        private readonly IPlayerService playerService;
         private string UserId;
         public HomeController(ILogger<HomeController> logger,
             IGameService gameService,
             IManagerService managerService,
             ICommonService commonService,
-            IValidationService validationService)
+            IValidationService validationService,
+            ITeamService teamService,
+             ILeagueService leagueService,
+             IPlayerService playerService)
         {
             _logger = logger;
             this.managerService = managerService;
             this.commonService = commonService;
             this.validationService = validationService;
             this.gameService = gameService;
+            this.teamService = teamService;
+            this.leagueService = leagueService;
+            this.playerService = playerService;
         }
         public IActionResult Index()
         {
@@ -75,7 +88,12 @@
             if (isValid)
             {
                 var currentManager = managerService.CreateNewManager(ngvm, UserId);
-                gameService.StartNewGame(currentManager);               
+                var currentGame = gameService.CreateNewGame(currentManager);
+                var teams = teamService.GenerateTeams(currentGame).Where(x => x.IsPlayable == true).ToList();
+                teams.ForEach(x => playerService.GeneratePlayers(currentGame, x));
+                leagueService.GenerateFixtures(currentGame);
+                playerService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
+                playerService.CalculatingPlayersPrice();
                 return RedirectToAction("Inbox", "Menu");
             }
 
@@ -95,7 +113,7 @@
             if (this.User.Identity.IsAuthenticated != false)
             {
                 UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            }                
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

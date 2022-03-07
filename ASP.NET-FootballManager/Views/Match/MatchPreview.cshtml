@@ -1,0 +1,13 @@
+﻿@model MatchViewModel
+
+<label>@Model.HomeTeamName</label>
+@foreach (var item in @Model.HomeTeamPlayers)
+{
+    <p>@item.FirstName @item.LastName</p>
+}
+
+<label>@Model.AwayTeamName</label>
+@foreach (var item in @Model.AwayTeamPlayers)
+{
+    <p>@item.FirstName @item.LastName</p>
+}

@@ -16,16 +16,16 @@
         {
             var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == ngvm.NationId);
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == ngvm.TeamId);
-            var currentUser = this.data.Users.FirstOrDefault(x => x.Id == userId);
-
+            var currentUser = this.data.Users.FirstOrDefault(x => x.Id == userId);           
+            
             var newManager = new Manager
             {
                 FirstName = ngvm.FirstName,
-                LastName = ngvm.LastName,
-                BornDate = ngvm.BornDate,
                 CurrentTeam = currentTeam,
-                Nation = currentNation,
                 CurrentTeamId = currentTeam.Id,
+                LastName = ngvm.LastName,
+                BornDate = ngvm.BornDate,               
+                Nation = currentNation,      
                 NationId = currentNation.Id,
                 User = currentUser,
                 UserId = currentUser.Id

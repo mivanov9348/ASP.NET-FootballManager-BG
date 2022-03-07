@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_FootballManager.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20220228150806_DatabaseChanges1")]
-    partial class DatabaseChanges1
+    [Migration("20220307063120_Add-Database")]
+    partial class AddDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,64 @@ namespace ASP.NET_FootballManager.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Fixture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AwayTeamGoal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AwayTeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AwayTeamName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HomeTeamGoal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HomeTeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HomeTeamName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPlayed")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LeagueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Round")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WinnerTeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AwayTeamId");
+
+                    b.HasIndex("HomeTeamId");
+
+                    b.HasIndex("LeagueId");
+
+                    b.ToTable("Fixtures");
+                });
+
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Game", b =>
                 {
                     b.Property<int>("Id")
@@ -56,6 +114,12 @@ namespace ASP.NET_FootballManager.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EuroCupRound")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LeagueRound")
                         .HasColumnType("int");
 
                     b.Property<int>("ManagerId")
@@ -121,6 +185,9 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rounds")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -231,11 +298,14 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Goals")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsStarting11")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LeagueId")
+                    b.Property<int?>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<int>("Matches")
@@ -248,6 +318,9 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.Property<int>("Saves")
@@ -310,7 +383,10 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int?>("CityId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LeagueId")
+                    b.Property<bool>("IsPlayable")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -340,6 +416,9 @@ namespace ASP.NET_FootballManager.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("Budget")
+                        .HasColumnType("int");
+
                     b.Property<int>("Draws")
                         .HasColumnType("int");
 
@@ -358,7 +437,10 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("GoalScored")
                         .HasColumnType("int");
 
-                    b.Property<int>("LeagueId")
+                    b.Property<bool>("IsPlayable")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<int>("Loses")
@@ -611,6 +693,32 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Navigation("Nation");
                 });
 
+            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Fixture", b =>
+                {
+                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", "AwayTeam")
+                        .WithMany("AwayMatches")
+                        .HasForeignKey("AwayTeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", "HomeTeam")
+                        .WithMany("HomeMatches")
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AwayTeam");
+
+                    b.Navigation("HomeTeam");
+
+                    b.Navigation("League");
+                });
+
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Game", b =>
                 {
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.Manager", "Manager")
@@ -699,8 +807,7 @@ namespace ASP.NET_FootballManager.Migrations
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
                         .WithMany("Players")
                         .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
                         .WithMany("Players")
@@ -742,8 +849,7 @@ namespace ASP.NET_FootballManager.Migrations
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
                         .WithMany("Teams")
                         .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
                         .WithMany("Teams")
@@ -768,8 +874,7 @@ namespace ASP.NET_FootballManager.Migrations
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.Manager", null)
                         .WithMany("VirtualTeams")
@@ -857,6 +962,8 @@ namespace ASP.NET_FootballManager.Migrations
 
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.League", b =>
                 {
+                    b.Navigation("Fixtures");
+
                     b.Navigation("Players");
 
                     b.Navigation("Teams");
@@ -900,6 +1007,10 @@ namespace ASP.NET_FootballManager.Migrations
 
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", b =>
                 {
+                    b.Navigation("AwayMatches");
+
+                    b.Navigation("HomeMatches");
+
                     b.Navigation("Players");
                 });
 #pragma warning restore 612, 618

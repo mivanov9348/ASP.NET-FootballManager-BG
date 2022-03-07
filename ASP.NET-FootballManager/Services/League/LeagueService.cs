@@ -12,7 +12,6 @@
         {
             this.data = data;
         }
-
         public void GenerateFixtures(Game game)
         {
             var allLeagues = this.data.Leagues.ToList();
@@ -24,6 +23,7 @@
                 var numOfMatches = currL.Teams.Count / 2 * (currL.Teams.Count - 1);
                 int numFixt = 0;
                 var round = 1;
+                var day = 1;
 
                 while (numFixt < numOfMatches)
                 {
@@ -45,14 +45,15 @@
                             LeagueId = currL.Id,
                             HomeTeamId = htId,
                             AwayTeamId = atId,
-                            Year = game.Year
-
+                            Year = game.Year,
+                            Day = day
                         };
 
                         this.data.Fixtures.Add(newFixt);
                         numFixt++;
                     }
                     round++;
+                    day++;
                     for (int i = currL.Teams.Count - 1; i > 1; i--)
                     {
                         VirtualTeam temp = currL.Teams[i - 1];
@@ -78,7 +79,6 @@
 
             return l;
         }
-
         public List<VirtualTeam> GetStandingsByLeague(int id)
         {
             if (id == 0)
@@ -92,7 +92,6 @@
             }
 
         }
-
         public void Shuffle(List<VirtualTeam> currl)
         {
             Random rnd = new Random();

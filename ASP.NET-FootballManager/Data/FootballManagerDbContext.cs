@@ -85,16 +85,16 @@
                     .WithMany(x => x.Teams)
                     .HasForeignKey(x => x.LeagueId);
 
-                team.HasMany(x => x.Managers)
-                    .WithOne(x => x.CurrentTeam)
-                    .OnDelete(DeleteBehavior.Restrict);
-
                 team.HasMany(x => x.VirtualTeams)
                     .WithOne(x => x.Team)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 team.HasMany(x => x.Games)
                     .WithOne(x => x.Team)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                team.HasMany(x => x.Managers)
+                    .WithOne(x => x.CurrentTeam)
                     .OnDelete(DeleteBehavior.Restrict);
 
             });
@@ -169,8 +169,8 @@
                   .HasForeignKey(x => x.NationId);
 
                 gp.HasOne(x => x.CurrentTeam)
-                 .WithMany(x => x.Managers)
-                 .HasForeignKey(x => x.CurrentTeamId);
+                  .WithMany(x => x.Managers)
+                  .HasForeignKey(x => x.CurrentTeamId);
 
                 gp.HasMany(x => x.Games)
                   .WithOne(x => x.Manager)

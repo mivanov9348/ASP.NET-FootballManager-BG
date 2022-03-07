@@ -26,18 +26,16 @@
             this.gameService = gameService;
             this.playerService = playerService;
         }
-
         public IActionResult Inbox(int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var currentInboxMessage = commonService.GetInboxMessages(CurrentGame.Id);
+            var currentInboxMessage = commonService.GetInboxMessages(CurrentGame.Id).OrderByDescending(x => x.Id).ToList();
 
             return View(new InboxViewModel
             {
-                News = currentInboxMessage.OrderByDescending(x => x.Id).ToList()
+                News = currentInboxMessage
             });
         }
-
         public IActionResult DeleteNews(int id)
         {
             commonService.DeleteNews(id);
@@ -47,7 +45,6 @@
         {
             return View();
         }
-
         public IActionResult Fixtures(FixturesViewModel fvm)
         {
             return View(new FixturesViewModel
@@ -56,8 +53,6 @@
                 Fixtures = commonService.GetFixture(fvm.LeagueId)
             });
         }
-
-
         public IActionResult Standings(StandingsViewModel svm)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
@@ -98,7 +93,6 @@
                 Leagues = leagueService.GetAllLeagues()
             });
         }
-
         private (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
