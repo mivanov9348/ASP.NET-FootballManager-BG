@@ -4,6 +4,7 @@ using ASP.NET_FootballManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_FootballManager.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220309145700_AddMatchClass")]
+    partial class AddMatchClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,14 +262,11 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Minute")
                         .HasColumnType("int");
 
-                    b.Property<string>("SituationText")
+                    b.Property<string>("Situation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Turn")
                         .HasColumnType("int");
-
-                    b.Property<bool>("isEnd")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -318,9 +317,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CleanSheets")
-                        .HasColumnType("int");
-
                     b.Property<int>("Defense")
                         .HasColumnType("int");
 
@@ -357,6 +353,9 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Saves")
                         .HasColumnType("int");
 
                     b.Property<int>("Speed")
@@ -487,9 +486,6 @@ namespace ASP.NET_FootballManager.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Overall")
-                        .HasColumnType("int");
 
                     b.Property<int>("Points")
                         .HasColumnType("int");

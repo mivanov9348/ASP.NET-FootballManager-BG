@@ -15,5 +15,6 @@
         VirtualTeam GetCurrentTeam(Game currentGame);
         Team GetOriginalTeam(VirtualTeam currentVirtual);
         void DeleteNews(int id);
+        VirtualTeam GetTeamById(int teamId);
     }
 }

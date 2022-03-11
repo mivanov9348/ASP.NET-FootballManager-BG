@@ -4,8 +4,9 @@
     public interface  ITeamService
     {
         List<VirtualTeam> GenerateTeams(Game game);
-
         List<VirtualTeam> CurrentGameTeams(Game currentGame);
+        void CalculateTeamOverall(List<VirtualTeam> teams);
+
 
     }
 }

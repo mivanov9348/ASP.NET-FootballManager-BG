@@ -24,6 +24,7 @@
         public int Titles { get; set; }
         public int EuroCups { get; set; }
         public int Budget { get; set; }
+        public int Overall { get; set; }
         public ICollection<Player> Players { get; set; } = new HashSet<Player>();
 
         public virtual ICollection<Fixture> HomeMatches { get; set; } = new HashSet<Fixture>();

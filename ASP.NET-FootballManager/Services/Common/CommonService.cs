@@ -45,5 +45,7 @@
         }
 
         public Team GetOriginalTeam(VirtualTeam currentVirtual) => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId);
+
+        public VirtualTeam GetTeamById(int teamId) => this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
     }
 }

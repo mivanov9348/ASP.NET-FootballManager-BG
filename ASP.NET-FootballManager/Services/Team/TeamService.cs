@@ -33,7 +33,18 @@
             this.data.SaveChanges();
             return virtualTeams;
         }
-
         public List<VirtualTeam> CurrentGameTeams(Game currentGame) => this.data.VirtualTeams.ToList();
+        public void CalculateTeamOverall(List<VirtualTeam> teams)
+        {
+            teams.ForEach(team => team.Overall = 0);
+
+            foreach (var team in teams)
+            {
+                var teamPlayers = this.data.Players.Where(x => x.TeamId == team.Id).ToList();
+                var overallSum = teamPlayers.Sum(x => x.Overall);
+                team.Overall = overallSum / teamPlayers.Count;
+            }
+            this.data.SaveChanges();
+        }
     }
 }

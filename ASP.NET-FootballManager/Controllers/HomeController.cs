@@ -91,6 +91,7 @@
                 var currentGame = gameService.CreateNewGame(currentManager);
                 var teams = teamService.GenerateTeams(currentGame).Where(x => x.IsPlayable == true).ToList();
                 teams.ForEach(x => playerService.GeneratePlayers(currentGame, x));
+                teamService.CalculateTeamOverall(teams) ;
                 leagueService.GenerateFixtures(currentGame);
                 playerService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
                 playerService.CalculatingPlayersPrice();

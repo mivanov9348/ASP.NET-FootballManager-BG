@@ -8,10 +8,13 @@
     public class LeagueService : ILeagueService
     {
         private readonly FootballManagerDbContext data;
+        private Random rnd;
         public LeagueService(FootballManagerDbContext data)
         {
+            this.rnd = new Random();
             this.data = data;
         }
+
         public void GenerateFixtures(Game game)
         {
             var allLeagues = this.data.Leagues.ToList();
@@ -38,6 +41,8 @@
                         {
                             GameId = game.Id,
                             Round = round,
+                            HomeTeam = ht,
+                            AwayTeam = at,
                             HomeTeamName = ht.Name,
                             AwayTeamName = at.Name,
                             HomeTeamGoal = 0,
@@ -105,6 +110,101 @@
                 currl[random] = currl[i];
                 currl[i] = value;
             }
+        }
+        public void CalculateOtherMatches(List<Fixture> fixtures, Fixture fixture)
+        {
+            fixtures.Remove(fixture);
+
+            foreach (var fixt in fixtures)
+            {
+                var homeTeamGoal = GetTeamGoal(fixt.HomeTeamId);
+                var awayTeamGoal = GetTeamGoal(fixt.AwayTeamId);
+                SetFixtureGoal(fixt,homeTeamGoal,awayTeamGoal);
+                GetGoalScorers(homeTeamGoal, fixt);
+                GetGoalScorers(awayTeamGoal, fixt);
+                CleanSheets(homeTeamGoal,awayTeamGoal,fixt);
+                CheckWinner(homeTeamGoal, awayTeamGoal, fixt);
+            }
+        }
+        private void SetFixtureGoal(Fixture fixt, int homeTeamGoal, int awayTeamGoal)
+        {
+            fixt.HomeTeamGoal = homeTeamGoal;
+            fixt.AwayTeamGoal = awayTeamGoal;
+            this.data.SaveChanges();
+        }
+        private void CleanSheets(int homeTeamGoal, int awayTeamGoal, Fixture fixt)
+        {
+            var htGk = this.data.Players.FirstOrDefault(x => x.PositionId == 1 && x.TeamId == fixt.HomeTeamId);
+            var atGk = this.data.Players.FirstOrDefault(x => x.PositionId == 1 && x.TeamId == fixt.AwayTeamId);
+
+            if (homeTeamGoal == 0)
+            {
+                atGk.CleanSheets += 1;
+            }
+            else
+            {
+                htGk.CleanSheets+=1;
+            }
+            this.data.SaveChanges();
+        }
+        private int GetTeamGoal(int teamId)
+        {
+            var currTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
+            var goals = rnd.Next(0, currTeam.Overall / 10);
+            return goals;
+        }
+        private void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)
+        {
+            var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
+            var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
+
+            homeTeam.Matches += 1;
+            homeTeam.GoalScored += homeGoals;
+            homeTeam.GoalAgainst += awayGoals;
+            homeTeam.GoalDifference = homeTeam.GoalScored -= homeTeam.GoalAgainst;
+
+            awayTeam.Matches += 1;
+            awayTeam.GoalScored += awayGoals;
+            awayTeam.GoalAgainst += homeGoals;
+            awayTeam.GoalDifference = awayTeam.GoalScored -= awayTeam.GoalAgainst;
+
+            if (homeGoals > awayGoals)
+            {
+                homeTeam.Wins += 1;
+                homeTeam.Points += 3;
+                awayTeam.Loses += 1;
+            }
+
+            if (homeGoals == awayGoals)
+            {
+                homeTeam.Draws += 1;
+                homeTeam.Points += 1;
+                awayTeam.Draws += 1;
+                awayTeam.Points += 1;
+            }
+
+            if (homeGoals < awayGoals)
+            {
+                awayTeam.Wins += 1;
+                awayTeam.Points += 3;
+                homeTeam.Loses += 1;
+            }
+
+            this.data.SaveChanges();
+        }
+        private void GetGoalScorers(int Goals, Fixture currentFixt)
+        {
+            var playersWithoutGk = this.data.Players.Where(x => x.TeamId == currentFixt.HomeTeamId && x.PositionId != 1).ToList();
+            var goalkeeper = this.data.Players.FirstOrDefault(x => x.TeamId == currentFixt.HomeTeamId && x.PositionId == 1);
+            var saves = Goals / 2;
+
+            for (int i = 0; i < Goals; i++)
+            {
+                var player = playersWithoutGk[rnd.Next(0, playersWithoutGk.Count)];
+                player.Goals += 1;
+            }            
+
+            this.data.SaveChanges();
         }
     }
 }

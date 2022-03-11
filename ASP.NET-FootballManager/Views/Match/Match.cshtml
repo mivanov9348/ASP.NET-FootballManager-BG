@@ -1,5 +1,145 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model MatchViewModel
+
+<style>
+
+    body {
+        background-color: grey;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+    .title {
+        text-align: center;
+        font-size: 40px;
+        color: black;
+        line-height: 40px;
+    }
+
+    .field {
+        display: flex;
+        text-align: center;
+    }
+
+    table {
+        line-height: 12px;
+    }
+
+    .HomeTeam {
+        margin-left: 20px;
+        border: 3px solid black;
+        height: max-content;
+        font-size: 12px;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .AwayTeam {
+        margin-left: 150px;
+        border: 3px solid black;
+        height: max-content;
+        font-size: 12px;
+    }
+
+    hr {
+        color: white;
+    }
+
+    .full-width {
+        position: relative;
+        height: 50px;
+        width: 600px;
+        margin: 0 -30px;
+        background: #333;
+        background: rgba(0,0,0,.8);
+        color: white;
+        text-align: center;
+        font-size: 25px;
+        border-radius: 20px 20px 20px 20px;
+    }
+
+    .minutes {
+        text-align: center;
+        border-radius: 80px 80px 80px 80px;
+        border: 3px solid white;
+        margin-left: 220px;
+        font-size: 40px;
+        width: 70px;
+    }
+
+    .info {
+        margin-top: 200px;
+        width: 450px;
+        margin-left: 80px;
+    }
+
+</style>
+
+<body>
+
+    <div class="title">
+        <label>@Model.HomeTeamName - @Model.AwayTeamName</label>
+        <p>@Model.CurrentMatch.CurrentFixture.HomeTeamGoal - @Model.CurrentMatch.CurrentFixture.AwayTeamGoal</p>
+    </div>
+    <hr />
+
+    <form id="myform" asp-action="GetAction" method="get" asp-route-id="@Model.CurrentMatch.Id">
+        <div class="field">
+            <input type="hidden" asp-for="@Model.CurrentMatch" />
+            <div class="HomeTeam">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr style="color:red;">
+                            <th>Pos</th>
+                            <th>Name</th>
+                            <th>Overall</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @Model.HomeTeamPlayers)
+                        {
+                            <tr>
+                                <td>@item.Position.Abbr</td>
+                                <td>@item.FirstName @item.LastName</td>
+                                <td>@item.Overall</td>
+                                <td><hr /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info">
+                <p class="minutes">@Model.CurrentMatch.Minute'</p>
+                <h2 class="full-width">@Model.CurrentMatch.SituationText</h2>
+            </div>
+
+            <div class="AwayTeam">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr style="color:red;">
+                            <th>Pos</th>
+                            <th>Name</th>
+                            <th>Overall</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @Model.AwayTeamPlayers)
+                        {
+                            <tr>
+                                <td>@item.Position.Abbr</td>
+                                <td>@item.FirstName @item.LastName</td>
+                                <td>@item.Overall</td>
+                                <td><hr /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </form>
+    <hr />
+
+
+</body>
+
+<script>setTimeout(function () { document.forms["myform"].submit(); }, 3000);</script>

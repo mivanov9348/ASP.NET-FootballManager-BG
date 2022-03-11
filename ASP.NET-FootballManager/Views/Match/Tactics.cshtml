@@ -1,0 +1,111 @@
+﻿@model TacticsViewModel
+
+<style>
+
+    body {
+        background-color: black;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        text-align: center;
+    }
+
+    .Subs {
+        margin-left: 330px;
+    }
+
+    .startingEleven {
+        margin-left: 330px;
+    }
+
+    label {
+        margin-left: -40px;
+        color: white;
+        font-weight: bolder;
+        font-size: 50px;
+    }
+
+    .field-validation-valid {
+        color: red
+    }
+
+</style>
+
+
+<body>
+   
+    <p>@Html.ValidationSummary(false, "", new { @class = "text-danger" })</p>
+
+    <form method="get">
+        <label style="float:left">Lineups</label>
+        <label style="margin-left:-200px">@Model.CurrentTeam.Name</label>
+        <hr style="color:white" />
+        <input type="submit" style="float:right" value="Next" asp-action="ValidTactics" />
+        <h5 style="color:white;font-weight:bolder;font-size:30px">Starting 11</h5>
+        <table class="table table-striped w-auto startingEleven">
+            <thead>
+                <tr style="color:white">
+                    <th>Pos</th>
+                    <th>Name</th>
+                    <th>Att</th>
+                    <th>Def</th>
+                    <th style="color:red">Overall</th>
+                    <th>Goals</th>
+                    <th>Saves</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in @Model.StartingEleven)
+                {
+                    <tr class="table-info">
+                        <th scope="row">@item.Position.Abbr</th>
+                        <td>@item.FirstName @item.LastName</td>
+                        <td>@item.Attack</td>
+                        <td>@item.Defense</td>
+                        <td style="color:red">@item.Overall</td>
+                        <td>@item.Goals</td>
+                        <td>@item.CleanSheets</td>
+                        <td><input type="submit" asp-action="RemoveFromStartingEleven" class="RemoveBtn" value="Remove" asp-route-id="@item.Id" /></td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+        <hr />
+        <table class="table table-striped w-auto Subs">
+            <thead>
+                <tr style="color:white">
+                    <th>Pos</th>
+                    <th>Name</th>
+                    <th>Att</th>
+                    <th>Def</th>
+                    <th style="color:red">Overall</th>
+                    <th>Goals</th>
+                    <th>Saves</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in @Model.Substitutes)
+                {
+                    <tr class="table-info">
+                        <th scope="row">@item.Position.Abbr</th>
+                        <td>@item.FirstName @item.LastName</td>
+                        <td>@item.Attack</td>
+                        <td>@item.Defense</td>
+                        <td style="color:red">@item.Overall</td>
+                        <td>@item.Goals</td>
+                        <td>@item.CleanSheets</td>
+                        <td><input type="submit" class="RemoveBtn" asp-action="AddToStartingEleven" value="Add" asp-route-id="@item.Id" /></td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </form>
+
+
+</body>

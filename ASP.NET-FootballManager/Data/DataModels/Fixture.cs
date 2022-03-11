@@ -36,6 +36,6 @@
 
         public int Year { get; set; }
 
-
+        public ICollection<Match> Matches { get; set; } = new HashSet<Match>();
     }
 }

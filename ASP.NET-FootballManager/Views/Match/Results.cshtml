@@ -1,1 +1,93 @@
-﻿
+﻿@model MatchDayViewModel
+
+<style>
+
+    body {
+        background-color: black;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+    label {
+        margin-left: 500px;
+        font-size: 50px;
+        color: gold;
+    }
+
+    .round {
+        margin-left: 590px;
+        color: darkkhaki;
+    }
+
+    .fixtures {
+        text-align: center;
+    }
+
+    hr {
+        color: white;
+    }
+
+    .table-dark {
+        font-size: 20px;
+    }
+
+    .submit {
+        margin-top: -30px;
+        text-align: center;
+        color: black;
+        font-weight: bolder;
+        width: 150px;
+        height: 30px;
+        float: right;
+    }
+
+        .submit:hover {
+            box-shadow: 0px 0px 30px white;
+        }
+
+</style>
+
+@{
+    var leagueName = "";
+    var count = "";
+}
+
+<body>
+
+    <label>RESULTS</label>
+    <h5 class="round">Round @Model.Round</h5>
+    <form method="get">
+        <input type="submit" value="To Main Menu" class="submit" asp-controller="Menu" asp-action="Inbox" />
+    </form>
+    <hr />
+
+    <div class="fixtures">
+
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th style="width:10px;">Day</th>
+                    <th style="width:30px;">League</th>
+                    <th style="width:80px;">HT</th>
+                    <th style="width:10px;">HG</th>
+                    <th style="width:10px;">AG</th>
+                    <th style="width:200px;">AT</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var fixture in @Model.DayFixtures)
+                {
+
+                    <tr>
+                        <th scope="row">@fixture.Day</th>
+                        <td style="color:green;">@fixture.League.Name</td>
+                        <td>@fixture.HomeTeamName</td>
+                        <td>@fixture.HomeTeamGoal</td>
+                        <td>@fixture.AwayTeamGoal</td>
+                        <td>@fixture.AwayTeamName</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</body>

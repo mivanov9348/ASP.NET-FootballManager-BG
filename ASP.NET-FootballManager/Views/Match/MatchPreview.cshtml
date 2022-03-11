@@ -1,13 +1,145 @@
 ﻿@model MatchViewModel
 
-<label>@Model.HomeTeamName</label>
-@foreach (var item in @Model.HomeTeamPlayers)
-{
-    <p>@item.FirstName @item.LastName</p>
-}
+<style>
 
-<label>@Model.AwayTeamName</label>
-@foreach (var item in @Model.AwayTeamPlayers)
-{
-    <p>@item.FirstName @item.LastName</p>
-}
+    body {
+        background-color: black;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        text-align: center;
+    }
+
+    .Title {
+        margin-top: 10px;
+        text-align: center;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .HomeTeam {
+        border: 5px solid grey;
+        box-shadow: 0px 0px 30px grey;
+        width: 350px;
+        text-align: center;
+        display: inline-block;
+        animation: fadeInAnimation ease 10s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+
+        .HomeTeam table {
+            color: white;
+            margin-left: 20px;
+            width:320px;
+        }
+
+        .HomeTeam label {
+            color: white;
+            font-weight: bolder;
+        }
+
+    .AwayTeam {
+        border: 5px solid grey;
+        box-shadow: 0px 0px 30px grey;
+        width: 350px;
+        text-align: center;
+        display: inline-block;
+        margin-left: 50px;
+        animation: fadeInAnimation ease 20s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+
+        .AwayTeam table {
+            color: white;
+            margin-left: 20px;
+            width:320px;
+            height:200px;
+        }
+
+        .AwayTeam label {
+            color: white;
+            font-weight: bolder;
+        }
+
+    .Button {
+        float: right;
+        margin-top: -25px;
+        background-color: white;
+        width: 100px;
+    }
+
+        .Button:hover {
+            box-shadow: 0px 0px 10px white;
+        }
+
+        table{
+            height:150px;
+        }
+
+    @@keyframes fadeInAnimation {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+
+<body>
+    <form>
+        <div class="Title">
+            <h1>@Model.HomeTeamName - @Model.AwayTeamName</h1>
+            <input type="submit" class="Button" value="Start" asp-action="Match" />
+        </div>
+    </form>
+    <hr style="color:white" />
+    <div class="HomeTeam">
+
+        <label>@Model.HomeTeamName</label>
+        <hr />
+        <table>
+            <tr style="color:red;">
+                <th>Pos</th>
+                <th>Name</th>
+                <th>Overall</th>
+            </tr>
+            @foreach (var item in @Model.HomeTeamPlayers)
+            {
+                <tr>
+                    <td>@item.Position.Abbr</td>
+                    <td>@item.FirstName @item.LastName</td>
+                    <td>@item.Overall</td>
+                    <td><hr /></td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="AwayTeam">
+
+        <label>@Model.AwayTeamName</label>
+        <hr />
+        <table>
+            <tr style="color:red;">
+                <th>Pos</th>
+                <th>Name</th>
+                <th>Overall</th>
+            </tr>
+            @foreach (var item in @Model.AwayTeamPlayers)
+            {
+                <tr>
+                    <td>@item.Position.Abbr</td>
+                    <td >@item.FirstName @item.LastName</td>
+                    <td>@item.Overall</td>
+                    <td><hr /></td>
+                </tr>
+            }
+        </table>
+
+    </div>
+
+
+</body>
+

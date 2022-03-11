@@ -20,7 +20,7 @@
         public int Defense { get; set; }
         public int Speed { get; set; }
         public int Overall { get; set; }
-        public int Saves { get; set; }
+        public int CleanSheets { get; set; }
         public int Price { get; set; }
         public bool IsStarting11 { get; set; }
         public int PositionId { get; set; }

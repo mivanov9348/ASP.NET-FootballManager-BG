@@ -6,15 +6,11 @@
     {
 
         void GenerateFixtures(Game game);
-
         LeagueViewModel GetLeague(int id);
-
         List<League> GetAllLeagues();
-
         void Shuffle(List<VirtualTeam> currl);
-
         List<VirtualTeam> GetStandingsByLeague(int id);
-
+        void CalculateOtherMatches(List<Fixture> fixtures,Fixture fixture);
 
     }
 }

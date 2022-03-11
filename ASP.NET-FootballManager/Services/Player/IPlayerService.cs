@@ -9,7 +9,10 @@
         void GeneratePlayers(Game game, VirtualTeam team);
         void CreateFreeAgents(Game game, int gk, int df, int mf, int st);
         void CalculatingPlayersPrice();
+        List<Player> GetStartingEleven(int teamId);
+        List<Player> GetSubstitutes(int teamId);
+        void Substitution(int playerId,string action);
 
-
+        Player GetPlayer(VirtualTeam team);
     }
 }

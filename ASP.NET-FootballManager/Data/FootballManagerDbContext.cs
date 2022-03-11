@@ -17,7 +17,7 @@
         public DbSet<VirtualTeam> VirtualTeams { get; set; }
         public DbSet<Inbox> Inboxes { get; set; }
         public DbSet<Fixture> Fixtures { get; set; }
-
+        public DbSet<Match> Matches { get; set; }
         public FootballManagerDbContext(DbContextOptions<FootballManagerDbContext> options)
             : base(options)
         {
@@ -236,6 +236,10 @@
                     .WithOne(x => x.Game)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                game.HasMany(x => x.Matches)
+                   .WithOne(x => x.Game)
+                   .OnDelete(DeleteBehavior.Restrict);
+
             });
 
             builder.Entity<Inbox>(inbox =>
@@ -267,6 +271,26 @@
                        .HasForeignKey(x => x.LeagueId)
                        .OnDelete(DeleteBehavior.Restrict);
 
+                fixture.HasMany(x => x.Matches)
+                       .WithOne(x => x.CurrentFixture)
+                       .OnDelete(DeleteBehavior.Restrict);
+
+
+            });
+
+            builder.Entity<Match>(match =>
+            {
+                match.HasKey(x => x.Id);
+
+                match.HasOne(x => x.CurrentFixture)
+                     .WithMany(x => x.Matches)
+                     .HasForeignKey(x => x.CurrentFixtureId)
+                     .OnDelete(DeleteBehavior.Restrict);
+
+                match.HasOne(x => x.Game)
+                     .WithMany(x => x.Matches)
+                     .HasForeignKey(x => x.GameId)
+                     .OnDelete(DeleteBehavior.Restrict);
 
             });
 

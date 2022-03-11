@@ -45,7 +45,7 @@
                     newModel.Players = this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.FirstName).ToList();
                     return newModel;
                 case 5:
-                    newModel.Players = this.data.Players.OrderByDescending(x => x.Saves).ThenByDescending(x => x.FirstName).ToList();
+                    newModel.Players = this.data.Players.OrderByDescending(x => x.CleanSheets).ThenByDescending(x => x.FirstName).ToList();
                     return newModel;
                 case 6:
                     newModel.Players = this.data.Players.OrderByDescending(x => x.Attack).ThenByDescending(x => x.FirstName).ToList();
@@ -115,7 +115,7 @@
                     TeamId = freeAgentsTeam.Id,
                     Matches = 0,
                     Goals = 0,
-                    Saves = 0,
+                    CleanSheets = 0,
                     Game = game,
                     GameId = game.Id,
                     IsStarting11 = true
@@ -167,7 +167,7 @@
                     TeamId = team.Id,
                     Matches = 0,
                     Goals = 0,
-                    Saves = 0,
+                    CleanSheets = 0,
                     Game = game,
                     GameId = game.Id,
                     IsStarting11 = true
@@ -221,7 +221,28 @@
             return (randomFN.FirstName, randomLN.LastName, city, age, nation);
 
         }
-
-
+        public List<Player> GetStartingEleven(int teamId) => this.data.Players.Where(x => x.IsStarting11 == true && x.TeamId == teamId).ToList();
+        public List<Player> GetSubstitutes(int teamId) => this.data.Players.Where(x => x.IsStarting11 == false && x.TeamId == teamId).ToList();
+        public void Substitution(int playerId, string action)
+        {
+            var currentPlayer = this.data.Players.FirstOrDefault(x => x.Id == playerId);
+            switch (action)
+            {
+                case "Add":
+                    currentPlayer.IsStarting11 = true;
+                    break;
+                case "Remove":
+                    currentPlayer.IsStarting11 = false;
+                    break;
+                default:
+                    break;
+            }
+            this.data.SaveChanges();
+        }
+        public Player GetPlayer(VirtualTeam team)
+        {
+            var players = this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList();
+            return players[rnd.Next(0, players.Count)];
+        }
     }
 }
