@@ -118,7 +118,8 @@
                     CleanSheets = 0,
                     Game = game,
                     GameId = game.Id,
-                    IsStarting11 = true
+                    IsStarting11 = true,
+                    FreeAgent = true
                 };
                 this.data.Players.Add(newPlayer);
                 this.data.SaveChanges();
@@ -170,7 +171,8 @@
                     CleanSheets = 0,
                     Game = game,
                     GameId = game.Id,
-                    IsStarting11 = true
+                    IsStarting11 = true,
+                    FreeAgent = false
                 };
                 this.data.Players.Add(newPlayer);
                 this.data.SaveChanges();
@@ -239,10 +241,11 @@
             }
             this.data.SaveChanges();
         }
-        public Player GetPlayer(VirtualTeam team)
+        public Player GetRandomPlayer(VirtualTeam team)
         {
             var players = this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList();
             return players[rnd.Next(0, players.Count)];
         }
+        public Player GetPlayerById(int id) => this.data.Players.FirstOrDefault(x => x.Id == id);
     }
 }

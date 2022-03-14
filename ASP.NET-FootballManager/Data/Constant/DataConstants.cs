@@ -1,4 +1,6 @@
-﻿namespace ASP.NET_FootballManager.Data.Constant
+﻿using ASP.NET_FootballManager.Data.DataModels;
+
+namespace ASP.NET_FootballManager.Data.Constant
 {
     public class DataConstants
     {
@@ -6,10 +8,14 @@
         public class Match
         {
             public const int Timespan = 20;
-       
+
         }
 
+        public class InboxTemplate
+        {
+           
 
+        }
 
 
 

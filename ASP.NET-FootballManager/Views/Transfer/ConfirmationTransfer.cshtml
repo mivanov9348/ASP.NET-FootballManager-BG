@@ -1,0 +1,78 @@
+﻿@model TransferViewModel
+<style>
+
+    body {
+        background-color: black;
+        font-family: fantasy;
+    }
+
+    .player {
+        border: 2px solid red;
+        box-shadow: 0px 0px 20px red;
+        width: 200px;
+        text-align: center;
+        color: white;
+        margin-top: 170px;
+        margin-left: 300px;
+    }
+
+    .Image {
+        position: relative;
+        height: 150px;
+        margin-left: 550px;
+        margin-top: -400px;
+    }
+
+    .team {
+        border: 2px solid red;
+        box-shadow: 0px 0px 20px red;
+        width: 200px;
+        text-align: center;
+        color: white;
+        margin-left: 800px;
+        margin-top: -300px;
+    }
+
+    .confirmBtn {
+        margin-left: 620px;
+        margin-top: 150px;
+        font-size: 20px;
+    }
+</style>
+
+<body>
+    <h2 style="color:red;text-align:center">@ViewData["error"]</h2>
+    <form method="get">
+        <input type="submit" value="Back" asp-action="Market" />
+        <div class="player">
+            <h5>@Model.PlayerToBuy.FirstName @Model.PlayerToBuy.LastName</h5>
+            <p>@Model.PlayerToBuy.Position.Abbr</p>
+            <hr />
+            <p>@Model.PlayerToBuy.Nation.Name</p>
+            <hr />
+            <p>Attack: @Model.PlayerToBuy.Attack</p>
+            <p>Defense: @Model.PlayerToBuy.Defense</p>
+            <p>Overall: @Model.PlayerToBuy.Overall</p>
+            <hr />
+            <p>Price: @Model.PlayerToBuy.Price</p>
+        </div>
+
+        <img class="Image" src="~/Images/greenarrow.png" />
+
+        <div class="team">
+            <h5>@Model.CurrentTeam.Name</h5>
+            <hr />
+            <p>Overall: @Model.CurrentTeam.Overall</p>
+            <p>Budget: @Model.CurrentTeam.Budget</p>
+        </div>
+
+        <div class="confirmBtn">
+            <input type="submit" value="Confirm" asp-action="Buy" asp-route-id="@Model.PlayerToBuy.Id" />
+
+        </div>
+
+        <div>
+        </div>
+    </form>
+
+</body>

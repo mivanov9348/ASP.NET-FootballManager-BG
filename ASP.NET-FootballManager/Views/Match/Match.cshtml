@@ -73,6 +73,10 @@
 
 </style>
 
+@{
+    var id = "one";
+}
+
 <body>
 
     <div class="title">
@@ -96,7 +100,11 @@
                     <tbody>
                         @foreach (var item in @Model.HomeTeamPlayers)
                         {
-                            <tr>
+                            if (item.FirstName + " " + item.LastName == Model.CurrentPlayerName)
+                            {
+                                id = "myDiv";
+                            }
+                            <tr id=@id>
                                 <td>@item.Position.Abbr</td>
                                 <td>@item.FirstName @item.LastName</td>
                                 <td>@item.Overall</td>
@@ -124,7 +132,11 @@
                     <tbody>
                         @foreach (var item in @Model.AwayTeamPlayers)
                         {
-                            <tr>
+                            if (item.FirstName + " " + item.LastName == Model.CurrentPlayerName)
+                            {
+                                id = "myDiv";
+                            }
+                            <tr id=@id>
                                 <td>@item.Position.Abbr</td>
                                 <td>@item.FirstName @item.LastName</td>
                                 <td>@item.Overall</td>
@@ -139,7 +151,11 @@
     </form>
     <hr />
 
-
 </body>
 
-<script>setTimeout(function () { document.forms["myform"].submit(); }, 3000);</script>
+<script>
+    setTimeout(function () { document.forms["myform"].submit(); }, 3000);
+
+      document.getElementById("myDiv").style.color = "red";
+
+</script>

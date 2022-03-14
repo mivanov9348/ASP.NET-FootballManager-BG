@@ -88,11 +88,11 @@
         {
             if (id == 0)
             {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == 1).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ToList();
+                return this.data.VirtualTeams.Where(x => x.LeagueId == 1).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x=>x.GoalScored).ToList();
             }
             else
             {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ToList();
+                return this.data.VirtualTeams.Where(x => x.LeagueId == id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
 
             }
 
@@ -153,7 +153,7 @@
             var goals = rnd.Next(0, currTeam.Overall / 10);
             return goals;
         }
-        private void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)
+        public void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)
         {
             var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
             var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
@@ -161,12 +161,12 @@
             homeTeam.Matches += 1;
             homeTeam.GoalScored += homeGoals;
             homeTeam.GoalAgainst += awayGoals;
-            homeTeam.GoalDifference = homeTeam.GoalScored -= homeTeam.GoalAgainst;
+            homeTeam.GoalDifference = homeTeam.GoalScored - homeTeam.GoalAgainst;
 
             awayTeam.Matches += 1;
             awayTeam.GoalScored += awayGoals;
             awayTeam.GoalAgainst += homeGoals;
-            awayTeam.GoalDifference = awayTeam.GoalScored -= awayTeam.GoalAgainst;
+            awayTeam.GoalDifference = awayTeam.GoalScored - awayTeam.GoalAgainst;
 
             if (homeGoals > awayGoals)
             {
@@ -196,8 +196,7 @@
         {
             var playersWithoutGk = this.data.Players.Where(x => x.TeamId == currentFixt.HomeTeamId && x.PositionId != 1).ToList();
             var goalkeeper = this.data.Players.FirstOrDefault(x => x.TeamId == currentFixt.HomeTeamId && x.PositionId == 1);
-            var saves = Goals / 2;
-
+           
             for (int i = 0; i < Goals; i++)
             {
                 var player = playersWithoutGk[rnd.Next(0, playersWithoutGk.Count)];

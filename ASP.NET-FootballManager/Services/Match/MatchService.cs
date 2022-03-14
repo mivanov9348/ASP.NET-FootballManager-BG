@@ -94,7 +94,7 @@
             {
                 if (defNum >= attackNum)
                 {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) save the ball!";                 
+                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) save the ball!";
                 }
 
                 if (attackNum > defNum)
@@ -198,7 +198,7 @@
             match.Minute += rnd.Next(1, Data.Constant.DataConstants.Match.Timespan);
             this.data.SaveChanges();
         }
-        public MatchViewModel GetMatchModel(Match match, Fixture fixture)
+        public MatchViewModel GetMatchModel(Match match, Fixture fixture, Player player)
         {
             return new MatchViewModel
             {
@@ -209,7 +209,8 @@
                 AwayTeamName = fixture.AwayTeamName,
                 Positions = this.data.Positions.ToList(),
                 HomeTeamPlayers = GetStarting11(fixture.HomeTeamId),
-                AwayTeamPlayers = GetStarting11(fixture.AwayTeamId)
+                AwayTeamPlayers = GetStarting11(fixture.AwayTeamId),
+                CurrentPlayerName = player.FirstName + " " + player.LastName
             };
         }
         public void EndMatch(Match match)
@@ -218,5 +219,6 @@
             match.Minute = 0;
             this.data.SaveChanges();
         }
+        public List<Fixture> GetResults(Game currentGame) => this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.Day == currentGame.Day - 1).ToList();
     }
 }

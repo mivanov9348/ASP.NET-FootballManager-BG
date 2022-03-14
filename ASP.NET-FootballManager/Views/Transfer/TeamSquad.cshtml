@@ -1,0 +1,67 @@
+﻿@model TeamViewModel
+
+<style>
+
+    body {
+        background-color: black;
+        font-family:fantasy;
+    }
+
+    table{
+        margin-top:30px;
+        box-shadow:0px 0px 20px white;
+    }
+
+    .teamInfo{
+        margin-top:50px;
+        text-align:center;
+        box-shadow:0px 0px 20px white;
+        color:white;
+    }
+
+</style>
+
+<body>
+    <p style="color:red;text-align:center">@ViewData["error"]</p>
+    <form method="get">
+        <input type="submit" value="Back" asp-action="Market" />
+
+        <div class="teamInfo">
+            <h1>@Model.CurrentTeam.Name</h1>        
+            <h5>@Model.CurrentTeam.Budget coins</h5>
+
+        </div>
+
+        <table class="table table-sm table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Pos</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Nat</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Att</th>
+                    <th scope="col">Def</th>
+                    <th scope="col">Ovr</th>
+                    <th scope="col">Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.Players)
+                {
+                    <tr>
+                        <td>@item.Position.Abbr</td>
+                        <td>@item.FirstName @item.LastName</td>
+                        <td>@item.Nation.Abbr</td>
+                        <td>@item.Age</td>
+                        <td>@item.Attack</td>
+                        <td>@item.Defense</td>
+                        <td>@item.Overall</td>
+                        <td>@item.Price</td>
+                        <td><input type="submit" value="Sell" asp-route-id="@item.Id" asp-action="Sell" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</body>

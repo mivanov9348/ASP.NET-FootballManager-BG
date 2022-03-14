@@ -4,6 +4,17 @@
     public class PlayersViewModel
     {
         public int SortBy { get; set; }
+
+        public string FullName { get; set; }
+        public string Nation { get; set; }
+        public string City { get; set; }
+        public int Age { get; set; }
+        public int Attack { get; set; }
+        public int Defense { get; set; }
+        public int Overall { get; set; }
+        public int Price { get; set; }
+        public int Goals { get; set; }
+        public int CleanSheets { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Nation> Nations { get; set; } = new List<Nation>();
         public List<VirtualTeam> Teams { get; set; } = new List<VirtualTeam>();

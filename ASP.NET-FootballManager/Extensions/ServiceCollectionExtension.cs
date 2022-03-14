@@ -1,0 +1,36 @@
+﻿using ASP.NET_FootballManager.Services.Common;
+using ASP.NET_FootballManager.Services.Game;
+using ASP.NET_FootballManager.Services.Inbox;
+using ASP.NET_FootballManager.Services.League;
+using ASP.NET_FootballManager.Services.Manager;
+using ASP.NET_FootballManager.Services.Match;
+using ASP.NET_FootballManager.Services.Player;
+using ASP.NET_FootballManager.Services.Team;
+using ASP.NET_FootballManager.Services.Transfer;
+using ASP.NET_FootballManager.Services.Validation;
+
+namespace Microsoft.Extensions.DependencyInjection
+{
+    public static class ServiceCollectionExtension
+    {
+
+        public static IServiceCollection AddApplicationServices (this IServiceCollection services)
+        {
+            services.AddScoped<ICommonService, CommonService>();
+            services.AddScoped<IManagerService, ManagerService>();
+            services.AddScoped<IValidationService, ValidationService>();
+            services.AddScoped<IGameService, GameService>();
+            services.AddScoped<ILeagueService, LeagueService>();
+            services.AddScoped<IPlayerService, PlayerService>();
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IMatchService, MatchService>();
+            services.AddScoped<ITransferService, TransferService>();
+            services.AddScoped<IInboxService, InboxService>();
+
+            return services;
+        }
+
+
+
+    }
+}

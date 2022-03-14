@@ -23,6 +23,7 @@
         public int CleanSheets { get; set; }
         public int Price { get; set; }
         public bool IsStarting11 { get; set; }
+        public bool FreeAgent { get; set; }
         public int PositionId { get; set; }
         public Position Position { get; set; }
         public int NationId { get; set; }

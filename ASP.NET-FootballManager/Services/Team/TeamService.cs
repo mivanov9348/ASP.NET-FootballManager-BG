@@ -2,14 +2,15 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Models;
+
     public class TeamService : ITeamService
     {
         private readonly FootballManagerDbContext data;
         public TeamService(FootballManagerDbContext data)
         {
-            this.data = data;   
+            this.data = data;
         }
-
         public List<VirtualTeam> GenerateTeams(Game game)
         {
             var allTeam = this.data.Teams.ToList();
@@ -34,17 +35,26 @@
             return virtualTeams;
         }
         public List<VirtualTeam> CurrentGameTeams(Game currentGame) => this.data.VirtualTeams.ToList();
-        public void CalculateTeamOverall(List<VirtualTeam> teams)
+        public void CalculateTeamOverall(VirtualTeam team)
         {
-            teams.ForEach(team => team.Overall = 0);
+            team.Overall = 0;
+            var teamPlayers = this.data.Players.Where(x => x.TeamId == team.Id).ToList();
+            var overallSum = teamPlayers.Sum(x => x.Overall);
+            team.Overall = overallSum / teamPlayers.Count;
 
-            foreach (var team in teams)
-            {
-                var teamPlayers = this.data.Players.Where(x => x.TeamId == team.Id).ToList();
-                var overallSum = teamPlayers.Sum(x => x.Overall);
-                team.Overall = overallSum / teamPlayers.Count;
-            }
             this.data.SaveChanges();
+        }
+
+        public TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam)
+        {
+            return new TeamViewModel
+            {
+                Positions = this.data.Positions.ToList(),
+                Cities = this.data.Cities.ToList(),
+                Players = currPlayers,
+                CurrentTeam = currentTeam,
+                Nations = this.data.Nations.ToList()
+            };
         }
     }
 }

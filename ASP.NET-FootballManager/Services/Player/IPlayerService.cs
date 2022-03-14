@@ -12,7 +12,7 @@
         List<Player> GetStartingEleven(int teamId);
         List<Player> GetSubstitutes(int teamId);
         void Substitution(int playerId,string action);
-
-        Player GetPlayer(VirtualTeam team);
+        Player GetPlayerById(int id);
+        Player GetRandomPlayer(VirtualTeam team);
     }
 }

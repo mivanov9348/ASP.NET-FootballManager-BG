@@ -27,7 +27,6 @@
             return false;
         }
         public Game GetCurrentGame(int id) => this.data.Games.FirstOrDefault(x => x.ManagerId == id);
-
         public Game CreateNewGame(Manager manager)
         {
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == manager.CurrentTeamId);
@@ -60,7 +59,10 @@
             this.data.SaveChanges();
             return newGame;
         }
-
-
+        public void NextDay(Game currentGame)
+        {
+            currentGame.Day += 1;
+            this.data.SaveChanges();
+        }
     }
 }

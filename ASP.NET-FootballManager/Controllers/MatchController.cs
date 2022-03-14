@@ -90,7 +90,7 @@
             var homeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId);
             var awayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId);
             var currentMatch = matchService.CreateMatch(currentFixture, CurrentGame);
-            var newModel = matchService.GetMatchModel(currentMatch, currentFixture);
+            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, homeTeamPlayers.First());
             return View(newModel);
         }
         public IActionResult GetAction(int id)
@@ -99,27 +99,30 @@
             var currentMatch = matchService.GetCurrentMatch(id);
             var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
+            var player = new Player();
 
             if (currentMatch.Turn == 1)
             {
-                var homeTeam = currentFixture.HomeTeam;
-                var player = playerService.GetPlayer(homeTeam);
+                var homeTeam = commonService.GetTeamById(currentFixture.HomeTeamId);
+                player = playerService.GetRandomPlayer(homeTeam);
                 matchService.PlayerAction(homeTeam, player, currentMatch);
             }
             else
             {
                 var awayTeam = commonService.GetTeamById(currentFixture.AwayTeamId);
-                var player = playerService.GetPlayer(awayTeam);
+                player = playerService.GetRandomPlayer(awayTeam);
                 matchService.PlayerAction(awayTeam, player, currentMatch);
             }
 
             matchService.Time(currentMatch);
-            var newModel = matchService.GetMatchModel(currentMatch, currentFixture);
+            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, player);
 
             if (currentMatch.Minute > 90)
-            {               
+            {
                 matchService.EndMatch(currentMatch);
-                leagueService.CalculateOtherMatches(dayFixtures,currentFixture);
+                leagueService.CheckWinner(currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture);
+                leagueService.CalculateOtherMatches(dayFixtures, currentFixture);
+                gameService.NextDay(CurrentGame);
                 return RedirectToAction("Results");
             }
 
@@ -128,12 +131,12 @@
         public IActionResult Results(MatchViewModel mvm)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
-            var round = dayFixtures.First().Round;
+            var dayResults = matchService.GetResults(CurrentGame);
+            var round = dayResults.First().Round;
 
             return View(new MatchDayViewModel
             {
-                DayFixtures = dayFixtures,
+                DayFixtures = dayResults,
                 Day = CurrentGame.Day,
                 Year = CurrentGame.Year,
                 Round = round,
@@ -173,7 +176,6 @@
             var currentTeam = commonService.GetCurrentTeam(currentGame);
             return (userId, currentManager, currentGame, currentTeam);
         }
-
 
 
     }

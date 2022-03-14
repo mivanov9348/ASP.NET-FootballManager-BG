@@ -1,0 +1,109 @@
+﻿@model TransferViewModel
+
+<partial name="~/Views/Shared/_SideBar.cshtml" />
+
+<style>
+
+    body {
+        background-color: black;
+        font-family: 'High Tower Text'
+    }
+
+    .title {
+        color: white;
+        margin-top: 10px;
+        margin-left: 400px;
+        width: 700px;
+        text-align: center;
+    }
+
+        .title label {
+            font-size: 50px;
+        }
+
+    .FreeAgents {
+        font-size: 30px;
+        text-align: center;
+        margin-top: -20px;
+        margin-left: 60px;
+        width: 1300px;
+    }
+
+    .details {
+        text-decoration: none;
+        color: white;
+    }
+
+    .squadBtn {
+        background-color: black;
+        color: red;
+        font-weight: bolder;
+        border: 2px solid red;
+        width: 200px;
+    }
+
+        .squadBtn:hover {
+            box-shadow: 0px 0px 20px white;
+        }
+
+</style>
+
+<form method="get">
+    <body>
+       
+        <div class="title">
+            <label>TRANSFER MARKET</label>
+            <br />
+            <input type="submit" class="squadBtn" asp-action="TeamSquad" value="Squad" />
+            <hr style="font-weight:bolder" />
+
+            <input type="submit" asp-action="SortPlayers" asp-route-id="0" value="All" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="1" value="GK" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="2" value="DF" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="3" value="MF" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="4" value="ST" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="5" value="Att" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="6" value="Def" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="7" value="OVR" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="8" value="Price" />
+        </div>
+
+        <div class="FreeAgents">
+            <hr />
+            <table class="table table-sm table-dark" style="font-size:20px;">
+                <thead>
+
+                    <tr>
+                        <th scope="col">Pos</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Nat</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Att</th>
+                        <th scope="col">Def</th>
+                        <th scope="col">Ovr</th>
+                        <th scope="col">Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in @Model.FreeAgents)
+                    {
+                        <tr>
+                            <td>@item.Position.Abbr</td>
+                            <td>@item.FirstName @item.LastName</td>
+                            <td>@item.Nation.Abbr</td>
+                            <td>@item.Age</td>
+                            <td>@item.Attack</td>
+                            <td>@item.Defense</td>
+                            <td>@item.Overall</td>
+                            <td>@item.Price</td>
+                            <td><input type="submit" value="Buy" asp-route-id="@item.Id" asp-action="ConfirmationTransfer" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </body>
+</form>

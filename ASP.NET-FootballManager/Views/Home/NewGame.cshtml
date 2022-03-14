@@ -39,9 +39,10 @@
 <body>
 
     <label>Create Manager</label>
-
+    <h5 style="color:white;font-family:fantasy;text-align:center">@ViewData["Error"]</h5>
     <form method="get">
         <div class="FormInput">
+            
             <hr />
             <input type="text" asp-for="@Model.FirstName" placeholder="First Name" />
             <br />

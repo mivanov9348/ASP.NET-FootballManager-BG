@@ -9,7 +9,8 @@
         margin-left: 70px;
         margin-top: 10px;
         border: 3px solid black;
-        box-shadow: 0px 0px 50px white;
+        box-shadow: 0px 0px 50px grey;
+        background-color: black;
     }
 
     input {
@@ -18,8 +19,17 @@
 
     .select {
         margin-left: 35px;
-        margin-top: -980px;
+        margin-top: 10px;
     }
+
+    .Title {
+        margin-top: 20px;
+        color: white;
+        font-size: 50px;
+        font-family: fantasy;
+        text-align: center;
+    }
+
 </style>
 
 @{
@@ -27,7 +37,13 @@
 }
 
 <body>
-    <partial name="_SideBar" />
+    <partial name="~/Views/Shared/_SideBar.cshtml" />
+
+    <div class="Title">
+        <p>STANDINGS</p>
+        <hr style="margin-left:100px;" />
+    </div>
+
     <div class="select">
         <form method="get">
             <select class="select" asp-for="@Model.LeagueId">

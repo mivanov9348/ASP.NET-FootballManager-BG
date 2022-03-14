@@ -14,7 +14,8 @@
         Match GetCurrentMatch(int matchId);
         void PlayerAction(VirtualTeam team, Player player, Match match);
         void Time(Match match);
-       void EndMatch(Match match);
-        MatchViewModel GetMatchModel(Match match, Fixture fixture);
+        void EndMatch(Match match);
+        MatchViewModel GetMatchModel(Match match, Fixture fixture, Player player);
+        List<Fixture> GetResults(Game currentGame);
     }
 }
