@@ -7,5 +7,7 @@
         Game GetCurrentGame(int id);
         bool isExistGame(string UserId);
         void NextDay(Game currentGame);
+
+        void ResetGame(Game CurrentGame);
     }
 }

@@ -11,8 +11,10 @@
         void CalculatingPlayersPrice();
         List<Player> GetStartingEleven(int teamId);
         List<Player> GetSubstitutes(int teamId);
-        void Substitution(int playerId,string action);
+        void Substitution(int playerId, string action);
         Player GetPlayerById(int id);
         Player GetRandomPlayer(VirtualTeam team);
+        Player GetGoalscorer(Game CurrentGame);
+        void RemovePlayers(VirtualTeam freeAgentsTeam);
     }
 }

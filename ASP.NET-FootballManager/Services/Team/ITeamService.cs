@@ -10,5 +10,6 @@
         void CalculateTeamOverall(VirtualTeam team);
         TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam);
 
+        void ResetTeams(Game currentGame);
     }
 }

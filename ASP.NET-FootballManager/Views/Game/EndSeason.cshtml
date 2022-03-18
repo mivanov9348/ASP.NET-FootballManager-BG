@@ -1,0 +1,87 @@
+﻿@model EndSeasonViewModel
+
+<style>
+
+    body {
+        background-color: grey;
+    }
+
+    label {
+        margin-top: 20px;
+        margin-left: 550px;
+        color: yellow;
+        font-weight: bolder;
+        font-size: 30px;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+    .table-bordered {
+        margin-top: 10px;
+        font-weight: bolder;
+    }
+
+        .table-bordered tr:first-child {
+            color: green;
+        }
+
+        .table-bordered tr:nth-last-child(-n+2) {
+            color: red;
+        }
+
+</style>
+
+@{
+    var num = 0;   
+}
+
+<body>
+    <label>END OF SEASON</label>
+    <br />
+    <form method="get">
+        <input style="float:right;margin-top:-20px;width:100px;font-weight:bolder" asp-action="SeasonStats" type="submit" value="Next" />
+        <hr />
+        <select asp-for="@Model.LeagueId">
+            <option value="0" style="color:red;font-weight:bolder;">Select League</option>
+            @foreach (var item in @Model.Leagues)
+            {
+                <option value=@item.Id>@item.Name</option>
+            }
+        </select>
+        <input type="submit" value="Select" asp-action="EndSeason" />
+        <table class="table table-bordered">
+            <thead>
+                <tr style="color:whitesmoke">
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>M</th>
+                    <th>W</th>
+                    <th>D</th>
+                    <th>L</th>
+                    <th>GS</th>
+                    <th>GA</th>
+                    <th>GD</th>
+                    <th>P</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.Teams)
+                {
+                    num++;
+
+                    <tr>
+                        <td>@num</td>
+                        <td>@item.Name</td>
+                        <td>@item.Matches</td>
+                        <td>@item.Wins</td>
+                        <td>@item.Draws</td>
+                        <td>@item.Loses</td>
+                        <td>@item.GoalScored</td>
+                        <td>@item.GoalAgainst</td>
+                        <td>@item.GoalDifference</td>
+                        <td>@item.Points</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</body>

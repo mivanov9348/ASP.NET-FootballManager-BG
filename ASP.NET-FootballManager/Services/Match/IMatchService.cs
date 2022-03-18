@@ -17,5 +17,7 @@
         void EndMatch(Match match);
         MatchViewModel GetMatchModel(Match match, Fixture fixture, Player player);
         List<Fixture> GetResults(Game currentGame);
+
+        void DeleteMatches(Game CurrentGame);
     }
 }

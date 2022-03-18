@@ -5,7 +5,7 @@
     {
 
         void CreateManagerNews(Manager currentManager, Game currentGame);
-        void TransferPlayerNews(Player currentPlayer, Game currentGame);
+        void BuyPlayerNews(Player currentPlayer, Game currentGame);
         void MatchFinishedNews(string winnerTeam, string LosingTeam, Game currentGame);
 
     }

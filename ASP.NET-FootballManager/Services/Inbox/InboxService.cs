@@ -23,7 +23,7 @@
             AddAndSave(inbox);
         }
 
-        public void TransferPlayerNews(Player currentPlayer, Game currentGame)
+        public void BuyPlayerNews(Player currentPlayer, Game currentGame)
         {
             var inbox = new Inbox
             {

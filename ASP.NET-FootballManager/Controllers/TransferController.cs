@@ -4,6 +4,7 @@
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
     using ASP.NET_FootballManager.Services.Game;
+    using ASP.NET_FootballManager.Services.Inbox;
     using ASP.NET_FootballManager.Services.Manager;
     using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
@@ -20,7 +21,8 @@
         private readonly IValidationService validatorService;
         private readonly ITeamService teamService;
         private readonly IPlayerService playerService;
-        public TransferController(IPlayerService playerService, ITeamService teamService, IValidationService validatorService, ITransferService transferService, IGameService gameService, ICommonService commonService, IManagerService managerService)
+        private readonly IInboxService inboxService;
+        public TransferController(IInboxService inboxService, IPlayerService playerService, ITeamService teamService, IValidationService validatorService, ITransferService transferService, IGameService gameService, ICommonService commonService, IManagerService managerService)
         {
             this.transferService = transferService;
             this.gameService = gameService;
@@ -29,6 +31,8 @@
             this.validatorService = validatorService;
             this.teamService = teamService;
             this.playerService = playerService;
+            this.inboxService = inboxService;
+
         }
         public IActionResult Market()
         {
@@ -62,6 +66,7 @@
             if (isValid)
             {
                 transferService.Buy(id, currentTeam);
+                inboxService.BuyPlayerNews(currPl, CurrentGame);
                 teamService.CalculateTeamOverall(currentTeam);
                 return RedirectToAction("Market");
             }
@@ -97,7 +102,7 @@
 
             if (isValid)
             {
-                transferService.Sell(id);         
+                transferService.Sell(id);
             }
             else
             {

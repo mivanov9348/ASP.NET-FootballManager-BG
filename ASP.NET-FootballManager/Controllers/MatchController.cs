@@ -38,6 +38,10 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
+            if (dayFixtures.Count == 0)
+            {
+                return RedirectToAction("EndSeason", "Game");
+            }
             var round = dayFixtures.First().Round;
 
             return View(new MatchDayViewModel
@@ -46,7 +50,8 @@
                 Day = CurrentGame.Day,
                 Year = CurrentGame.Year,
                 Round = round,
-                Leagues = leagueService.GetAllLeagues()
+                Leagues = leagueService.GetAllLeagues(),
+                CurrentTeam = currentTeam
             });
         }
         public IActionResult MatchPreview()

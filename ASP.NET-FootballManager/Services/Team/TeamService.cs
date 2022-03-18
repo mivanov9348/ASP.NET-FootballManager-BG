@@ -44,7 +44,6 @@
 
             this.data.SaveChanges();
         }
-
         public TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam)
         {
             return new TeamViewModel
@@ -55,6 +54,24 @@
                 CurrentTeam = currentTeam,
                 Nations = this.data.Nations.ToList()
             };
+        }
+
+        public void ResetTeams(Game currentGame)
+        {
+            var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id);
+
+            foreach (var team in allTeams)
+            {
+                team.Matches = 0;
+                team.Wins = 0;
+                team.Draws = 0;
+                team.Loses = 0;
+                team.GoalScored = 0;
+                team.GoalAgainst = 0;
+                team.GoalDifference = 0;
+                team.Points = 0;
+            }
+            this.data.SaveChanges();
         }
     }
 }

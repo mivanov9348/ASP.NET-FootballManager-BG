@@ -220,5 +220,16 @@
             this.data.SaveChanges();
         }
         public List<Fixture> GetResults(Game currentGame) => this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.Day == currentGame.Day - 1).ToList();
+
+        public void DeleteMatches(Game CurrentGame)
+        {
+            var matches = this.data.Matches.Where(x => x.GameId == CurrentGame.Id);
+
+            foreach (var item in matches)
+            {
+                this.data.Matches.Remove(item);
+            }
+            this.data.SaveChanges();
+        }
     }
 }

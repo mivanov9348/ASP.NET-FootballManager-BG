@@ -47,10 +47,14 @@
         }
         public IActionResult Fixtures(FixturesViewModel fvm)
         {
+            var allLeagues= leagueService.GetAllLeagues();
+            var currentFixtures = commonService.GetFixture(fvm.LeagueId,fvm.CurrentRound);
+            var rounds = commonService.GetAllRounds(fvm.LeagueId);           
             return View(new FixturesViewModel
             {
-                Leagues = leagueService.GetAllLeagues(),
-                Fixtures = commonService.GetFixture(fvm.LeagueId)
+                Leagues = allLeagues,
+                Fixtures = currentFixtures,
+                AllRounds = rounds               
             });
         }
         public IActionResult Standings(StandingsViewModel svm)
@@ -69,7 +73,6 @@
             }
 
             return View(svm);
-
         }
         public IActionResult PlayersStats(PlayersViewModel pvm)
         {
@@ -87,7 +90,7 @@
                 CurrentTeam = currentTeam,
                 Players = playerService.GetPlayersByTeam(currentTeam.Id),
                 Nations = commonService.GetAllNations(),
-                Teams = commonService.GetAllVirtualTeams(),
+                Teams = commonService.GetAllVirtualTeams(CurrentGame),
                 Cities = commonService.GetAllCities(),
                 Positions = commonService.GetAllPositions(),
                 Leagues = leagueService.GetAllLeagues()

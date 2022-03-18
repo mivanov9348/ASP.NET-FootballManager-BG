@@ -31,15 +31,15 @@
 
 
 <body>
-   
+
     <p>@Html.ValidationSummary(false, "", new { @class = "text-danger" })</p>
 
     <form method="get">
-        <label style="float:left">Lineups</label>
+        <label style="float:left;margin-left:10px">Lineups</label>
         <label style="margin-left:-200px">@Model.CurrentTeam.Name</label>
         <hr style="color:white" />
         <input type="submit" style="float:right" value="Next" asp-action="ValidTactics" />
-        <h5 style="color:white;font-weight:bolder;font-size:30px">Starting 11</h5>
+        <h5 style="color:white;font-weight:bolder;font-size:30px;margin-left:80px">Starting 11</h5>
         <table class="table table-striped w-auto startingEleven">
             <thead>
                 <tr style="color:white">
@@ -70,9 +70,9 @@
                 }
 
             </tbody>
-
         </table>
         <hr />
+         <h5 style="color:white;font-weight:bolder;font-size:30px;margin-left:80px">Substitutions</h5>
         <table class="table table-striped w-auto Subs">
             <thead>
                 <tr style="color:white">

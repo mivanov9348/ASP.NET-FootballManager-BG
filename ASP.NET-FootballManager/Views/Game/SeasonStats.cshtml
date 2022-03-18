@@ -1,0 +1,68 @@
+﻿@model EndSeasonViewModel
+
+<style>
+
+    body {
+        background-color: grey;
+    }
+
+    label {
+        margin-top: 20px;
+        margin-left: 550px;
+        color: yellow;
+        font-weight: bolder;
+        font-size: 50px;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+    .NewSeasonBtn {
+        margin-left: 560px;
+        margin-top: -20px;
+        width: 150px;
+        font-weight: bolder;
+        border-radius: 10px 10px 10px 10px;
+    }
+
+    .Stats {
+        margin-top: 10px;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        text-align: center;
+        height: max-content;
+        border: 2px solid yellow;
+    }
+
+</style>
+
+
+<body>
+    <label>STATS</label>
+    <br />
+    <form method="get">
+        <input class="NewSeasonBtn" asp-action="NewSeason" type="submit" value="New Season" />
+        <hr />
+        <select asp-for="@Model.LeagueId">
+            <option value="0" style="color:red;font-weight:bolder;">Select League</option>
+            @foreach (var item in @Model.Leagues)
+            {
+                <option value=@item.Id>@item.Name</option>
+            }
+        </select>
+        <input type="submit" value="Select" asp-action="SeasonStats" />
+    </form>
+
+    <div class="Stats">
+        <h1 style="margin-top:10px">@Model.League.Name</h1>
+        <hr />
+        <h5 style="color:white">Champion</h5>
+        <p style="color:green">@Model.Teams.First().Name</p>
+        <h5 style="color:white">Relegated</h5>
+        <p style="color:red">@Model.Teams.TakeLast(2).First().Name</p>
+        <p style="color:red">@Model.Teams.TakeLast(2).Last().Name</p>
+        <h5 style="color:white">Goalscorer</h5>
+        <p>@Model.GoalScorer.FirstName @Model.GoalScorer.LastName - @Model.GoalScorer.Goals goals (@Model.GoalScorer.Team.Name)</p>
+
+    </div>
+
+
+</body>
+

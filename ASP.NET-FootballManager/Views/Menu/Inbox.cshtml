@@ -5,23 +5,30 @@
 <style>
 
     body {
-        background-color: darkslategrey;
+        background-color: black;
     }
 
     .Inbox {
-        margin-top: 50px;
+        margin-top: 30px;
         margin-left: 150px;
         border-radius: 10px 10px 10px 10px;
-        border:3px solid black;
+        border: 3px solid white;
         background-color: darkgrey;
         height: auto;
         width: 1200px;
     }
 
     .news {
-        font-family:'OLD SPORT 02 ATHLETIC NCV';
-        text-align:center;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        text-align: center;
+        height: 100px;
+        width: 1150px;
+        margin-left: 20px;
     }
+
+        .news:hover {
+            box-shadow: 0px 0px 10px black;
+        }
 
     .title {
         margin-left: 550px;
@@ -39,10 +46,10 @@
         @foreach (var item in @Model.News)
         {
             <div class="news">
-                <p>Year: @item.Year Day: @item.Day</p>
-                <p style="color:red;font-size:30px">@item.Message</p>
-            </div>  
-            <hr style="font-weight:bolder;font-size:20px;color:green"/>
+                <p style="color:red">Year: @item.Year Day: @item.Day</p>
+                <p style="color:black;font-style:italic;font-size:30px">@item.Message</p>
+            </div>
+            <hr style="font-weight:bolder;font-size:20px;color:green" />
         }
     </div>
 

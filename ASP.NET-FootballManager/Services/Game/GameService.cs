@@ -45,23 +45,23 @@
             };
 
             this.data.Games.Add(newGame);
-            this.data.SaveChanges();
-
-            var newInbox = new Inbox
-            {
-                Game = newGame,
-                GameId = newGame.Id,
-                Message = $"{currentTeam.Name} appoint {manager.FirstName} {manager.LastName} as Manager!",
-                Year = newGame.Year,
-                Day = newGame.Day
-            };
-            this.data.Inboxes.Add(newInbox);
-            this.data.SaveChanges();
+            this.data.SaveChanges();           
             return newGame;
         }
         public void NextDay(Game currentGame)
         {
             currentGame.Day += 1;
+            
+            this.data.SaveChanges();
+        }
+
+        public void ResetGame(Game CurrentGame)
+        {
+            CurrentGame.Day = 0;
+            CurrentGame.Year = 0;
+            CurrentGame.Season += 1;
+            CurrentGame.LeagueRound = 1;
+            CurrentGame.EuroCupRound = 1;
             this.data.SaveChanges();
         }
     }

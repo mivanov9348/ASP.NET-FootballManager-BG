@@ -16,45 +16,44 @@
             this.rnd = new Random();
             this.data = data;
         }
-
         public List<Player> GetPlayersByTeam(int teamId) => this.data.Players.Where(x => x.TeamId == teamId).ToList();
         public PlayersViewModel SortingPlayers(int sortBy)
         {
+            var allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true).ToList();
             var newModel = new PlayersViewModel
             {
                 Nations = this.data.Nations.ToList(),
                 Cities = this.data.Cities.ToList(),
-                Players = this.data.Players.ToList(),
+                Players = allPlayers,
                 Positions = this.data.Positions.ToList(),
                 Teams = this.data.VirtualTeams.ToList(),
-
             };
 
             switch (sortBy)
             {
                 case 1:
-                    newModel.Players = this.data.Players.OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList();
-                    return newModel;
-                case 2:
-                    newModel.Players = this.data.Players.OrderBy(x => x.Team.Name).ThenByDescending(x => x.FirstName).ToList();
-                    return newModel;
-                case 3:
-                    newModel.Players = this.data.Players.OrderBy(x => x.City.Name).ThenByDescending(x => x.FirstName).ToList();
-                    return newModel;
-                case 4:
-                    newModel.Players = this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.FirstName).ToList();
-                    return newModel;
-                case 5:
-                    newModel.Players = this.data.Players.OrderByDescending(x => x.CleanSheets).ThenByDescending(x => x.FirstName).ToList();
-                    return newModel;
-                case 6:
-                    newModel.Players = this.data.Players.OrderByDescending(x => x.Attack).ThenByDescending(x => x.FirstName).ToList();
-                    return newModel;
-                case 7:
-                    newModel.Players = this.data.Players.OrderByDescending(x => x.Defense).ThenByDescending(x => x.FirstName).ToList();
-                    return newModel;
-                case 8:
-                    newModel.Players = this.data.Players.OrderByDescending(x => x.Overall).ThenByDescending(x => x.FirstName).ToList();
+                    newModel.Players = allPlayers.OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList();
+                    return newModel;  
+                case 2:               
+                    newModel.Players = allPlayers.OrderBy(x => x.Team.Name).ThenByDescending(x => x.FirstName).ToList();
+                    return newModel;   
+                case 3:                
+                    newModel.Players = allPlayers.OrderBy(x => x.City.Name).ThenByDescending(x => x.FirstName).ToList();
+                    return newModel;   
+                case 4:                
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Goals).ThenByDescending(x => x.FirstName).ToList();
+                    return newModel;   
+                case 5:                
+                    newModel.Players = allPlayers.OrderByDescending(x => x.CleanSheets).ThenByDescending(x => x.FirstName).ToList();
+                    return newModel;   
+                case 6:                
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Attack).ThenByDescending(x => x.FirstName).ToList();
+                    return newModel;             
+                case 7:                
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Defense).ThenByDescending(x => x.FirstName).ToList();
+                    return newModel;   
+                case 8:                
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Overall).ThenByDescending(x => x.FirstName).ToList();
                     return newModel;
                 default:
                     return newModel;
@@ -74,6 +73,7 @@
         public void CreateFreeAgents(Game game, int gk, int df, int mf, int st)
         {
             var freeAgentsTeam = this.data.VirtualTeams.FirstOrDefault(x => x.IsPlayable == false);
+            RemovePlayers(freeAgentsTeam);
             for (int i = 0; i < gk; i++)
             {
                 FillFreeAgents("Goalkeeper");
@@ -247,5 +247,16 @@
             return players[rnd.Next(0, players.Count)];
         }
         public Player GetPlayerById(int id) => this.data.Players.FirstOrDefault(x => x.Id == id);
+        public Player GetGoalscorer(Game CurrentGame) => this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.Matches).FirstOrDefault(x => x.GameId == CurrentGame.Id);
+        public void RemovePlayers(VirtualTeam freeAgentsTeam)
+        {
+            var allPlayers = this.data.Players.Where(x => x.TeamId == freeAgentsTeam.Id).ToList();
+
+            foreach (var item in allPlayers)
+            {
+                this.data.Players.Remove(item);
+            }
+            this.data.SaveChanges();
+        }
     }
 }
