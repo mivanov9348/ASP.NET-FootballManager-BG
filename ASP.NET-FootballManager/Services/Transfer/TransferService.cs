@@ -21,6 +21,7 @@
             currentPlayer.Team = currentTeam;
             currentPlayer.FreeAgent = false;
             currentPlayer.TeamId = currentTeam.Id;
+
             this.data.SaveChanges();
         }
         public List<Player> GetAllFreeAgents(int gameId, int orderId)

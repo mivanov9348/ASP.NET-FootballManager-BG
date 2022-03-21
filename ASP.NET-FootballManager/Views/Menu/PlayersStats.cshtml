@@ -3,7 +3,7 @@
 <style>
     body {
         background-color: black;
-        font-family:'OLD SPORT 02 ATHLETIC NCV';
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
     }
 
     .players {
@@ -11,7 +11,7 @@
         margin-top: 30px;
         color: white;
         font-size: 20px;
-        margin-left: 90px;
+        margin-left: -20px;
     }
 
         .players table {
@@ -26,9 +26,13 @@
         }
 
     .select {
-        margin-left: 90px;
+        margin-left: 150px;
         margin-top: 30px;
         font-weight: bolder;
+    }
+
+    table, th, td {
+        border: 1px solid;
     }
 
     .Title {
@@ -38,6 +42,16 @@
         font-family: fantasy;
         text-align: center;
     }
+
+    .playerStatsLink {
+        text-decoration: none;
+        color: white;
+    }
+
+        .playerStatsLink:hover {
+            color: blue;
+        }
+
 </style>
 
 @{
@@ -67,50 +81,50 @@
         </select>
 
         <input type="submit" value="Sort" asp-action="PlayersStats" />
-    </form>
 
-    <div class="players">
 
-        <table>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Pos</th>
-                <th scope="col">Age</th>
-                <th scope="col">Nat</th>
-                <th scope="col">Team</th>
-                <th scope="col">City</th>
-                <th scope="col">Att</th>
-                <th scope="col">Def</th>
-                <th scope="col">Speed</th>
-                <th scope="col">OVR</th>
-                <th scope="col">Goals</th>
-                <th scope="col">Clean Sheets</th>
-            </tr>
-            @foreach (var item in @Model.Players)
-            {
-                num++;
+        <div class="players">
+
+            <table>
                 <tr>
-                    <th scope="row">@num</th>
-                    <td>@item.FirstName @item.LastName</td>
-                    <td>@item.Position.Abbr</td>
-                    <td>@item.Age</td>
-                    <td>@item.Nation.Abbr</td>
-                    <td>@item.Team.Name</td>
-                    <td>@item.City.Name</td>
-                    <td>@item.Attack</td>
-                    <td>@item.Defense</td>
-                    <td>@item.Speed</td>
-                    <td>@item.Overall</td>
-                    <td>@item.Goals</td>
-                    <td>@item.CleanSheets</td>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Pos</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Nat</th>
+                    <th scope="col">Team</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Att</th>
+                    <th scope="col">Def</th>
+                    <th scope="col">Speed</th>
+                    <th scope="col">OVR</th>
+                    <th scope="col">Goals</th>
+                    <th scope="col">Clean Sheets</th>
                 </tr>
-            }
-        </table>
+                @foreach (var item in @Model.Players)
+                {
+                    num++;
+                    <tr>
+                        <th scope="row">@num</th>
+                        <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@item.Id">@item.FirstName @item.LastName</a></td>
+                        <td>@item.Position.Abbr</td>
+                        <td>@item.Age</td>
+                        <td>@item.Nation.Abbr</td>
+                        <td>@item.Team.Name</td>
+                        <td>@item.City.Name</td>
+                        <td>@item.Attack</td>
+                        <td>@item.Defense</td>
+                        <td>@item.Speed</td>
+                        <td>@item.Overall</td>
+                        <td>@item.Goals</td>
+                        <td>@item.CleanSheets</td>
+                    </tr>
+                }
+            </table>
 
 
-    </div>
+        </div>
 
-
+    </form>
 
 </body>

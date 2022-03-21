@@ -29,7 +29,7 @@
         .HomeTeam table {
             color: white;
             margin-left: 20px;
-            width:320px;
+            width: 320px;
         }
 
         .HomeTeam label {
@@ -52,14 +52,17 @@
         .AwayTeam table {
             color: white;
             margin-left: 20px;
-            width:320px;
-            height:200px;
+            width: 320px;
+            height: 200px;
         }
 
         .AwayTeam label {
             color: white;
             font-weight: bolder;
         }
+
+
+
 
     .Button {
         float: right;
@@ -72,9 +75,11 @@
             box-shadow: 0px 0px 10px white;
         }
 
-        table{
-            height:150px;
-        }
+    table {
+     
+        height: 150px;
+    }
+
 
     @@keyframes fadeInAnimation {
         from {
@@ -99,7 +104,7 @@
 
         <label>@Model.HomeTeamName</label>
         <hr />
-        <table>
+        <table >
             <tr style="color:red;">
                 <th>Pos</th>
                 <th>Name</th>
@@ -131,7 +136,7 @@
             {
                 <tr>
                     <td>@item.Position.Abbr</td>
-                    <td >@item.FirstName @item.LastName</td>
+                    <td>@item.FirstName @item.LastName</td>
                     <td>@item.Overall</td>
                     <td><hr /></td>
                 </tr>

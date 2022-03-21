@@ -29,6 +29,10 @@
         width: 1300px;
     }
 
+      table, th, td {
+        border: 1px solid;
+    }
+
     .details {
         text-decoration: none;
         color: white;
@@ -46,17 +50,27 @@
             box-shadow: 0px 0px 20px white;
         }
 
+        
+    .playerStatsLink {
+        text-decoration: none;
+        color: white;
+    }
+
+        .playerStatsLink:hover {
+            color: blue;
+        }
+
 </style>
 
 <form method="get">
     <body>
-       
+
         <div class="title">
             <label>TRANSFER MARKET</label>
             <br />
             <input type="submit" class="squadBtn" asp-action="TeamSquad" value="Squad" />
-            <hr style="font-weight:bolder" />
-
+            <p style="margin-top:5px;font-weight:bolder">Budget: @Model.CurrentTeam.Budget coins</p>
+            <hr style="font-weight:bolder;margin-top:-12px" />
             <input type="submit" asp-action="SortPlayers" asp-route-id="0" value="All" />
             <input type="submit" asp-route-action="SortPlayers" asp-route-id="1" value="GK" />
             <input type="submit" asp-route-action="SortPlayers" asp-route-id="2" value="DF" />
@@ -90,7 +104,7 @@
                     {
                         <tr>
                             <td>@item.Position.Abbr</td>
-                            <td>@item.FirstName @item.LastName</td>
+                            <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-controller="Menu" asp-route-id="@item.Id">@item.FirstName @item.LastName</a></td>
                             <td>@item.Nation.Abbr</td>
                             <td>@item.Age</td>
                             <td>@item.Attack</td>

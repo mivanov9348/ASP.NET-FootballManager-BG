@@ -2,58 +2,140 @@
 {
     using ASP.NET_FootballManager.Data;
     using NET_FootballManager.Data.DataModels;
+
     public class InboxService : IInboxService
     {
         private readonly FootballManagerDbContext data;
+
         public InboxService(FootballManagerDbContext data)
         {
             this.data = data;
         }
-
         public void CreateManagerNews(Manager currentManager, Game currentGame)
         {
-            var inbox = new Inbox
+            var messageReview = $"{currentGame.Team.Name} appoint {currentGame.Manager.FirstName} {currentGame.Manager.LastName} as manager!";
+            var fullMessage = $"Welcome to the new club! Season {currentGame.Season} started! Good luck!";
+
+            var newSeasonNews = new Inbox
             {
                 Day = currentGame.Day,
                 Year = currentGame.Year,
                 Game = currentGame,
                 GameId = currentGame.Id,
-                Message = $"{currentGame.Team.Name} appoint {currentManager.FirstName} {currentManager.LastName} as manager!"
+                MessageReview = messageReview,
+                FullMessage = fullMessage
             };
-            AddAndSave(inbox);
-        }
 
+            AddAndSave(newSeasonNews);
+        }
         public void BuyPlayerNews(Player currentPlayer, Game currentGame)
         {
+            var team = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId);
+            var position = this.data.Positions.FirstOrDefault(x => x.Id == currentPlayer.PositionId);
+
+            var messageReview = $"{team.Name} confirm transfer!";
+            var fullMessage = $"{currentPlayer.FirstName} {currentPlayer.LastName} is a new {team.Name} player. {currentPlayer.FirstName} {currentPlayer.LastName} is a  {currentPlayer.Age} years old, play as {position.Name}.";
+
             var inbox = new Inbox
             {
                 Day = currentGame.Day,
                 Year = currentGame.Year,
                 Game = currentGame,
                 GameId = currentGame.Id,
-                Message = $"{currentPlayer.FirstName} {currentPlayer.LastName} is a new {currentGame.Team.Name} player!"
+                MessageReview = messageReview,
+                FullMessage = fullMessage
             };
             AddAndSave(inbox);
         }
-
-        public void MatchFinishedNews(string winnerTeam, string LosingTeam, Game currentGame)
+        public void NewSeasonNews(Game currentGame)
         {
+            var messageReview = $"Season {currentGame.Season} started!";
+            var fullMessage = $"Season {currentGame.Season} started! Good luck!";
 
-            var inbox = new Inbox
+            var newSeasonNews = new Inbox
             {
                 Day = currentGame.Day,
                 Year = currentGame.Year,
                 Game = currentGame,
-                GameId = currentGame.Id
+                GameId = currentGame.Id,
+                MessageReview = messageReview,
+                FullMessage = fullMessage
             };
 
-            AddAndSave(inbox);
+            AddAndSave(newSeasonNews);
         }
+        public void MatchFinishedNews(Game CurrentGame, Fixture currentFixture)
+        {
+            var messageReview = "";
+            var fullMessage = "";
+            var homeTeamName = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixture.HomeTeamId).Name;
+            var awayTeamName = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixture.AwayTeamId).Name;
 
+            if (currentFixture.HomeTeamGoal > currentFixture.AwayTeamGoal)
+            {
+                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} ";
+                fullMessage = $"{homeTeamName} wins over {awayTeamName} with {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} in round {currentFixture.Round}.";
+            }
+            if (currentFixture.HomeTeamGoal < currentFixture.AwayTeamGoal)
+            {
+                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} ";
+                fullMessage = $"{awayTeamName} wins over {homeTeamName} with {currentFixture.AwayTeamGoal}:{currentFixture.HomeTeamGoal} in round {currentFixture.Round}.";
+            }
+            if (currentFixture.HomeTeamGoal == currentFixture.AwayTeamGoal)
+            {
+                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal}";
+                fullMessage = $"{homeTeamName} finished draw with {awayTeamName} in round {currentFixture.Round}.";
+            }
+
+            var matchNews = new Inbox
+            {
+                Day = CurrentGame.Day,
+                Year = CurrentGame.Year,
+                Game = CurrentGame,
+                GameId = CurrentGame.Id,
+                MessageReview = messageReview,
+                FullMessage = fullMessage
+            };
+
+            AddAndSave(matchNews);
+        }
         private void AddAndSave(Inbox inbox)
         {
             this.data.Inboxes.Add(inbox);
             this.data.SaveChanges();
+        }
+        public List<Inbox> GetInboxMessages(int gameId) => this.data.Inboxes.Where(x => x.GameId == gameId).ToList();
+        public Inbox GetFullMessage(int id)
+        {
+            if (id == 0)
+            {
+                return this.data.Inboxes.First();
+            }
+            else
+            {
+                return this.data.Inboxes.FirstOrDefault(x => x.Id == id);
+            }
+
+        }
+        public void SellPlayerNews(int playerId, Game currentGame)
+        {
+            var team = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId);
+            var player = this.data.Players.FirstOrDefault(x => x.Id == playerId);
+            var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);           
+
+            var messageReview = $"{team.Name} sell player!";
+            var fullMessage = $"{team.Name} sell {player.FirstName} {player.LastName}, a {player.Age} years old {position.Name}. {team.Name} will receive {player.Price} coins for the deal!";
+
+            var inbox = new Inbox
+            {
+                Day = currentGame.Day,
+                Year = currentGame.Year,
+                Game = currentGame,
+                GameId = currentGame.Id,
+                MessageReview = messageReview,
+                FullMessage = fullMessage
+            };
+            AddAndSave(inbox);
         }
     }
 }

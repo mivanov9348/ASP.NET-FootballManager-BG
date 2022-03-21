@@ -29,6 +29,39 @@ namespace ASP.NET_FootballManager.Data.Constant
             public const int st = 50;
         }
 
+        public class InboxMessages
+        {
+
+
+
+            public (string messageReview, string fullMessage) MatchNews(string homeTeamName, string awayTeamName, int homeTeamGoal, int awayTeamGoal, int currentRound)
+            {
+                var messageReview = "";
+                var fullMessage = "";
+
+                if (homeTeamGoal > awayTeamGoal)
+                {
+                    messageReview = $"{homeTeamName} - {awayTeamName} {homeTeamGoal}:{awayTeamGoal} ";
+
+                    fullMessage = $"{homeTeamName} wins over {awayTeamName} with {homeTeamGoal}:{awayTeamGoal} in round {currentRound}.";
+                }
+                if (homeTeamGoal < awayTeamGoal)
+                {
+                    messageReview = $"{homeTeamName} - {awayTeamName} {homeTeamGoal}:{awayTeamGoal} ";
+
+                    fullMessage = $"{awayTeamName} wins over {homeTeamName} with {awayTeamGoal}:{homeTeamGoal} in round {currentRound}.";
+                }
+                if (homeTeamGoal == awayTeamGoal)
+                {
+                    messageReview = $"{homeTeamName} - {awayTeamName} {homeTeamGoal}:{awayTeamGoal}";
+
+                    fullMessage = $"{homeTeamName} finished draw with {awayTeamName} in round {currentRound}.";
+                }
+
+                return (messageReview, fullMessage);
+            }
+        }
+
 
 
 

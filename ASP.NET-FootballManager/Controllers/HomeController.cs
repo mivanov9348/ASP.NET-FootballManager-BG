@@ -13,6 +13,7 @@
     using ASP.NET_FootballManager.Services.Player;
     using System.Text;
     using ASP.NET_FootballManager.Services.Inbox;
+    using ASP.NET_FootballManager.Services.Fixture;
 
     public class HomeController : Controller
     {
@@ -25,6 +26,7 @@
         private readonly ILeagueService leagueService;
         private readonly IPlayerService playerService;
         private readonly IInboxService inboxService;
+        private readonly IFixtureService fixtureService;
         private string UserId;
         public HomeController(ILogger<HomeController> logger,
             IGameService gameService,
@@ -34,7 +36,8 @@
             ITeamService teamService,
             ILeagueService leagueService,
             IPlayerService playerService,
-            IInboxService inboxService)
+            IInboxService inboxService,
+            IFixtureService fixtureService)
         {
             _logger = logger;
             this.managerService = managerService;
@@ -45,6 +48,7 @@
             this.leagueService = leagueService;
             this.playerService = playerService;
             this.inboxService = inboxService;
+            this.fixtureService = fixtureService;
         }
         public IActionResult Index()
         {
@@ -75,7 +79,7 @@
             return View(new NewManagerViewModel
             {
                 Nations = commonService.GetAllNations(),
-                Teams = commonService.GetAllTeams()
+                Teams = teamService.GetAllTeams()
             });
         }
         public IActionResult StartGame(NewManagerViewModel ngvm)
@@ -92,13 +96,13 @@
 
             if (isValid)
             {
-                var currentManager = managerService.CreateNewManager(ngvm, UserId);              
+                var currentManager = managerService.CreateNewManager(ngvm, UserId);
                 var currentGame = gameService.CreateNewGame(currentManager);
                 inboxService.CreateManagerNews(currentManager, currentGame);
                 var teams = teamService.GenerateTeams(currentGame).Where(x => x.IsPlayable == true).ToList();
                 teams.ForEach(x => playerService.GeneratePlayers(currentGame, x));
                 teams.ForEach(x => teamService.CalculateTeamOverall(x));
-                leagueService.GenerateFixtures(currentGame);
+                fixtureService.GenerateLeagueFixtures(currentGame);
                 playerService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
                 playerService.CalculatingPlayersPrice();
                 return RedirectToAction("Inbox", "Menu");
@@ -110,10 +114,9 @@
                 return View("NewGame", new NewManagerViewModel
                 {
                     Nations = commonService.GetAllNations(),
-                    Teams = commonService.GetAllTeams()
+                    Teams = teamService.GetAllTeams()
                 });
             }
-
         }
 
         public IActionResult ExistingGame()

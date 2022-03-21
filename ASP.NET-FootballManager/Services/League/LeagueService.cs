@@ -14,64 +14,9 @@
         {
             this.rnd = new Random();
             this.data = data;
-        }
-        public void GenerateFixtures(Game game)
-        {
-            var allLeagues = this.data.Leagues.ToList();
-
-            foreach (var item in allLeagues)
-            {
-                ResetFixtures(item);
-                var currL = this.GetLeague(item.Id);
-                var teams = this.data.VirtualTeams.Where(x => x.LeagueId == currL.Id).ToList();
-                Shuffle(teams);
-                var numOfMatches = teams.Count / 2 * (teams.Count - 1);
-                int numFixt = 0;
-                var round = 1;
-                var day = 1;
-
-                while (numFixt < numOfMatches)
-                {
-                    for (int i = 0; i < teams.Count() / 2; i += 1)
-                    {
-                        var htId = teams[i].Id;
-                        var atId = teams[(teams.Count() - 1 - i)].Id;
-                        var ht = this.data.VirtualTeams.FirstOrDefault(x => x.Id == htId);
-                        var at = this.data.VirtualTeams.FirstOrDefault(x => x.Id == atId);
-
-                        var newFixt = new Fixture
-                        {
-                            GameId = game.Id,
-                            Round = round,
-                            HomeTeam = ht,
-                            AwayTeam = at,
-                            HomeTeamName = ht.Name,
-                            AwayTeamName = at.Name,
-                            HomeTeamGoal = 0,
-                            AwayTeamGoal = 0,
-                            LeagueId = currL.Id,
-                            HomeTeamId = htId,
-                            AwayTeamId = atId,
-                            Year = game.Year,
-                            Day = day
-                        };
-
-                        this.data.Fixtures.Add(newFixt);
-                        numFixt++;
-                    }
-                    round++;
-                    day++;
-                    for (int i = teams.Count - 1; i > 1; i--)
-                    {
-                        VirtualTeam temp = teams[i - 1];
-                        teams[i - 1] = teams[i];
-                        teams[i] = temp;
-                    }
-                }
-            }
-            this.data.SaveChanges();
-        }
-        public List<League> GetAllLeagues() => this.data.Leagues.ToList(); public League GetLeague(int id)
+        }     
+        public List<League> GetAllLeagues() => this.data.Leagues.ToList(); 
+        public League GetLeague(int id)
         {
             if (id == 0)
             {
@@ -94,22 +39,7 @@
                 return this.data.VirtualTeams.Where(x => x.LeagueId == id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
 
             }
-
-        }
-        public void Shuffle(List<VirtualTeam> currl)
-        {
-            Random rnd = new Random();
-            int n = currl.Count;
-
-            for (int i = n - 1; i > 1; i--)
-            {
-                int random = rnd.Next(i + 1);
-
-                var value = currl[random];
-                currl[random] = currl[i];
-                currl[i] = value;
-            }
-        }
+        }      
         public void CalculateOtherMatches(List<Fixture> fixtures, Fixture fixture)
         {
             fixtures.Remove(fixture);
@@ -207,17 +137,7 @@
             }
 
             this.data.SaveChanges();
-        }
-        public void ResetFixtures(League league)
-        {
-            var allFixt = this.data.Fixtures.Where(x => x.LeagueId == league.Id).ToList();
-
-            foreach (var fixt in allFixt)
-            {
-                this.data.Fixtures.Remove(fixt);
-            }
-            this.data.SaveChanges();
-        }
+        }     
         public void PromotedRelegated(Game CurrentGame)
         {
             var leagues = this.data.Leagues.ToList();

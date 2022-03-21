@@ -5,7 +5,9 @@
 
         public int Id { get; set; }
 
-        public string Message { get; set; }
+        public string MessageReview { get; set; }
+
+        public string FullMessage { get; set; }
 
         public int GameId { get; set; }
 

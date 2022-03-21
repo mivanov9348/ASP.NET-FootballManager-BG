@@ -1,4 +1,5 @@
 ﻿using ASP.NET_FootballManager.Services.Common;
+using ASP.NET_FootballManager.Services.Fixture;
 using ASP.NET_FootballManager.Services.Game;
 using ASP.NET_FootballManager.Services.Inbox;
 using ASP.NET_FootballManager.Services.League;
@@ -26,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IMatchService, MatchService>();
             services.AddScoped<ITransferService, TransferService>();
             services.AddScoped<IInboxService, InboxService>();
+            services.AddScoped<IFixtureService, FixtureService>();
 
             return services;
         }

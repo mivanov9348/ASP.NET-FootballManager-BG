@@ -9,7 +9,11 @@
         List<VirtualTeam> CurrentGameTeams(Game currentGame);
         void CalculateTeamOverall(VirtualTeam team);
         TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam);
-
         void ResetTeams(Game currentGame);
+        VirtualTeam GetCurrentTeam(Game currentGame);
+        Team GetOriginalTeam(VirtualTeam currentVirtual);
+        VirtualTeam GetTeamById(int teamId);
+        List<VirtualTeam> GetAllVirtualTeams(Game currentGame);
+        List<Team> GetAllTeams();
     }
 }

@@ -152,10 +152,13 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Day")
                         .HasColumnType("int");
 
+                    b.Property<string>("FullMessage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Message")
+                    b.Property<string>("MessageReview")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Year")

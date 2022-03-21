@@ -12,6 +12,8 @@
     using System.Security.Claims;
     using ASP.NET_FootballManager.Services.Match;
     using ASP.NET_FootballManager.Services.Team;
+    using ASP.NET_FootballManager.Services.Inbox;
+    using ASP.NET_FootballManager.Services.Fixture;
 
     public class GameController : Controller
     {
@@ -22,7 +24,9 @@
         private readonly ILeagueService leagueService;
         private readonly IMatchService matchService;
         private readonly ITeamService teamService;
-        public GameController(ITeamService teamService,IMatchService matchService,ILeagueService leagueService, IPlayerService playerService, ICommonService commonService, IManagerService managerService, IGameService gameService)
+        private readonly IInboxService inboxService;
+        private readonly IFixtureService fixtureService;
+        public GameController(IFixtureService fixtureService, IInboxService inboxService, ITeamService teamService, IMatchService matchService, ILeagueService leagueService, IPlayerService playerService, ICommonService commonService, IManagerService managerService, IGameService gameService)
         {
             this.playerService = playerService;
             this.commonService = commonService;
@@ -31,6 +35,8 @@
             this.leagueService = leagueService;
             this.matchService = matchService;
             this.teamService = teamService;
+            this.inboxService = inboxService;
+            this.fixtureService = fixtureService;
         }
 
         public IActionResult EndSeason(EndSeasonViewModel esvm)
@@ -67,10 +73,11 @@
 
             leagueService.PromotedRelegated(CurrentGame);
             matchService.DeleteMatches(CurrentGame);
-            leagueService.GenerateFixtures(CurrentGame);
+            fixtureService.GenerateLeagueFixtures(CurrentGame);
             playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgents.gk, DataConstants.FreeAgents.df, DataConstants.FreeAgents.mf, DataConstants.FreeAgents.st);
             teamService.ResetTeams(CurrentGame);
             gameService.ResetGame(CurrentGame);
+            inboxService.NewSeasonNews(CurrentGame);
 
             return RedirectToAction("Inbox", "Menu");
         }
@@ -80,7 +87,7 @@
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var currentManager = managerService.GetCurrentManager(userId);
             var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = commonService.GetCurrentTeam(currentGame);
+            var currentTeam = teamService.GetCurrentTeam(currentGame);
             return (userId, currentManager, currentGame, currentTeam);
         }
 

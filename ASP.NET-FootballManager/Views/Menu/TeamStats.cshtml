@@ -18,6 +18,10 @@
         margin-left: 70px;
     }
 
+    table, th, td {
+        border: 1px solid;
+    }
+
     .players {
         text-align: center;
         margin-top: 30px;
@@ -34,6 +38,16 @@
 
         .players th {
             color: peru;
+        }
+
+
+    .playerStatsLink {
+        text-decoration: none;
+        color: white;
+    }
+
+        .playerStatsLink:hover {
+            color: blue;
         }
 
 </style>
@@ -54,6 +68,7 @@
         <p> @Model.CurrentTeam.League.Name</p>
         <hr />
         <p>Titles: @Model.CurrentTeam.Titles</p>
+        <p>Budget: @Model.CurrentTeam.Budget coins</p>
     </div>
 
     <div class="players">
@@ -78,7 +93,7 @@
                 num++;
                 <tr>
                     <th scope="row">@num</th>
-                    <td>@item.FirstName @item.LastName</td>
+                    <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@item.Id">@item.FirstName @item.LastName</a></td>
                     <td>@item.Position.Abbr</td>
                     <td>@item.Age</td>
                     <td>@item.Nation.Abbr</td>

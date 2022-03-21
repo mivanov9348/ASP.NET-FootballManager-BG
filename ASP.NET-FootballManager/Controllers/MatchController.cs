@@ -4,10 +4,12 @@
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
     using ASP.NET_FootballManager.Services.Game;
+    using ASP.NET_FootballManager.Services.Inbox;
     using ASP.NET_FootballManager.Services.League;
     using ASP.NET_FootballManager.Services.Manager;
     using ASP.NET_FootballManager.Services.Match;
     using ASP.NET_FootballManager.Services.Player;
+    using ASP.NET_FootballManager.Services.Team;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
 
@@ -19,12 +21,16 @@
         private readonly IManagerService managerService;
         private readonly ILeagueService leagueService;
         private readonly IPlayerService playerService;
+        private readonly IInboxService inboxService;
+        private readonly ITeamService teamService;
         public MatchController(IMatchService matchService,
         IGameService gameService,
         ICommonService commonService,
         IManagerService managerService,
         ILeagueService leagueService,
-        IPlayerService playerService
+        IPlayerService playerService,
+        IInboxService inboxService,
+        ITeamService teamService
             )
         {
             this.managerService = managerService;
@@ -33,6 +39,8 @@
             this.commonService = commonService;
             this.leagueService = leagueService;
             this.playerService = playerService;
+            this.inboxService = inboxService;
+            this.teamService = teamService;
         }
         public IActionResult MatchDayPreview()
         {
@@ -104,32 +112,33 @@
             var currentMatch = matchService.GetCurrentMatch(id);
             var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var player = new Player();
+            var player = new Player();           
 
             if (currentMatch.Turn == 1)
             {
-                var homeTeam = commonService.GetTeamById(currentFixture.HomeTeamId);
+                var homeTeam = teamService.GetTeamById(currentFixture.HomeTeamId);
                 player = playerService.GetRandomPlayer(homeTeam);
                 matchService.PlayerAction(homeTeam, player, currentMatch);
             }
             else
             {
-                var awayTeam = commonService.GetTeamById(currentFixture.AwayTeamId);
+                var awayTeam = teamService.GetTeamById(currentFixture.AwayTeamId);
                 player = playerService.GetRandomPlayer(awayTeam);
                 matchService.PlayerAction(awayTeam, player, currentMatch);
             }
-
             matchService.Time(currentMatch);
-            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, player);
-
             if (currentMatch.Minute > 90)
             {
                 matchService.EndMatch(currentMatch);
                 leagueService.CheckWinner(currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture);
                 leagueService.CalculateOtherMatches(dayFixtures, currentFixture);
                 gameService.NextDay(CurrentGame);
+                inboxService.MatchFinishedNews(CurrentGame, currentFixture);
                 return RedirectToAction("Results");
             }
+
+            
+            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, player);            
 
             return View("Match", newModel);
         }
@@ -178,7 +187,7 @@
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var currentManager = managerService.GetCurrentManager(userId);
             var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = commonService.GetCurrentTeam(currentGame);
+            var currentTeam = teamService.GetCurrentTeam(currentGame);
             return (userId, currentManager, currentGame, currentTeam);
         }
 

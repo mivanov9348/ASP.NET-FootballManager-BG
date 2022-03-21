@@ -8,8 +8,12 @@
     }
 
     .buttons {
+        text-align: center;
         margin-top: 10px;
-        margin-left: 90px;
+    }
+
+    table, th, td {
+        border: 1px solid;
     }
 
     th {
@@ -20,19 +24,17 @@
         color: darkseagreen;
     }
 
-
     .fixtures {
         text-align: center;
-        margin-top: 30px;
+        margin-top: 20px;
         color: white;
         font-size: 20px;
-        margin-left: 90px;
+        margin-left: 300px;
     }
 
         .fixtures table {
             box-shadow: 0px 0px 10px white;
             border: 5px ridge white;
-            width: 105%;
             table-layout: fixed;
         }
 
@@ -67,18 +69,15 @@
                 {
                     <option value="@item.Id">@item.Name</option>
                 }
-            </select>           
-         
-            <br />
-            <select class="select" asp-for="@Model.CurrentRound">
-                <option style="color:red">Choose Round</option>
-                @for (var i = 1; i <= @Model.AllRounds; i++)
-                {
-                    <option value="@i">@i</option>
-                }
             </select>
-
             <input type="submit" value="Choose" asp-action="Fixtures" />
+            <br />
+            @for (var i = 1; i <= @Model.AllRounds; i++)
+            {
+                <input type="hidden" asp-for="LeagueId">
+                <input asp-action="ChooseRound" asp-route-id="@i" type="submit" value="@i" />
+            }
+
         </form>
     </div>
 
@@ -87,11 +86,11 @@
 
         <table>
             <tr>
-                <th scope="col">Round</th>
-                <th scope="col">HT</th>
-                <th scope="col">HG</th>
-                <th scope="col">AG</th>
-                <th scope="col">AT</th>
+                <th scope="col" style="width:70px">Round</th>
+                <th scope="col" style="width:250px">HT</th>
+                <th scope="col" style="width:100px">HG</th>
+                <th scope="col" style="width:100px">AG</th>
+                <th scope="col" style="width:250px">AT</th>
             </tr>
             @foreach (var item in @Model.Fixtures)
             {

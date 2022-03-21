@@ -42,7 +42,8 @@
                 FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, 0),
                 CurrentTeamPlayers = transferService.GetCurrentTeamPlayers(currentTeam.Id),
                 Nations = commonService.GetAllNations(),
-                Positions = commonService.GetAllPositions()
+                Positions = commonService.GetAllPositions(),
+                CurrentTeam = currentTeam
             });
         }
         public IActionResult SortPlayers(string text, int id)
@@ -54,7 +55,8 @@
                 FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, id),
                 CurrentTeamPlayers = transferService.GetCurrentTeamPlayers(currentTeam.Id),
                 Nations = commonService.GetAllNations(),
-                Positions = commonService.GetAllPositions()
+                Positions = commonService.GetAllPositions(),
+                CurrentTeam = currentTeam
             });
         }
         public IActionResult Buy(int id)
@@ -97,12 +99,14 @@
         public IActionResult Sell(int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+
             bool isValid = validatorService.SellValidator(currentTeam);
             var currPlayers = playerService.GetPlayersByTeam(currentTeam.Id);
 
             if (isValid)
             {
                 transferService.Sell(id);
+                inboxService.SellPlayerNews(id, CurrentGame);
             }
             else
             {
@@ -125,7 +129,7 @@
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var currentManager = managerService.GetCurrentManager(userId);
             var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = commonService.GetCurrentTeam(currentGame);
+            var currentTeam = teamService.GetCurrentTeam(currentGame);
             return (userId, currentManager, currentGame, currentTeam);
         }
     }
