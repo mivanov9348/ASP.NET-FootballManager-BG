@@ -23,7 +23,8 @@
                 Game = game,
                 GameId = game.Id,
                 LeagueId = x.LeagueId,
-                IsPlayable = x.IsPlayable
+                IsPlayable = x.IsPlayable,
+                ImageUrl = x.ImageUrl
 
             }).ToList();
 

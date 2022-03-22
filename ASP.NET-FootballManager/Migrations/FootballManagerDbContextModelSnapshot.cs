@@ -161,6 +161,9 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<string>("MessageReview")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NewsImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
@@ -321,9 +324,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CleanSheets")
-                        .HasColumnType("int");
-
                     b.Property<int>("Defense")
                         .HasColumnType("int");
 
@@ -359,11 +359,17 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Overall")
                         .HasColumnType("int");
 
+                    b.Property<int>("Passes")
+                        .HasColumnType("int");
+
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProfileImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Speed")
                         .HasColumnType("int");
@@ -422,6 +428,9 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int?>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsPlayable")
                         .HasColumnType("bit");
 
@@ -475,6 +484,9 @@ namespace ASP.NET_FootballManager.Migrations
 
                     b.Property<int>("GoalScored")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsPlayable")
                         .HasColumnType("bit");

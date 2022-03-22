@@ -68,23 +68,22 @@
     </div>
 
     <form method="get" class="select">
-        <select asp-for="SortBy">
+        <select asp-for="PlayerSorting">
             <option style="color:red">Sort By</option>
-            <option value="1">Name</option>
-            <option value="2">Team</option>
-            <option value="3">City</option>
-            <option value="4">Goals</option>
-            <option value="5">Clean Sheets</option>
-            <option value="6">Attack</option>
-            <option value="7">Defense</option>
-            <option value="8">Overall</option>
+            <option value="0">Name</option>
+            <option value="1">Team</option>
+            <option value="2">City</option>
+            <option value="3">Goals</option>
+            <option value="4">Passes</option>
+            <option value="5">Attack</option>
+            <option value="6">Defense</option>
+            <option value="7">Overall</option>
+            <option value="8">Price</option>
         </select>
 
         <input type="submit" value="Sort" asp-action="PlayersStats" />
 
-
         <div class="players">
-
             <table>
                 <tr>
                     <th scope="col">#</th>
@@ -99,7 +98,7 @@
                     <th scope="col">Speed</th>
                     <th scope="col">OVR</th>
                     <th scope="col">Goals</th>
-                    <th scope="col">Clean Sheets</th>
+                    <th scope="col">Passes</th>
                 </tr>
                 @foreach (var item in @Model.Players)
                 {
@@ -117,14 +116,10 @@
                         <td>@item.Speed</td>
                         <td>@item.Overall</td>
                         <td>@item.Goals</td>
-                        <td>@item.CleanSheets</td>
+                        <td>@item.Passes</td>
                     </tr>
                 }
             </table>
-
-
         </div>
-
     </form>
-
 </body>

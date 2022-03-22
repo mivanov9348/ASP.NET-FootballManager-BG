@@ -11,6 +11,7 @@ namespace ASP.NET_FootballManager.Data.DataModels
         [Required]
         public string Name { get; set; }
         public bool IsPlayable { get; set; }
+        public string ImageUrl { get; set; }
         public int? CityId { get; set; }
         public City City { get; set; }
         public int? NationId { get; set; }

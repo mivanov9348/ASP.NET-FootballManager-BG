@@ -5,13 +5,10 @@
     {
 
         public int Id { get; set; }
-
         [Required]
         public string FirstName { get; set; }
-
         [Required]
         public string LastName { get; set; }
-
         [Range(16, 35)]
         public int Age { get; set; }
         public int Matches { get; set; }
@@ -20,9 +17,10 @@
         public int Defense { get; set; }
         public int Speed { get; set; }
         public int Overall { get; set; }
-        public int CleanSheets { get; set; }
+        public int Passes { get; set; }
         public int Price { get; set; }
         public bool IsStarting11 { get; set; }
+        public string ProfileImage { get; set; }
         public bool FreeAgent { get; set; }
         public int PositionId { get; set; }
         public Position Position { get; set; }

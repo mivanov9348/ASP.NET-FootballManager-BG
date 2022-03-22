@@ -2,9 +2,11 @@
 {
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Models.Sorting;
+
     public interface IPlayerService
     {
-        PlayersViewModel SortingPlayers(int sortBy);
+        PlayersViewModel SortingPlayers(PlayerSorting s);   
         List<Player> GetPlayersByTeam(int teamId);
         void GeneratePlayers(Game game, VirtualTeam team);
         void CreateFreeAgents(Game game, int gk, int df, int mf, int st);

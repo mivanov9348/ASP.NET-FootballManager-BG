@@ -2,6 +2,7 @@
 {
     using ASP.NET_FootballManager.Data.DataModels;
     using ASP.NET_FootballManager.Models;
+    using ASP.NET_FootballManager.Models.Sorting;
     using ASP.NET_FootballManager.Services.Common;
     using ASP.NET_FootballManager.Services.Fixture;
     using ASP.NET_FootballManager.Services.Game;
@@ -96,7 +97,7 @@
             if (svm.LeagueId == 0)
             {
                 svm.Leagues = leagueService.GetAllLeagues();
-                svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId);
+                 svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId);
             }
             else
             {
@@ -108,7 +109,7 @@
         }
         public IActionResult PlayersStats(PlayersViewModel pvm)
         {
-            pvm = playerService.SortingPlayers(pvm.SortBy);
+            pvm = playerService.SortingPlayers(pvm.PlayerSorting);
             return View(pvm);
         }
         public IActionResult TeamStats()
@@ -135,7 +136,6 @@
             var nation = commonService.GetAllNations().FirstOrDefault(x => x.Id == currentPlayer.NationId);
             var position = commonService.GetAllPositions().FirstOrDefault(x => x.Id == currentPlayer.PositionId);
             var team = teamService.GetAllVirtualTeams(CurrentGame).FirstOrDefault(x => x.Id == currentPlayer.TeamId);
-            var path = "~/Images/Faces/1.png";
 
             return View(new PlayersViewModel
             {
@@ -145,7 +145,7 @@
                 Defense = currentPlayer.Defense,
                 City = currentPlayer.Team.Name,
                 Position = position.Name,
-                ImageUrl = path,
+                ImageUrl = currentPlayer.ProfileImage,
                 Goals = currentPlayer.Goals,
                 Overall = currentPlayer.Overall,
                 Nation = nation.Name,

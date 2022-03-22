@@ -5,6 +5,7 @@
     using ASP.NET_FootballManager.Models;
     using System.Collections.Generic;
     using Data.Constant;
+    using ASP.NET_FootballManager.Models.Sorting;
 
     public class LeagueService : ILeagueService
     {
@@ -14,8 +15,8 @@
         {
             this.rnd = new Random();
             this.data = data;
-        }     
-        public List<League> GetAllLeagues() => this.data.Leagues.ToList(); 
+        }
+        public List<League> GetAllLeagues() => this.data.Leagues.ToList();
         public League GetLeague(int id)
         {
             if (id == 0)
@@ -28,6 +29,17 @@
             }
 
         }
+        public List<VirtualTeam> GetStandingsByLeague2(int id)
+        {
+            if (id == 0)
+            {
+                return this.data.VirtualTeams.Where(x => x.LeagueId == 1).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
+            }
+            else
+            {
+                return this.data.VirtualTeams.Where(x => x.LeagueId == id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
+            }
+        }
         public List<VirtualTeam> GetStandingsByLeague(int id)
         {
             if (id == 0)
@@ -39,7 +51,7 @@
                 return this.data.VirtualTeams.Where(x => x.LeagueId == id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
 
             }
-        }      
+        }
         public void CalculateOtherMatches(List<Fixture> fixtures, Fixture fixture)
         {
             fixtures.Remove(fixture);
@@ -66,14 +78,6 @@
             var htGk = this.data.Players.FirstOrDefault(x => x.PositionId == 1 && x.TeamId == fixt.HomeTeamId);
             var atGk = this.data.Players.FirstOrDefault(x => x.PositionId == 1 && x.TeamId == fixt.AwayTeamId);
 
-            if (homeTeamGoal == 0)
-            {
-                atGk.CleanSheets += 1;
-            }
-            else
-            {
-                htGk.CleanSheets += 1;
-            }
             this.data.SaveChanges();
         }
         private int GetTeamGoal(int teamId)
@@ -137,7 +141,7 @@
             }
 
             this.data.SaveChanges();
-        }     
+        }
         public void PromotedRelegated(Game CurrentGame)
         {
             var leagues = this.data.Leagues.ToList();
@@ -189,6 +193,6 @@
             this.data.SaveChanges();
 
         }
-      
+
     }
 }

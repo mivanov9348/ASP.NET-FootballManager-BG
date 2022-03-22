@@ -43,7 +43,8 @@
                 Game = currentGame,
                 GameId = currentGame.Id,
                 MessageReview = messageReview,
-                FullMessage = fullMessage
+                FullMessage = fullMessage,
+                NewsImage = currentPlayer.ProfileImage
             };
             AddAndSave(inbox);
         }
@@ -70,6 +71,7 @@
             var fullMessage = "";
             var homeTeamName = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixture.HomeTeamId).Name;
             var awayTeamName = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixture.AwayTeamId).Name;
+            var playerTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixture.AwayTeamId || x.Id == currentFixture.HomeTeamId);
 
             if (currentFixture.HomeTeamGoal > currentFixture.AwayTeamGoal)
             {
@@ -94,7 +96,8 @@
                 Game = CurrentGame,
                 GameId = CurrentGame.Id,
                 MessageReview = messageReview,
-                FullMessage = fullMessage
+                FullMessage = fullMessage,
+                NewsImage = playerTeam.ImageUrl
             };
 
             AddAndSave(matchNews);
@@ -121,7 +124,7 @@
         {
             var team = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId);
             var player = this.data.Players.FirstOrDefault(x => x.Id == playerId);
-            var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);           
+            var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
 
             var messageReview = $"{team.Name} sell player!";
             var fullMessage = $"{team.Name} sell {player.FirstName} {player.LastName}, a {player.Age} years old {position.Name}. {team.Name} will receive {player.Price} coins for the deal!";
