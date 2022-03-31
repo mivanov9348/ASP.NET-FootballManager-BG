@@ -25,7 +25,8 @@
         private readonly IFixtureService fixtureService;
         private readonly ITeamService teamService;
         private readonly IInboxService inboxService;
-        public MenuController(IInboxService inboxService, ITeamService teamService, IFixtureService fixtureService, IPlayerService playerService, IGameService gameService, ICommonService commonService, ILeagueService leagueService, IManagerService managerService)
+        private readonly IDayService dayService;
+        public MenuController(IInboxService inboxService, ITeamService teamService, IFixtureService fixtureService, IPlayerService playerService, IGameService gameService, ICommonService commonService, ILeagueService leagueService, IManagerService managerService, IDayService dayService)
         {
             this.commonService = commonService;
             this.leagueService = leagueService;
@@ -35,12 +36,13 @@
             this.fixtureService = fixtureService;
             this.teamService = teamService;
             this.inboxService = inboxService;
+            this.dayService = dayService;
         }
         public IActionResult Inbox(int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var currentInboxMessage = inboxService.GetInboxMessages(CurrentGame.Id).OrderByDescending(x => x.Id).ToList();
-            var currentMessage = inboxService.GetFullMessage(id);
+            var currentMessage = inboxService.GetFullMessage(id, CurrentGame);
 
             return View(new InboxViewModel
             {
@@ -52,7 +54,7 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var currentInboxMessage = inboxService.GetInboxMessages(CurrentGame.Id).OrderByDescending(x => x.Id).ToList();
-            var currentMessage = inboxService.GetFullMessage(id);
+            var currentMessage = inboxService.GetFullMessage(id, CurrentGame);
 
             return View("Inbox", new InboxViewModel
             {
@@ -69,25 +71,43 @@
             var allLeagues = leagueService.GetAllLeagues();
             var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, fvm.CurrentRound);
             var rounds = fixtureService.GetAllRounds(fvm.LeagueId);
+            var currentLeague = leagueService.GetLeague(fvm.LeagueId);
+
             return View(new FixturesViewModel
             {
                 Leagues = allLeagues,
                 Fixtures = currentFixtures,
                 AllRounds = rounds,
-                LeagueId = fvm.LeagueId
+                LeagueId = fvm.LeagueId,
+                CurrentLeagueName = currentLeague.Name.ToUpper()
             });
-        }
+        }      
         public IActionResult ChooseRound(int id, FixturesViewModel fvm)
         {
             var allLeagues = leagueService.GetAllLeagues();
             var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, id);
             var rounds = fixtureService.GetAllRounds(fvm.LeagueId);
+            var currentLeague = leagueService.GetLeague(fvm.LeagueId);
+
             return View("Fixtures", new FixturesViewModel
             {
                 Leagues = allLeagues,
                 Fixtures = currentFixtures,
                 AllRounds = rounds,
-                LeagueId = fvm.LeagueId
+                LeagueId = fvm.LeagueId,
+                CurrentLeagueName = currentLeague.Name.ToUpper()
+            });
+        }
+        public IActionResult Calendar()
+        {
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            var days = dayService.GetAllDays(CurrentGame);
+            var year = CurrentGame.Year;
+
+            return View(new CalendarViewModel
+            {
+                Days = days,
+                Year = year
             });
         }
         public IActionResult Standings(StandingsViewModel svm)
@@ -97,7 +117,7 @@
             if (svm.LeagueId == 0)
             {
                 svm.Leagues = leagueService.GetAllLeagues();
-                 svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId);
+                svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId);
             }
             else
             {
@@ -107,9 +127,9 @@
 
             return View(svm);
         }
-        public IActionResult PlayersStats(PlayersViewModel pvm)
+        public IActionResult PlayersStats(PlayersViewModel pvm, int id)
         {
-            pvm = playerService.SortingPlayers(pvm.PlayerSorting);
+            pvm = playerService.SortingPlayers(pvm.PlayerSorting, id);
             return View(pvm);
         }
         public IActionResult TeamStats()

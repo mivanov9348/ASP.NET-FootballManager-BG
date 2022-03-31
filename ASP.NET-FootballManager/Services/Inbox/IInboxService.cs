@@ -9,6 +9,6 @@
         void NewSeasonNews(Game currentGame);
         void MatchFinishedNews(Game CurrentGame, Fixture currentFixture);
         List<Inbox> GetInboxMessages(int managerId);
-        Inbox GetFullMessage(int id);
+        Inbox GetFullMessage(int id, Game CurrentGame);
     }
 }

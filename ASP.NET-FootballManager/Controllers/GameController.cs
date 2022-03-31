@@ -14,6 +14,8 @@
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Inbox;
     using ASP.NET_FootballManager.Services.Fixture;
+    using ASP.NET_FootballManager.Services.EuroCup;
+    using ASP.NET_FootballManager.Services.Cup;
 
     public class GameController : Controller
     {
@@ -26,7 +28,10 @@
         private readonly ITeamService teamService;
         private readonly IInboxService inboxService;
         private readonly IFixtureService fixtureService;
-        public GameController(IFixtureService fixtureService, IInboxService inboxService, ITeamService teamService, IMatchService matchService, ILeagueService leagueService, IPlayerService playerService, ICommonService commonService, IManagerService managerService, IGameService gameService)
+        private readonly ICupService cupService;
+        private readonly IEuroCupService euroCupService;
+        private readonly IDayService dayService;
+        public GameController(IDayService dayService,ICupService cupService, IEuroCupService euroCupService, IFixtureService fixtureService, IInboxService inboxService, ITeamService teamService, IMatchService matchService, ILeagueService leagueService, IPlayerService playerService, ICommonService commonService, IManagerService managerService, IGameService gameService)
         {
             this.playerService = playerService;
             this.commonService = commonService;
@@ -37,8 +42,57 @@
             this.teamService = teamService;
             this.inboxService = inboxService;
             this.fixtureService = fixtureService;
+            this.euroCupService = euroCupService;
+            this.cupService = cupService;
+            this.dayService= dayService;
         }
+        public IActionResult SeasonStats(EndSeasonViewModel esvm)
+        {
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            var goalScorer = playerService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
+            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId);
+            var league = leagueService.GetLeague(esvm.LeagueId);
+            var euroCup = euroCupService.GetEuropeanCup(esvm.EuroCupId);
+            var cup = cupService.GetCurrentCup();
+            var cupWinner = cupService.GetWinner(CurrentGame);
+            var championsCupWinner = euroCupService.GetChampionsCupWinner(CurrentGame);
+            var euroCupWinner = euroCupService.GetEuroCupWinner(CurrentGame);
 
+            return View(new EndSeasonViewModel
+            {
+                GoalScorer = goalScorer,
+                Leagues = leagueService.GetAllLeagues(),
+                EuroCups = euroCupService.AllEuroCups(),
+                EuroCup = euroCup,
+                Teams = teams,
+                League = league,
+                Cup = cup,
+                CupWinner = cupWinner,
+                EuroCupWinner = euroCupWinner,
+                ChampionsCupWinner = championsCupWinner
+            });
+        }
+        public IActionResult NewSeason()
+        {
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+
+            leagueService.PromotedRelegated(CurrentGame);
+            gameService.ResetGame(CurrentGame);
+            dayService.CalculateDays(CurrentGame);
+            fixtureService.AddFixtureToDay(CurrentGame);
+            matchService.DeleteMatches(CurrentGame);
+            fixtureService.DeleteFixtures(CurrentGame);
+            fixtureService.GenerateLeagueFixtures(CurrentGame);
+            cupService.GenerateCupParticipants(CurrentGame);
+            fixtureService.GenerateCupFixtures(CurrentGame);
+            euroCupService.DistributionEuroParticipant(CurrentGame);
+            fixtureService.GenerateEuroFixtures(CurrentGame);
+            playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgents.gk, DataConstants.FreeAgents.df, DataConstants.FreeAgents.mf, DataConstants.FreeAgents.st);
+            teamService.ResetTeams(CurrentGame);           
+            inboxService.NewSeasonNews(CurrentGame);
+
+            return RedirectToAction("Inbox", "Menu");
+        }
         public IActionResult EndSeason(EndSeasonViewModel esvm)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
@@ -50,38 +104,6 @@
                 Teams = teams
             });
         }
-
-        public IActionResult SeasonStats(EndSeasonViewModel esvm)
-        {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var goalScorer = playerService.GetGoalscorer(CurrentGame);
-            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId);
-            var league = leagueService.GetLeague(esvm.LeagueId);
-
-            return View(new EndSeasonViewModel
-            {
-                GoalScorer = goalScorer,
-                Leagues = leagueService.GetAllLeagues(),
-                Teams = teams,
-                League = league
-            });
-        }
-
-        public IActionResult NewSeason()
-        {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-
-            leagueService.PromotedRelegated(CurrentGame);
-            matchService.DeleteMatches(CurrentGame);
-            fixtureService.GenerateLeagueFixtures(CurrentGame);
-            playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgents.gk, DataConstants.FreeAgents.df, DataConstants.FreeAgents.mf, DataConstants.FreeAgents.st);
-            teamService.ResetTeams(CurrentGame);
-            gameService.ResetGame(CurrentGame);
-            inboxService.NewSeasonNews(CurrentGame);
-
-            return RedirectToAction("Inbox", "Menu");
-        }
-
         private (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

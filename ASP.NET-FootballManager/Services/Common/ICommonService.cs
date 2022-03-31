@@ -7,7 +7,7 @@
         List<Position> GetAllPositions();
         List<City> GetAllCities();
         List<Player> GetAllPlayers();
-        List<Game> GetAllUsersSaves(int managerId);                  
-      
+        List<Game> GetAllUsersSaves(int managerId);      
+
     }
 }

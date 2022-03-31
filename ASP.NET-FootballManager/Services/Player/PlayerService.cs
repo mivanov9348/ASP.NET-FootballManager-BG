@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Player
 {
     using ASP.NET_FootballManager.Data;
+    using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Data.Database.ImportDto;
     using ASP.NET_FootballManager.Data.DataModels;
     using ASP.NET_FootballManager.Models;
@@ -16,14 +17,13 @@
         {
             this.rnd = new Random();
             this.data = data;
-        }        
+        }
         public void GeneratePlayers(Game game, VirtualTeam team)
         {
-            (int goalkeepers, int defenders, int midfielders, int forwards) = GetCountForPosition();
-            FillPlayersByPosition(goalkeepers, game, team, "Goalkeeper");
-            FillPlayersByPosition(defenders, game, team, "Defender");
-            FillPlayersByPosition(midfielders, game, team, "Midlefielder");
-            FillPlayersByPosition(forwards, game, team, "Striker");
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.gk, game, team, "Goalkeeper");
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.df, game, team, "Defender");
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.mf, game, team, "Midlefielder");
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.st, game, team, "Striker");
         }
         public void CreateFreeAgents(Game game, int gk, int df, int mf, int st)
         {
@@ -76,25 +76,11 @@
                     IsStarting11 = true,
                     FreeAgent = true
                 };
+                GetProfileImage(newPlayer);
                 this.data.Players.Add(newPlayer);
                 this.data.SaveChanges();
             }
 
-        }
-        public void CalculatingPlayersPrice()
-        {
-            var allTeams = this.data.Players.ToList();
-            allTeams.ForEach(x => x.Price = x.Overall * 3);
-            this.data.SaveChanges();
-
-        }
-        private (int goalkeepers, int defenders, int midfielders, int forwards) GetCountForPosition()
-        {
-            var goalkeepers = 1;
-            var defenders = 4;
-            var midfielders = 4;
-            var forwards = 2;
-            return (goalkeepers, defenders, midfielders, forwards);
         }
         private void FillPlayersByPosition(int count, Game game, VirtualTeam team, string position)
         {
@@ -133,6 +119,120 @@
                 this.data.Players.Add(newPlayer);
                 this.data.SaveChanges();
             }
+        }
+        public void Substitution(int playerId, string action)
+        {
+            var currentPlayer = this.data.Players.FirstOrDefault(x => x.Id == playerId);
+            switch (action)
+            {
+                case "Add":
+                    currentPlayer.IsStarting11 = true;
+                    break;
+                case "Remove":
+                    currentPlayer.IsStarting11 = false;
+                    break;
+                default:
+                    break;
+            }
+            this.data.SaveChanges();
+        }
+        public void CalculatingPlayersPrice()
+        {
+            var allTeams = this.data.Players.ToList();
+            allTeams.ForEach(x => x.Price = x.Overall * 3);
+            this.data.SaveChanges();
+        }
+        public Player GetRandomPlayer(VirtualTeam team)
+        {
+            var players = this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList();
+            return players[rnd.Next(0, players.Count)];
+        }
+        public List<Player> GetPlayersByTeam(int teamId) => this.data.Players.Where(x => x.TeamId == teamId).ToList();
+        public Player GetPlayerById(int id) => this.data.Players.FirstOrDefault(x => x.Id == id);
+        public Player GetLeagueGoalscorer(Game CurrentGame, int leagueId)
+        {
+
+            if (leagueId == 0)
+            {
+                leagueId = this.data.Leagues.FirstOrDefault(x => x.Level == 1).Id;
+            }
+
+            var currentComp = this.data.Leagues.FirstOrDefault(x => x.Id == leagueId);
+            return this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.Matches).FirstOrDefault(x => x.GameId == CurrentGame.Id && x.LeagueId == leagueId);
+        }
+        public List<Player> GetStartingEleven(int teamId) => this.data.Players.Where(x => x.IsStarting11 == true && x.TeamId == teamId).ToList();
+        public List<Player> GetSubstitutes(int teamId) => this.data.Players.Where(x => x.IsStarting11 == false && x.TeamId == teamId).ToList();
+        public void RemovePlayers(VirtualTeam freeAgentsTeam)
+        {
+            var allPlayers = this.data.Players.Where(x => x.TeamId == freeAgentsTeam.Id).ToList();
+
+            foreach (var item in allPlayers)
+            {
+                this.data.Players.Remove(item);
+            }
+            this.data.SaveChanges();
+        }
+        public PlayersViewModel SortingPlayers(PlayerSorting sortBy, int id)
+        {
+            var allPlayers = new List<Player>();
+
+            switch (id)
+            {
+                case 0:
+                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true && x.Team.LeagueId != null).ToList();
+                    break;
+                case 1:
+                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true && x.Team.LeagueId != null).ToList();
+                    break;
+                case 2:
+                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == false && x.Team.Name != "FreeAgents").ToList();
+                    break;
+            }
+
+            var newModel = new PlayersViewModel
+            {
+                Nations = this.data.Nations.ToList(),
+                Cities = this.data.Cities.ToList(),
+                Players = allPlayers,
+                Positions = this.data.Positions.ToList(),
+                Teams = this.data.VirtualTeams.ToList(),
+            };
+
+            switch (sortBy)
+            {
+                case PlayerSorting.FirstName:
+                    newModel.Players = allPlayers.OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList();
+                    break;
+                case PlayerSorting.TeamName:
+                    newModel.Players = allPlayers.OrderBy(x => x.Team.Name).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerSorting.CityName:
+                    newModel.Players = allPlayers.OrderBy(x => x.City.Name).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerSorting.Goals:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Goals).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerSorting.Passes:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Passes).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerSorting.Attack:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Attack).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerSorting.Defense:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Defense).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerSorting.Overall:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Overall).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerSorting.Price:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Price).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                default:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.Team.Name).ToList();
+                    break;
+            }
+
+            return newModel;
         }
         private (int defense, int attack, int speed, int overall) CalculatePlayerAttributes(string position)
         {
@@ -187,90 +287,6 @@
             var randomFileNum = rnd.Next(1, filesCount);
             player.ProfileImage = $"{randomFileNum}.png";
             this.data.SaveChanges();
-        }
-        public void Substitution(int playerId, string action)
-        {
-            var currentPlayer = this.data.Players.FirstOrDefault(x => x.Id == playerId);
-            switch (action)
-            {
-                case "Add":
-                    currentPlayer.IsStarting11 = true;
-                    break;
-                case "Remove":
-                    currentPlayer.IsStarting11 = false;
-                    break;
-                default:
-                    break;
-            }
-            this.data.SaveChanges();
-        }
-        public Player GetRandomPlayer(VirtualTeam team)
-        {
-            var players = this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList();
-            return players[rnd.Next(0, players.Count)];
-        }
-        public List<Player> GetPlayersByTeam(int teamId) => this.data.Players.Where(x => x.TeamId == teamId).ToList();
-        public Player GetPlayerById(int id) => this.data.Players.FirstOrDefault(x => x.Id == id);
-        public Player GetGoalscorer(Game CurrentGame) => this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.Matches).FirstOrDefault(x => x.GameId == CurrentGame.Id);
-        public List<Player> GetStartingEleven(int teamId) => this.data.Players.Where(x => x.IsStarting11 == true && x.TeamId == teamId).ToList();
-        public List<Player> GetSubstitutes(int teamId) => this.data.Players.Where(x => x.IsStarting11 == false && x.TeamId == teamId).ToList();
-        public void RemovePlayers(VirtualTeam freeAgentsTeam)
-        {
-            var allPlayers = this.data.Players.Where(x => x.TeamId == freeAgentsTeam.Id).ToList();
-
-            foreach (var item in allPlayers)
-            {
-                this.data.Players.Remove(item);
-            }
-            this.data.SaveChanges();
-        }
-        public PlayersViewModel SortingPlayers(PlayerSorting sortBy)
-        {
-            var allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true).ToList();
-            var newModel = new PlayersViewModel
-            {
-                Nations = this.data.Nations.ToList(),
-                Cities = this.data.Cities.ToList(),
-                Players = allPlayers,
-                Positions = this.data.Positions.ToList(),
-                Teams = this.data.VirtualTeams.ToList(),
-            };
-
-            switch (sortBy)
-            {
-                case PlayerSorting.FirstName:
-                    newModel.Players = allPlayers.OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList();
-                    break;
-                case PlayerSorting.TeamName:
-                    newModel.Players = allPlayers.OrderBy(x => x.Team.Name).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.CityName:
-                    newModel.Players = allPlayers.OrderBy(x => x.City.Name).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Goals:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Goals).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Passes:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Passes).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Attack:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Attack).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Defense:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Defense).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Overall:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Overall).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Price:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Price).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                default:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Team.Name).ToList();
-                    break;
-            }   
-
-            return newModel;
         }
     }
 }

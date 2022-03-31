@@ -25,7 +25,16 @@
                                                     || x.AwayTeamId == currentTeam.Id);
 
         }
-        public List<Fixture> GetFixturesByDay(Game CurrentGame) => this.data.Fixtures.Where(x => x.Day == CurrentGame.Day && x.GameId == CurrentGame.Id).ToList();
+        public List<Fixture> GetFixturesByDay(Game CurrentGame)
+        {
+            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == CurrentGame.Day && x.GameId == CurrentGame.Id);
+            if (currentDay == null)
+            {
+                return null;
+            }
+            return this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.DayId == currentDay.Id).ToList();
+
+        }
         public List<Player> GetStarting11(int teamId) => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList();
         public (bool isValid, string error) ValidateTactics(VirtualTeam currentTeam)
         {
@@ -100,6 +109,7 @@
                 if (attackNum > defNum)
                 {
                     match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) Pass the ball!";
+                    player.Passes += 1;
                 }
             }
 
@@ -108,6 +118,7 @@
                 if (defNum > attackNum)
                 {
                     match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball!";
+                    player.Passes += 1;
                 }
 
                 if (defNum == attackNum)
@@ -129,6 +140,7 @@
                 if (defNum > attackNum)
                 {
                     match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball";
+                    player.Passes += 1;
                 }
                 if (attackNum == defNum)
                 {
@@ -154,6 +166,7 @@
                 if (attackNum == defNum)
                 {
                     match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball!";
+                    player.Passes += 1;
                 }
                 if (attackNum > defNum)
                 {
@@ -219,8 +232,11 @@
             match.Minute = 0;
             this.data.SaveChanges();
         }
-        public List<Fixture> GetResults(Game currentGame) => this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.Day == currentGame.Day - 1).ToList();
-
+        public List<Fixture> GetResults(Game currentGame)
+        {
+            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentGame.Day - 1 && x.GameId == currentGame.Id);
+            return this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.DayId == currentDay.Id).ToList();
+        }
         public void DeleteMatches(Game CurrentGame)
         {
             var matches = this.data.Matches.Where(x => x.GameId == CurrentGame.Id);

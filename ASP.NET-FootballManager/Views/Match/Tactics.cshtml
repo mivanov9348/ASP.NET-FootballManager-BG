@@ -13,7 +13,13 @@
     }
 
     .startingEleven {
-        margin-left: 330px;
+        margin-left: 20px;
+       
+    }
+
+    .table-info{
+       background-color:black;
+       
     }
 
     label {
@@ -23,7 +29,7 @@
         font-size: 50px;
     }
 
-     table, th, td {
+    table, th, td {
         border: 1px solid;
     }
 
@@ -44,7 +50,7 @@
         <hr style="color:white" />
         <input type="submit" style="float:right" value="Next" asp-action="ValidTactics" />
         <h5 style="color:white;font-weight:bolder;font-size:30px;margin-left:80px">Starting 11</h5>
-        <table class="table table-striped w-auto startingEleven">
+        <table class="table startingEleven">
             <thead>
                 <tr style="color:white">
                     <th>Pos</th>
@@ -69,14 +75,14 @@
                         <td style="color:red">@item.Overall</td>
                         <td>@item.Goals</td>
                         <td>@item.Passes</td>
-                        <td><input type="submit" asp-action="RemoveFromStartingEleven" class="RemoveBtn" value="Remove" asp-route-id="@item.Id" /></td>
+                        <td><input type="submit" asp-action="RemoveFromStartingEleven" class="RemoveBtn" value="CHANGE" asp-route-id="@item.Id" /></td>
                     </tr>
                 }
 
             </tbody>
         </table>
         <hr />
-         <h5 style="color:white;font-weight:bolder;font-size:30px;margin-left:80px">Substitutions</h5>
+        <h5 style="color:white;font-weight:bolder;font-size:30px;margin-left:80px">Substitutions</h5>
         <table class="table table-striped w-auto Subs">
             <thead>
                 <tr style="color:white">

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ASP.NET_FootballManager.Migrations
 {
-    public partial class AddDb : Migration
+    public partial class AddDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,21 @@ namespace ASP.NET_FootballManager.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EuropeanCups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Participants = table.Column<int>(type: "int", nullable: false),
+                    Rounds = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EuropeanCups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,6 +218,28 @@ namespace ASP.NET_FootballManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Participants = table.Column<int>(type: "int", nullable: false),
+                    Rounds = table.Column<int>(type: "int", nullable: false),
+                    NationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cups_Nations_NationId",
+                        column: x => x.NationId,
+                        principalTable: "Nations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Leagues",
                 columns: table => new
                 {
@@ -235,7 +272,9 @@ namespace ASP.NET_FootballManager.Migrations
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CityId = table.Column<int>(type: "int", nullable: true),
                     NationId = table.Column<int>(type: "int", nullable: true),
-                    LeagueId = table.Column<int>(type: "int", nullable: true)
+                    LeagueId = table.Column<int>(type: "int", nullable: true),
+                    CupId = table.Column<int>(type: "int", nullable: true),
+                    EuropeanCupId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -245,6 +284,18 @@ namespace ASP.NET_FootballManager.Migrations
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Teams_Cups_CupId",
+                        column: x => x.CupId,
+                        principalTable: "Cups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Teams_EuropeanCups_EuropeanCupId",
+                        column: x => x.EuropeanCupId,
+                        principalTable: "EuropeanCups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Teams_Leagues_LeagueId",
                         column: x => x.LeagueId,
@@ -333,6 +384,32 @@ namespace ASP.NET_FootballManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Days",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    CurrentDay = table.Column<int>(type: "int", nullable: false),
+                    isMatchDay = table.Column<bool>(type: "bit", nullable: false),
+                    isEuroCupDay = table.Column<bool>(type: "bit", nullable: false),
+                    isCupDay = table.Column<bool>(type: "bit", nullable: false),
+                    isLeagueDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsPlayed = table.Column<bool>(type: "bit", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Days", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Days_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Inboxes",
                 columns: table => new
                 {
@@ -340,6 +417,7 @@ namespace ASP.NET_FootballManager.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MessageReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NewsImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GameId = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false)
@@ -422,16 +500,35 @@ namespace ASP.NET_FootballManager.Migrations
                     HomeTeamId = table.Column<int>(type: "int", nullable: false),
                     AwayTeamId = table.Column<int>(type: "int", nullable: false),
                     LeagueId = table.Column<int>(type: "int", nullable: true),
+                    DayId = table.Column<int>(type: "int", nullable: true),
+                    CupId = table.Column<int>(type: "int", nullable: true),
+                    EuropeanCupId = table.Column<int>(type: "int", nullable: true),
                     HomeTeamGoal = table.Column<int>(type: "int", nullable: false),
                     AwayTeamGoal = table.Column<int>(type: "int", nullable: false),
                     IsPlayed = table.Column<bool>(type: "bit", nullable: false),
-                    WinnerTeamId = table.Column<int>(type: "int", nullable: false),
-                    Day = table.Column<int>(type: "int", nullable: false),
-                    Year = table.Column<int>(type: "int", nullable: false)
+                    WinnerTeamId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fixtures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Fixtures_Cups_CupId",
+                        column: x => x.CupId,
+                        principalTable: "Cups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Fixtures_Days_DayId",
+                        column: x => x.DayId,
+                        principalTable: "Days",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Fixtures_EuropeanCups_EuropeanCupId",
+                        column: x => x.EuropeanCupId,
+                        principalTable: "EuropeanCups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Fixtures_Leagues_LeagueId",
                         column: x => x.LeagueId,
@@ -470,6 +567,7 @@ namespace ASP.NET_FootballManager.Migrations
                     Passes = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     IsStarting11 = table.Column<bool>(type: "bit", nullable: false),
+                    ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FreeAgent = table.Column<bool>(type: "bit", nullable: false),
                     PositionId = table.Column<int>(type: "int", nullable: false),
                     NationId = table.Column<int>(type: "int", nullable: false),
@@ -594,9 +692,34 @@ namespace ASP.NET_FootballManager.Migrations
                 column: "NationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cups_NationId",
+                table: "Cups",
+                column: "NationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Days_GameId",
+                table: "Days",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Fixtures_AwayTeamId",
                 table: "Fixtures",
                 column: "AwayTeamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fixtures_CupId",
+                table: "Fixtures",
+                column: "CupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fixtures_DayId",
+                table: "Fixtures",
+                column: "DayId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fixtures_EuropeanCupId",
+                table: "Fixtures",
+                column: "EuropeanCupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Fixtures_HomeTeamId",
@@ -695,6 +818,16 @@ namespace ASP.NET_FootballManager.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Teams_CupId",
+                table: "Teams",
+                column: "CupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_EuropeanCupId",
+                table: "Teams",
+                column: "EuropeanCupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Teams_LeagueId",
                 table: "Teams",
                 column: "LeagueId");
@@ -761,6 +894,9 @@ namespace ASP.NET_FootballManager.Migrations
                 name: "Positions");
 
             migrationBuilder.DropTable(
+                name: "Days");
+
+            migrationBuilder.DropTable(
                 name: "VirtualTeams");
 
             migrationBuilder.DropTable(
@@ -777,6 +913,12 @@ namespace ASP.NET_FootballManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Cups");
+
+            migrationBuilder.DropTable(
+                name: "EuropeanCups");
 
             migrationBuilder.DropTable(
                 name: "Leagues");

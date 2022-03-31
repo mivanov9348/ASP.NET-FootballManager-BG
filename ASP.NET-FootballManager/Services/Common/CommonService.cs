@@ -9,12 +9,11 @@
         {
             this.data = data;
         }
-
         public List<City> GetAllCities() => this.data.Cities.ToList();
         public List<Nation> GetAllNations() => this.data.Nations.ToList();
         public List<Player> GetAllPlayers() => this.data.Players.ToList();
         public List<Position> GetAllPositions() => this.data.Positions.ToList();
         public List<Game> GetAllUsersSaves(int managerId) => this.data.Games.Where(x => x.ManagerId == managerId).ToList();
-     
+      
     }
 }

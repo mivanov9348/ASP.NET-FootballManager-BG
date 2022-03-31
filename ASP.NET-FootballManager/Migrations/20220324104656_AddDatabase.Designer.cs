@@ -4,6 +4,7 @@ using ASP.NET_FootballManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_FootballManager.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220324104656_AddDatabase")]
+    partial class AddDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,9 +129,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Participants")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rank")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rounds")
                         .HasColumnType("int");
 
@@ -153,9 +152,6 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AwayTeamName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompetitionName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CupId")
@@ -215,9 +211,6 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CupRound")
-                        .HasColumnType("int");
 
                     b.Property<int>("Day")
                         .HasColumnType("int");
@@ -545,12 +538,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsCupParticipant")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEuroParticipant")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsPlayable")
                         .HasColumnType("bit");
 
@@ -591,22 +578,10 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Budget")
                         .HasColumnType("int");
 
-                    b.Property<int>("ChampionsCup")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cups")
-                        .HasColumnType("int");
-
                     b.Property<int>("Draws")
                         .HasColumnType("int");
 
                     b.Property<int>("EuroCups")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EuropeanCupId")
                         .HasColumnType("int");
 
                     b.Property<int>("GameId")
@@ -623,12 +598,6 @@ namespace ASP.NET_FootballManager.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCupParticipant")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEuroParticipant")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPlayable")
                         .HasColumnType("bit");
@@ -664,10 +633,6 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CupId");
-
-                    b.HasIndex("EuropeanCupId");
 
                     b.HasIndex("GameId");
 
@@ -1141,16 +1106,6 @@ namespace ASP.NET_FootballManager.Migrations
 
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Cup", "Cup")
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("CupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.EuropeanCup", "EuropeanCup")
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("EuropeanCupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ASP.NET_FootballManager.Data.DataModels.Game", "Game")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("GameId")
@@ -1171,10 +1126,6 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Cup");
-
-                    b.Navigation("EuropeanCup");
 
                     b.Navigation("Game");
 
@@ -1246,8 +1197,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Navigation("Fixtures");
 
                     b.Navigation("Teams");
-
-                    b.Navigation("VirtualTeams");
                 });
 
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Day", b =>
@@ -1260,8 +1209,6 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Navigation("Fixtures");
 
                     b.Navigation("Teams");
-
-                    b.Navigation("VirtualTeams");
                 });
 
             modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Fixture", b =>

@@ -9,11 +9,11 @@
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
     using ASP.NET_FootballManager.Services.Team;
-    using ASP.NET_FootballManager.Services.League;
     using ASP.NET_FootballManager.Services.Player;
-    using System.Text;
     using ASP.NET_FootballManager.Services.Inbox;
     using ASP.NET_FootballManager.Services.Fixture;
+    using ASP.NET_FootballManager.Services.EuroCup;
+    using ASP.NET_FootballManager.Services.Cup;
 
     public class HomeController : Controller
     {
@@ -23,10 +23,12 @@
         private readonly IManagerService managerService;
         private readonly IGameService gameService;
         private readonly ITeamService teamService;
-        private readonly ILeagueService leagueService;
         private readonly IPlayerService playerService;
         private readonly IInboxService inboxService;
         private readonly IFixtureService fixtureService;
+        private readonly IDayService dayService;
+        private readonly IEuroCupService euroCupService;
+        private readonly ICupService cupService;
         private string UserId;
         public HomeController(ILogger<HomeController> logger,
             IGameService gameService,
@@ -34,10 +36,12 @@
             ICommonService commonService,
             IValidationService validationService,
             ITeamService teamService,
-            ILeagueService leagueService,
             IPlayerService playerService,
             IInboxService inboxService,
-            IFixtureService fixtureService)
+            IFixtureService fixtureService,
+            IDayService dayService,
+            IEuroCupService euroCupService,
+            ICupService cupService)
         {
             _logger = logger;
             this.managerService = managerService;
@@ -45,10 +49,12 @@
             this.validationService = validationService;
             this.gameService = gameService;
             this.teamService = teamService;
-            this.leagueService = leagueService;
             this.playerService = playerService;
             this.inboxService = inboxService;
             this.fixtureService = fixtureService;
+            this.dayService = dayService;
+            this.euroCupService = euroCupService;
+            this.cupService = cupService;
         }
         public IActionResult Index()
         {
@@ -79,7 +85,7 @@
             return View(new NewManagerViewModel
             {
                 Nations = commonService.GetAllNations(),
-                Teams = teamService.GetAllTeams()
+                Teams = teamService.GetAllPlayableTeams()
             });
         }
         public IActionResult StartGame(NewManagerViewModel ngvm)
@@ -96,17 +102,30 @@
 
             if (isValid)
             {
+                //CreateManager
                 var currentManager = managerService.CreateNewManager(ngvm, UserId);
                 var currentGame = gameService.CreateNewGame(currentManager);
+                //CalculateDaysForSeason
+                dayService.CalculateDays(currentGame);
+                fixtureService.AddFixtureToDay(currentGame);
+                //NewManagerNews
                 inboxService.CreateManagerNews(currentManager, currentGame);
-                var teams = teamService.GenerateTeams(currentGame).Where(x => x.IsPlayable == true).ToList();
+                //GenerateTeamsForGame
+                var teams = teamService.GenerateTeams(currentGame).ToList();
+                //GenerateCup
+                cupService.GenerateCupParticipants(currentGame);
+                fixtureService.GenerateCupFixtures(currentGame);
+                //GenerateEuroCup
+                euroCupService.DistributionEuroParticipant(currentGame);
+                fixtureService.GenerateEuroFixtures(currentGame);
+                //GeneratePlayersAndTeamOverall
                 teams.ForEach(x => playerService.GeneratePlayers(currentGame, x));
-                teams.ForEach(x => teamService.CalculateTeamOverall(x));
-                fixtureService.GenerateLeagueFixtures(currentGame);
                 playerService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
                 playerService.CalculatingPlayersPrice();
+                teams.ForEach(x => teamService.CalculateTeamOverall(x));
+                //GenerateLeagueFixtures
+                fixtureService.GenerateLeagueFixtures(currentGame);          
                 return RedirectToAction("Inbox", "Menu");
-
             }
             else
             {
@@ -118,12 +137,10 @@
                 });
             }
         }
-
         public IActionResult ExistingGame()
         {
             return View();
         }
-
         private void CurrentUser()
         {
             if (this.User.Identity.IsAuthenticated != false)
@@ -137,7 +154,6 @@
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
         public IActionResult GameErrors()
         {
             return View();

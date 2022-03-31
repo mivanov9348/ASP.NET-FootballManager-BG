@@ -17,5 +17,6 @@
         public List<Manager> Managers { get; set; } = new List<Manager>();
         public List<Player> Players { get; set; } = new List<Player>();
         public List<League> Leagues { get; set; } = new List<League>();
+        public List<Cup> Cups { get; set; } = new List<Cup>();       
     }
 }

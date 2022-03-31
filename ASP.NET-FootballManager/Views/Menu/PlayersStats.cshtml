@@ -1,4 +1,4 @@
-﻿    @model PlayersViewModel
+﻿@model PlayersViewModel
 
 <style>
     body {
@@ -27,7 +27,7 @@
 
     .select {
         margin-left: 150px;
-        margin-top: 30px;
+        margin-top: -10px;
         font-weight: bolder;
     }
 
@@ -52,6 +52,11 @@
             color: blue;
         }
 
+    .SelectCompetition {
+        font-size: 15px;
+        margin-left: 520px;
+    }
+
 </style>
 
 @{
@@ -66,6 +71,13 @@
         <p>PLAYERS STATS</p>
         <hr style="margin-left:80px;" />
     </div>
+
+    <form method="get">
+        <div class="SelectCompetition">
+            <input type="submit" asp-action="PlayersStats" asp-route-id="1" value="Bulgarian Teams" />
+            <input type="submit" asp-action="PlayersStats" asp-route-id="2" value="European Teams" />
+        </div>
+    </form>
 
     <form method="get" class="select">
         <select asp-for="PlayerSorting">

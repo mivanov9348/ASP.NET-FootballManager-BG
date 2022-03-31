@@ -21,6 +21,14 @@ namespace ASP.NET_FootballManager.Data.Constant
             public const int PromotionCoins = 200;
         }
 
+        public class StartingPlayersCount
+        {
+            public const int gk = 1;
+            public const int df = 4;
+            public const int mf = 4;
+            public const int st = 2;
+        }
+
         public class FreeAgents
         {
             public const int gk = 20;

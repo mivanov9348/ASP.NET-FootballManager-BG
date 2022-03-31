@@ -24,7 +24,13 @@
                 GameId = game.Id,
                 LeagueId = x.LeagueId,
                 IsPlayable = x.IsPlayable,
-                ImageUrl = x.ImageUrl
+                ImageUrl = x.ImageUrl,
+                CupId = x.CupId,
+                EuropeanCupId = x.EuropeanCupId,
+                Cup = x.Cup,
+                EuropeanCup = x.EuropeanCup,
+                IsEuroParticipant = x.IsEuroParticipant,
+                IsCupParticipant= x.IsCupParticipant
 
             }).ToList();
 
@@ -79,5 +85,6 @@
         public Team GetOriginalTeam(VirtualTeam currentVirtual) => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId);
         public VirtualTeam GetTeamById(int teamId) => this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
 
+        public List<Team> GetAllPlayableTeams() => this.data.Teams.Where(x => x.IsPlayable == true).ToList();
     }
 }

@@ -26,7 +26,7 @@
         color: white;
     }
 
-     table, th, td {
+    table, th, td {
         border: 1px solid;
     }
 
@@ -51,11 +51,6 @@
 
 </style>
 
-@{
-    var leagueName = "";
-    var count = "";
-}
-
 <body>
 
     <label>MATCHDAY</label>
@@ -70,7 +65,7 @@
         <table class="table table-dark">
             <thead>
                 <tr>
-                    <th style="width:10px;">Day</th>
+                    <th style="width:10px;">Round</th>
                     <th style="width:30px;">League</th>
                     <th style="width:80px;">HT</th>
                     <th style="width:10px;">HG</th>
@@ -81,10 +76,9 @@
             <tbody>
                 @foreach (var fixture in @Model.DayFixtures)
                 {
-                    
                     <tr>
-                        <th scope="row">@fixture.Day</th>
-                        <td style="color:green;">@fixture.League.Name</td>
+                        <th scope="row">@fixture.Round</th>
+                        <td>@fixture.CompetitionName</td>
                         <td>@fixture.HomeTeamName</td>
                         <td>@fixture.HomeTeamGoal</td>
                         <td>@fixture.AwayTeamGoal</td>

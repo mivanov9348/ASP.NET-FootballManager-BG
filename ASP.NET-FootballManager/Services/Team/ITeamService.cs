@@ -15,5 +15,6 @@
         VirtualTeam GetTeamById(int teamId);
         List<VirtualTeam> GetAllVirtualTeams(Game currentGame);
         List<Team> GetAllTeams();
+        List<Team> GetAllPlayableTeams();
     }
 }

@@ -10,6 +10,7 @@
     .buttons {
         text-align: center;
         margin-top: 10px;
+        margin-left: 50px;
     }
 
     table, th, td {
@@ -26,7 +27,7 @@
 
     .fixtures {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 10px;
         color: white;
         font-size: 20px;
         margin-left: 300px;
@@ -63,7 +64,7 @@
 
     <div class="buttons">
         <form method="get">
-            <select class="select" asp-for="@Model.LeagueId">
+            <select class="select" style="font-weight:bolder" asp-for="@Model.LeagueId">
                 <option style="color:red">Choose League</option>
                 @foreach (var item in @Model.Leagues)
                 {
@@ -71,6 +72,10 @@
                 }
             </select>
             <input type="submit" value="Choose" asp-action="Fixtures" />
+            <br />
+            <input type="submit" value="Cup" asp-action="CupsFixture" asp-route-id="1" />
+            <input type="submit" value="ChampionsCup" asp-action="CupsFixture" asp-route-id="2" />
+            <input type="submit" value="EuroCup" asp-action="CupsFixture" asp-route-id="3" />
             <br />
             @for (var i = 1; i <= @Model.AllRounds; i++)
             {
@@ -85,6 +90,9 @@
     <div class="fixtures">
 
         <table>
+            <tr>
+                <th colspan="5" style="color:white">@Model.CurrentLeagueName</th>
+            </tr>
             <tr>
                 <th scope="col" style="width:70px">Round</th>
                 <th scope="col" style="width:250px">HT</th>

@@ -1,15 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿    using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ASP.NET_FootballManager.Migrations
 {
-    public partial class AddStandingsSort : Migration
+    public partial class AddTeamsInfo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "StandingsSort",
+                name: "ChampionsCup",
+                table: "VirtualTeams",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<int>(
+                name: "Cups",
                 table: "VirtualTeams",
                 type: "int",
                 nullable: false,
@@ -19,7 +26,11 @@ namespace ASP.NET_FootballManager.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "StandingsSort",
+                name: "ChampionsCup",
+                table: "VirtualTeams");
+
+            migrationBuilder.DropColumn(
+                name: "Cups",
                 table: "VirtualTeams");
         }
     }

@@ -18,6 +18,9 @@
         public DbSet<Inbox> Inboxes { get; set; }
         public DbSet<Fixture> Fixtures { get; set; }
         public DbSet<Match> Matches { get; set; }
+        public DbSet<Day> Days { get; set; }
+        public DbSet<EuropeanCup> EuropeanCups { get; set; }
+        public DbSet<Cup> Cups { get; set; }
         public FootballManagerDbContext(DbContextOptions<FootballManagerDbContext> options)
             : base(options)
         {
@@ -49,6 +52,9 @@
                    .WithOne(x => x.Nation)
                    .OnDelete(DeleteBehavior.Restrict);
 
+                nat.HasMany(x => x.Cups)
+                   .WithOne(x => x.Nation)
+                   .OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<City>(cit =>
@@ -96,6 +102,14 @@
                 team.HasMany(x => x.Managers)
                     .WithOne(x => x.CurrentTeam)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                team.HasOne(x => x.Cup)
+                    .WithMany(x => x.Teams)
+                    .HasForeignKey(x => x.CupId);
+
+                team.HasOne(x => x.EuropeanCup)
+                    .WithMany(x => x.Teams)
+                    .HasForeignKey(x => x.EuropeanCupId);
 
             });
 
@@ -198,6 +212,14 @@
                  .WithMany(x => x.VirtualTeams)
                  .HasForeignKey(x => x.LeagueId);
 
+                vt.HasOne(x => x.Cup)
+                 .WithMany(x => x.VirtualTeams)
+                 .HasForeignKey(x => x.CupId);
+
+                vt.HasOne(x => x.EuropeanCup)
+                 .WithMany(x => x.VirtualTeams)
+                 .HasForeignKey(x => x.EuropeanCupId);
+
                 vt.HasMany(x => x.Players)
                    .WithOne(x => x.Team)
                    .OnDelete(DeleteBehavior.Restrict);
@@ -233,6 +255,10 @@
                     .OnDelete(DeleteBehavior.Restrict);
 
                 game.HasMany(x => x.Players)
+                    .WithOne(x => x.Game)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                game.HasMany(x => x.Days)
                     .WithOne(x => x.Game)
                     .OnDelete(DeleteBehavior.Restrict);
 
@@ -275,7 +301,17 @@
                        .WithOne(x => x.CurrentFixture)
                        .OnDelete(DeleteBehavior.Restrict);
 
+                fixture.HasOne(x => x.Cup)
+                       .WithMany(x => x.Fixtures)
+                       .HasForeignKey(x => x.CupId);
 
+                fixture.HasOne(x => x.EuropeanCup)
+                       .WithMany(x => x.Fixtures)
+                       .HasForeignKey(x => x.EuropeanCupId);
+
+                fixture.HasOne(x => x.Day)
+                       .WithMany(x => x.Fixtures)
+                       .HasForeignKey(x => x.DayId);
             });
 
             builder.Entity<Match>(match =>
@@ -292,6 +328,57 @@
                      .HasForeignKey(x => x.GameId)
                      .OnDelete(DeleteBehavior.Restrict);
 
+            });
+
+            builder.Entity<Day>(day =>
+            {
+                day.HasKey(x => x.Id);
+
+                day.HasOne(x => x.Game)
+                   .WithMany(x => x.Days)
+                   .HasForeignKey(x => x.GameId);
+
+                day.HasMany(x => x.Fixtures)
+                   .WithOne(x => x.Day)
+                   .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<Cup>(cup =>
+            {
+                cup.HasKey(x => x.Id);
+
+                cup.HasOne(x => x.Nation)
+                   .WithMany(x => x.Cups)
+                   .HasForeignKey(x => x.NationId);
+
+                cup.HasMany(x => x.Teams)
+                   .WithOne(x => x.Cup)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+                cup.HasMany(x => x.Fixtures)
+                   .WithOne(x => x.Cup)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+                cup.HasMany(x => x.VirtualTeams)
+                   .WithOne(x => x.Cup)
+                   .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<EuropeanCup>(eurocup =>
+            {
+                eurocup.HasKey(x => x.Id);               
+
+                eurocup.HasMany(x => x.Teams)
+                       .WithOne(x => x.EuropeanCup)
+                       .OnDelete(DeleteBehavior.Restrict);
+
+                eurocup.HasMany(x => x.Fixtures)
+                       .WithOne(x => x.EuropeanCup)
+                       .OnDelete(DeleteBehavior.Restrict);
+
+                eurocup.HasMany(x => x.VirtualTeams)
+                       .WithOne(x => x.EuropeanCup)
+                       .OnDelete(DeleteBehavior.Restrict);
             });
 
             base.OnModelCreating(builder);

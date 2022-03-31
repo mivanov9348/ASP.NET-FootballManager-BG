@@ -36,6 +36,7 @@
                 Manager = manager,
                 Season = 1,
                 Year = 1,
+                CupRound = 1,
                 EuroCupRound = 1,
                 LeagueRound = 1,
                 Day = 1,
@@ -45,20 +46,18 @@
             };
 
             this.data.Games.Add(newGame);
-            this.data.SaveChanges();           
+            this.data.SaveChanges();
             return newGame;
         }
         public void NextDay(Game currentGame)
         {
             currentGame.Day += 1;
-            
             this.data.SaveChanges();
         }
-
         public void ResetGame(Game CurrentGame)
         {
-            CurrentGame.Day = 0;
-            CurrentGame.Year = 0;
+            CurrentGame.Day = 1;
+            CurrentGame.Year += 1;
             CurrentGame.Season += 1;
             CurrentGame.LeagueRound = 1;
             CurrentGame.EuroCupRound = 1;

@@ -4,22 +4,23 @@
 
 namespace ASP.NET_FootballManager.Migrations
 {
-    public partial class AddPlayerProfilePicture : Migration
+    public partial class EuroCupAndCupRank : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ProfileImage",
-                table: "Players",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.AddColumn<int>(
+                name: "Rank",
+                table: "EuropeanCups",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ProfileImage",
-                table: "Players");
+                name: "Rank",
+                table: "EuropeanCups");
         }
     }
 }

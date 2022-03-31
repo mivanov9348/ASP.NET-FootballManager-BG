@@ -4,9 +4,12 @@
     public interface IFixtureService
     {
         void GenerateLeagueFixtures(Game game);
+        void GenerateCupFixtures(Game game);
+        void GenerateEuroFixtures(Game game);
+        void AddFixtureToDay(Game game);
         void ShuffleTeams(List<VirtualTeam> currl);
-        void ResetLeagueFixtures(League league);
-        List<Fixture> GetFixture(int id, int round);
+        void DeleteFixtures(Game game);
+        List<Fixture> GetFixture(int id, int round);    
         int GetAllRounds(int leagueId);
 
 

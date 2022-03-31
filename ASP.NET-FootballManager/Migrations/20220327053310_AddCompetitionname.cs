@@ -4,13 +4,13 @@
 
 namespace ASP.NET_FootballManager.Migrations
 {
-    public partial class Change : Migration
+    public partial class AddCompetitionname : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "NewsImage",
-                table: "Inboxes",
+                name: "CompetitionName",
+                table: "Fixtures",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -18,8 +18,8 @@ namespace ASP.NET_FootballManager.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "NewsImage",
-                table: "Inboxes");
+                name: "CompetitionName",
+                table: "Fixtures");
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using ASP.NET_FootballManager.Services.Common;
+using ASP.NET_FootballManager.Services.Cup;
+using ASP.NET_FootballManager.Services.EuroCup;
 using ASP.NET_FootballManager.Services.Fixture;
 using ASP.NET_FootballManager.Services.Game;
 using ASP.NET_FootballManager.Services.Inbox;
@@ -28,6 +30,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ITransferService, TransferService>();
             services.AddScoped<IInboxService, InboxService>();
             services.AddScoped<IFixtureService, FixtureService>();
+            services.AddScoped<IEuroCupService, EuroCupService>();
+            services.AddScoped<IDayService, DayService>();
+            services.AddScoped<ICupService, CupService>();
 
             return services;
         }

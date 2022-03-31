@@ -9,5 +9,6 @@
         public int Year { get; set; }
         public int Day { get; set; }
         public int Round { get; set; }
+        public string CompetitionName { get; set; }
     }
 }

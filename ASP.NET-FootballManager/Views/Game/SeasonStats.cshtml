@@ -62,7 +62,28 @@
         <p>@Model.GoalScorer.FirstName @Model.GoalScorer.LastName - @Model.GoalScorer.Goals goals (@Model.GoalScorer.Team.Name)</p>
 
     </div>
-
+    <hr />
+    <div class="Stats">
+        <h1 style="margin-top:10px">@Model.Cup.Name</h1>
+        <hr />
+        <h5 style="color:white">Champion</h5>
+        <p style="color:green">@Model.CupWinner.Name</p>
+    </div>
+    <hr />
+    <div class="Stats">
+        <h1 style="margin-top:10px">Champions Cup</h1>
+        <hr />
+        <h5 style="color:white">Champion</h5>
+        <p style="color:green">@Model.ChampionsCupWinner.Name</p>
+    </div>
+    <hr />
+    <div class="Stats">
+        <h1 style="margin-top:10px">Euro Cup</h1>
+        <hr />
+        <h5 style="color:white">Champion</h5>
+        <p style="color:green">@Model.EuroCupWinner.Name</p>
+    </div>
+    <hr />
 
 </body>
 

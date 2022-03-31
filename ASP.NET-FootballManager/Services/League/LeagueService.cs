@@ -29,17 +29,6 @@
             }
 
         }
-        public List<VirtualTeam> GetStandingsByLeague2(int id)
-        {
-            if (id == 0)
-            {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == 1).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
-            }
-            else
-            {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
-            }
-        }
         public List<VirtualTeam> GetStandingsByLeague(int id)
         {
             if (id == 0)
@@ -61,9 +50,8 @@
                 var homeTeamGoal = GetTeamGoal(fixt.HomeTeamId);
                 var awayTeamGoal = GetTeamGoal(fixt.AwayTeamId);
                 SetFixtureGoal(fixt, homeTeamGoal, awayTeamGoal);
-                GetGoalScorers(homeTeamGoal, fixt);
-                GetGoalScorers(awayTeamGoal, fixt);
-                CleanSheets(homeTeamGoal, awayTeamGoal, fixt);
+                GetGoalScorers(fixt.HomeTeam, homeTeamGoal, fixt);
+                GetGoalScorers(fixt.AwayTeam, awayTeamGoal, fixt);
                 CheckWinner(homeTeamGoal, awayTeamGoal, fixt);
             }
         }
@@ -71,13 +59,6 @@
         {
             fixt.HomeTeamGoal = homeTeamGoal;
             fixt.AwayTeamGoal = awayTeamGoal;
-            this.data.SaveChanges();
-        }
-        private void CleanSheets(int homeTeamGoal, int awayTeamGoal, Fixture fixt)
-        {
-            var htGk = this.data.Players.FirstOrDefault(x => x.PositionId == 1 && x.TeamId == fixt.HomeTeamId);
-            var atGk = this.data.Players.FirstOrDefault(x => x.PositionId == 1 && x.TeamId == fixt.AwayTeamId);
-
             this.data.SaveChanges();
         }
         private int GetTeamGoal(int teamId)
@@ -90,6 +71,10 @@
         {
             var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
             var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentFixt.Day.CurrentDay);
+
+            currentFixt.IsPlayed = true;
+            currentDay.IsPlayed = true;
 
             homeTeam.Matches += 1;
             homeTeam.GoalScored += homeGoals;
@@ -129,10 +114,9 @@
 
             this.data.SaveChanges();
         }
-        private void GetGoalScorers(int Goals, Fixture currentFixt)
+        private void GetGoalScorers(VirtualTeam currentTeam, int Goals, Fixture currentFixt)
         {
-            var playersWithoutGk = this.data.Players.Where(x => x.TeamId == currentFixt.HomeTeamId && x.PositionId != 1).ToList();
-            var goalkeeper = this.data.Players.FirstOrDefault(x => x.TeamId == currentFixt.HomeTeamId && x.PositionId == 1);
+            var playersWithoutGk = this.data.Players.Where(x => x.TeamId == currentTeam.Id && x.Position.Name != "Goalkeeper").ToList();
 
             for (int i = 0; i < Goals; i++)
             {
@@ -145,30 +129,39 @@
         public void PromotedRelegated(Game CurrentGame)
         {
             var leagues = this.data.Leagues.ToList();
+            var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
+            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
 
             foreach (var league in leagues)
             {
                 var standings = GetStandingsByLeague(league.Id);
                 var nextLeagueLevel = league.Level += 1;
                 var nextLeague = this.data.Leagues.FirstOrDefault(x => x.Level == nextLeagueLevel && x.NationId == league.NationId);
+                var nextLeagueTeams = this.data.VirtualTeams.Where(x => x.LeagueId == nextLeague.Id).ToList();
                 var upLeagueLevel = league.Level -= 1;
                 var upLeague = this.data.Leagues.FirstOrDefault(x => x.Level == upLeagueLevel && x.NationId == league.NationId);
 
                 if (league.Level == 1)
                 {
                     var champion = standings.First();
-                    champion.Titles += 1;
-
+                    var secondChampionsCupParticipant = standings.Skip(1).First();
+                    var firstEuroCupParticipant = standings.Skip(2).First();
+                    var secondEuroCupParticipant = standings.Skip(3).First();
                     standings.Reverse();
                     var firstRelegated = standings.First();
                     var secondRelegated = standings.Skip(1).First();
 
-                    if (nextLeague != null)
+                    champion.Titles += 1;
+                    champion.EuropeanCupId = championsCup.Id;
+                    secondChampionsCupParticipant.EuropeanCupId = championsCup.Id;
+                    firstEuroCupParticipant.EuropeanCupId = euroCup.Id;
+                    secondEuroCupParticipant.EuropeanCupId = euroCup.Id;
+
+                    if (nextLeague != null && nextLeagueTeams.Count > 0)
                     {
                         firstRelegated.LeagueId = nextLeague.Id;
                         secondRelegated.LeagueId = nextLeague.Id;
                     }
-
                 }
                 else
                 {
@@ -179,7 +172,7 @@
                         firstPromoted.LeagueId = upLeague.Id;
                         secondPromoted.LeagueId = upLeague.Id;
 
-                        if (nextLeague != null)
+                        if (nextLeague != null && nextLeagueTeams.Count > 0)
                         {
                             standings.Reverse();
                             var firstRelegated = standings.First();

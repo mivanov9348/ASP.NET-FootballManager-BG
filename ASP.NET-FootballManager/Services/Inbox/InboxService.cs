@@ -23,7 +23,8 @@
                 Game = currentGame,
                 GameId = currentGame.Id,
                 MessageReview = messageReview,
-                FullMessage = fullMessage
+                FullMessage = fullMessage,
+                NewsImage = $"Faces/Manager.png"
             };
 
             AddAndSave(newSeasonNews);
@@ -44,7 +45,7 @@
                 GameId = currentGame.Id,
                 MessageReview = messageReview,
                 FullMessage = fullMessage,
-                NewsImage = currentPlayer.ProfileImage
+                NewsImage = $"Faces/{currentPlayer.ProfileImage}"
             };
             AddAndSave(inbox);
         }
@@ -97,22 +98,17 @@
                 GameId = CurrentGame.Id,
                 MessageReview = messageReview,
                 FullMessage = fullMessage,
-                NewsImage = playerTeam.ImageUrl
+                NewsImage = $"Team/{playerTeam.ImageUrl}"
             };
 
             AddAndSave(matchNews);
         }
-        private void AddAndSave(Inbox inbox)
-        {
-            this.data.Inboxes.Add(inbox);
-            this.data.SaveChanges();
-        }
         public List<Inbox> GetInboxMessages(int gameId) => this.data.Inboxes.Where(x => x.GameId == gameId).ToList();
-        public Inbox GetFullMessage(int id)
+        public Inbox GetFullMessage(int id, Game CurrentGame)
         {
             if (id == 0)
             {
-                return this.data.Inboxes.First();
+                return this.data.Inboxes.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == CurrentGame.Id);
             }
             else
             {
@@ -136,9 +132,15 @@
                 Game = currentGame,
                 GameId = currentGame.Id,
                 MessageReview = messageReview,
-                FullMessage = fullMessage
+                FullMessage = fullMessage,
+                NewsImage = $"Faces/{player.ProfileImage}"
             };
             AddAndSave(inbox);
+        }
+        private void AddAndSave(Inbox inbox)
+        {
+            this.data.Inboxes.Add(inbox);
+            this.data.SaveChanges();
         }
     }
 }

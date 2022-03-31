@@ -3,6 +3,9 @@
     using ASP.NET_FootballManager.Data.DataModels;
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
+    using ASP.NET_FootballManager.Services.Cup;
+    using ASP.NET_FootballManager.Services.EuroCup;
+    using ASP.NET_FootballManager.Services.Fixture;
     using ASP.NET_FootballManager.Services.Game;
     using ASP.NET_FootballManager.Services.Inbox;
     using ASP.NET_FootballManager.Services.League;
@@ -21,8 +24,12 @@
         private readonly IManagerService managerService;
         private readonly ILeagueService leagueService;
         private readonly IPlayerService playerService;
+        private readonly IFixtureService fixtureService;
         private readonly IInboxService inboxService;
         private readonly ITeamService teamService;
+        private readonly IDayService dayService;
+        private readonly ICupService cupService;
+        private readonly IEuroCupService euroCupService;
         public MatchController(IMatchService matchService,
         IGameService gameService,
         ICommonService commonService,
@@ -30,7 +37,11 @@
         ILeagueService leagueService,
         IPlayerService playerService,
         IInboxService inboxService,
-        ITeamService teamService
+        ITeamService teamService,
+        IDayService dayService,
+        ICupService cupService,
+        IEuroCupService euroCupService,
+        IFixtureService fixtureService
             )
         {
             this.managerService = managerService;
@@ -41,15 +52,21 @@
             this.playerService = playerService;
             this.inboxService = inboxService;
             this.teamService = teamService;
+            this.dayService = dayService;
+            this.cupService = cupService;
+            this.euroCupService = euroCupService;
+            this.fixtureService = fixtureService;
         }
         public IActionResult MatchDayPreview()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
-            if (dayFixtures.Count == 0)
+            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);          
+
+            if ( dayFixtures == null|| dayFixtures.Count == 0)
             {
                 return RedirectToAction("EndSeason", "Game");
             }
+
             var round = dayFixtures.First().Round;
 
             return View(new MatchDayViewModel
@@ -86,6 +103,25 @@
             var clubStartingEleven = playerService.GetStartingEleven(currentTeam.Id);
             var clubSubstitutes = playerService.GetSubstitutes(currentTeam.Id);
             var positions = commonService.GetAllPositions();
+            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
+            var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
+            var currentDay = dayService.GetCurrentDay(CurrentGame);
+
+            if (currentFixture == null)
+            {
+                if (currentDay.isCupDay)
+                {
+                    cupService.CalculateOtherMatches(dayFixtures, currentFixture);
+                    fixtureService.GenerateCupFixtures(CurrentGame);
+                }
+                if (currentDay.isEuroCupDay)
+                {
+                    euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
+                    fixtureService.GenerateEuroFixtures(CurrentGame);
+                }
+                gameService.NextDay(CurrentGame);
+                return RedirectToAction("Results", "Match");
+            }
 
             return View(new TacticsViewModel
             {
@@ -112,7 +148,8 @@
             var currentMatch = matchService.GetCurrentMatch(id);
             var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var player = new Player();           
+            var currentDay = dayService.GetCurrentDay(CurrentGame);
+            var player = new Player();
 
             if (currentMatch.Turn == 1)
             {
@@ -130,22 +167,36 @@
             if (currentMatch.Minute > 90)
             {
                 matchService.EndMatch(currentMatch);
-                leagueService.CheckWinner(currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture);
-                leagueService.CalculateOtherMatches(dayFixtures, currentFixture);
+                if (currentDay.isLeagueDay)
+                {
+                    leagueService.CheckWinner(currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture);
+                    leagueService.CalculateOtherMatches(dayFixtures, currentFixture);
+                }
+                if (currentDay.isCupDay)
+                {
+                    cupService.CheckWinner(currentFixture);
+                    cupService.CalculateOtherMatches(dayFixtures, currentFixture);
+                    fixtureService.GenerateCupFixtures(CurrentGame);
+                }
+                if (currentDay.isEuroCupDay)
+                {
+                    euroCupService.CheckWinner(currentFixture);
+                    euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
+                    fixtureService.GenerateEuroFixtures(CurrentGame);
+                }
                 gameService.NextDay(CurrentGame);
                 inboxService.MatchFinishedNews(CurrentGame, currentFixture);
                 return RedirectToAction("Results");
             }
 
-            
-            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, player);            
+            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, player);
 
             return View("Match", newModel);
         }
         public IActionResult Results(MatchViewModel mvm)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var dayResults = matchService.GetResults(CurrentGame);
+            var dayResults = matchService.GetResults(CurrentGame);          
             var round = dayResults.First().Round;
 
             return View(new MatchDayViewModel

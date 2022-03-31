@@ -6,7 +6,7 @@
 
     public interface IPlayerService
     {
-        PlayersViewModel SortingPlayers(PlayerSorting s);   
+        PlayersViewModel SortingPlayers(PlayerSorting s, int id);   
         List<Player> GetPlayersByTeam(int teamId);
         void GeneratePlayers(Game game, VirtualTeam team);
         void CreateFreeAgents(Game game, int gk, int df, int mf, int st);
@@ -16,7 +16,7 @@
         void Substitution(int playerId, string action);
         Player GetPlayerById(int id);
         Player GetRandomPlayer(VirtualTeam team);
-        Player GetGoalscorer(Game CurrentGame);
+        Player GetLeagueGoalscorer(Game CurrentGame, int leagueId);
         void RemovePlayers(VirtualTeam freeAgentsTeam);
     }
 }

@@ -10,12 +10,7 @@
         List<VirtualTeam> GetStandingsByLeague(int id);
         void CalculateOtherMatches(List<Fixture> fixtures, Fixture fixture);
         void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt);
-        void PromotedRelegated(Game CurrentGame);
-    
-        List<VirtualTeam> GetStandingsByLeague2(int id);
-
-
-
+        void PromotedRelegated(Game CurrentGame);  
 
 
     }
