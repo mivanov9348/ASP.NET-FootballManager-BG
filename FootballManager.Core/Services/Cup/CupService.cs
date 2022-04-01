@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Cup
 {
     using ASP.NET_FootballManager.Data;
-    using Data.DataModels;
+    using ASP.NET_FootballManager.Data.DataModels;   
     using System.Collections.Generic;
 
     public class CupService : ICupService

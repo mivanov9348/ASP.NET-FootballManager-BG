@@ -2,11 +2,8 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.DataModels;
-    using ASP.NET_FootballManager.Models;
     using System.Collections.Generic;
     using Data.Constant;
-    using ASP.NET_FootballManager.Models.Sorting;
-
     public class LeagueService : ILeagueService
     {
         private readonly FootballManagerDbContext data;
@@ -184,8 +181,6 @@
                 }
             }
             this.data.SaveChanges();
-
         }
-
     }
 }

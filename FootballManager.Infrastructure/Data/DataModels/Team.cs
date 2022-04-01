@@ -4,7 +4,6 @@ namespace ASP.NET_FootballManager.Data.DataModels
 {
     public class Team
     {
-
         public int Id { get; set; }
 
         [StringLength(30)]

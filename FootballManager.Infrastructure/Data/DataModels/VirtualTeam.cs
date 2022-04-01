@@ -1,10 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Data.DataModels
-{
-    using ASP.NET_FootballManager.Models.Sorting;
-    using Microsoft.AspNetCore.Identity;
+{   
     public class VirtualTeam
     {
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string ImageUrl { get; set; }

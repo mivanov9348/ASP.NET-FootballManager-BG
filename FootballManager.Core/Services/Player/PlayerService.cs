@@ -260,8 +260,8 @@
         private (string firstName, string lastName, City city, int age, Nation nation) getPlayerInfo()
         {
 
-            var firstNamesPath = File.ReadAllText(@"C:\Users\mivan\source\repos\ASP.NET-FootballManager\ASP.NET-FootballManager\Data\Database\FirstNames.json");
-            var lastNamesPath = File.ReadAllText(@"C:\Users\mivan\source\repos\ASP.NET-FootballManager\ASP.NET-FootballManager\Data\Database\LastNames.json");
+            var firstNamesPath = File.ReadAllText(@"C:\Users\mivan\source\repos\ASP.NET-FootballManager\FootballManager.Infrastructure\Data\Database\FirstNames.json");
+            var lastNamesPath = File.ReadAllText(@"C:\Users\mivan\source\repos\ASP.NET-FootballManager\FootballManager.Infrastructure\Data\Database\LastNames.json");
 
             var firstNames = JsonConvert.DeserializeObject<FirstNamesDto[]>(firstNamesPath);
             var lastNames = JsonConvert.DeserializeObject<LastNamesDto[]>(lastNamesPath);

@@ -47,7 +47,9 @@
             return View(new InboxViewModel
             {
                 News = currentInboxMessage,
-                CurrentNews = currentMessage
+                CurrentNews = currentMessage,
+                Year = currentMessage.Year,
+                Day = currentMessage.Day
             });
         }
         public IActionResult OpenNews(int id)
