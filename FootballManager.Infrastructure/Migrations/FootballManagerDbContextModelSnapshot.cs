@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ASP.NET_FootballManager.Migrations
+namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
     partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace ASP.NET_FootballManager.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.2")
+                .HasAnnotation("ProductVersion", "6.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);

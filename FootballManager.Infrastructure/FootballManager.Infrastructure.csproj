@@ -7,17 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\Database\FirstNames.json" />
-    <None Remove="Data\Database\LastNames.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\Database\FirstNames.json">
+    <Content Include="Seeding\NamesData\FirstNames.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Data\Database\LastNames.json">
+    <Content Include="Seeding\NamesData\LastNames.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

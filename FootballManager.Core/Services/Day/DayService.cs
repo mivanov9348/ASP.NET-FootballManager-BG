@@ -35,7 +35,7 @@ namespace ASP.NET_FootballManager.Services.Common
             this.data.SaveChanges();
 
             var daysUsed = new List<Day>();
-            var currentDays = this.data.Days.Where(x => x.GameId == currentGame.Id).ToList();
+            var currentDays = this.data.Days.Where(x => x.GameId == currentGame.Id && x.Year == currentGame.Year).ToList();
 
             for (int i = 0; i < leagueFixtures; i++)
             {
@@ -77,6 +77,6 @@ namespace ASP.NET_FootballManager.Services.Common
 
         public List<Day> GetAllDays(Game currentGame) => this.data.Days.Where(x => x.GameId == currentGame.Id && x.Year == currentGame.Year).ToList();
 
-        public Day GetCurrentDay(Game currentGame) => this.data.Days.FirstOrDefault(x => x.GameId == currentGame.Id && x.CurrentDay == currentGame.Day);
+        public Day GetCurrentDay(Game currentGame) => this.data.Days.FirstOrDefault(x => x.GameId == currentGame.Id && x.CurrentDay == currentGame.Day && x.Year == currentGame.Year);
     }
 }

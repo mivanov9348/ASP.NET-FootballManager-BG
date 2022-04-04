@@ -70,8 +70,9 @@
         }
         public IActionResult Fixtures(FixturesViewModel fvm)
         {
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var allLeagues = leagueService.GetAllLeagues();
-            var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, fvm.CurrentRound);
+            var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, fvm.CurrentRound, CurrentGame);
             var rounds = fixtureService.GetAllRounds(fvm.LeagueId);
             var currentLeague = leagueService.GetLeague(fvm.LeagueId);
 
@@ -83,11 +84,29 @@
                 LeagueId = fvm.LeagueId,
                 CurrentLeagueName = currentLeague.Name.ToUpper()
             });
-        }      
+        }
+        public IActionResult CupsFixture(FixturesViewModel fvm)
+        {
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            var allLeagues = leagueService.GetAllLeagues();
+            var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, fvm.CurrentRound, CurrentGame);
+            var rounds = fixtureService.GetAllRounds(fvm.LeagueId);
+            var currentLeague = leagueService.GetLeague(fvm.LeagueId);
+
+            return View(new FixturesViewModel
+            {
+                Leagues = allLeagues,
+                Fixtures = currentFixtures,
+                AllRounds = rounds,
+                LeagueId = fvm.LeagueId,
+                CurrentLeagueName = currentLeague.Name.ToUpper()
+            });
+        }
         public IActionResult ChooseRound(int id, FixturesViewModel fvm)
         {
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var allLeagues = leagueService.GetAllLeagues();
-            var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, id);
+            var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, id, CurrentGame);
             var rounds = fixtureService.GetAllRounds(fvm.LeagueId);
             var currentLeague = leagueService.GetLeague(fvm.LeagueId);
 
@@ -119,25 +138,26 @@
             if (svm.LeagueId == 0)
             {
                 svm.Leagues = leagueService.GetAllLeagues();
-                svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId);
+                svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId, CurrentGame);
             }
             else
             {
                 svm.Leagues = leagueService.GetAllLeagues();
-                svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId);
+                svm.VirtualTeams = leagueService.GetStandingsByLeague(svm.LeagueId, CurrentGame);
             }
 
             return View(svm);
         }
         public IActionResult PlayersStats(PlayersViewModel pvm, int id)
         {
-            pvm = playerService.SortingPlayers(pvm.PlayerSorting, id);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            pvm = playerService.SortingPlayers(pvm.PlayerSorting, id, CurrentGame);
             return View(pvm);
         }
         public IActionResult TeamStats()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var originalTeam = teamService.GetOriginalTeam(currentTeam);
+            var originalTeam = teamService.GetOriginalTeam(currentTeam, CurrentGame);
 
             return View(new TeamViewModel
             {

@@ -64,7 +64,10 @@
         <h1 style="text-align:center;">@Model.CurrentTeam.Name</h1>
         <hr />
         <p> @Model.Team.Nation.Name</p>
-        <p> @Model.Team.City.Name</p>
+        @if (@Model.Team.City != null)
+        {
+            <p> @Model.Team.City.Name</p>
+        }
         <p> @Model.CurrentTeam.League.Name</p>
         <hr />
         <p>Titles: @Model.CurrentTeam.Titles</p>

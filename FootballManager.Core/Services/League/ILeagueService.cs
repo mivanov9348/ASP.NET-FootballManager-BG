@@ -7,7 +7,7 @@
 
         League GetLeague(int id);
         List<League> GetAllLeagues();
-        List<VirtualTeam> GetStandingsByLeague(int id);
+        List<VirtualTeam> GetStandingsByLeague(int id,Game CurrentGame);
         void CalculateOtherMatches(List<Fixture> fixtures, Fixture fixture);
         void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt);
         void PromotedRelegated(Game CurrentGame);  

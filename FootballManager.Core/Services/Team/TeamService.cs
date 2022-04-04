@@ -82,7 +82,7 @@
         public List<VirtualTeam> GetAllVirtualTeams(Game currentGame) => this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id).ToList();
         public List<Team> GetAllTeams() => this.data.Teams.ToList();
         public VirtualTeam GetCurrentTeam(Game currentGame) => this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId);
-        public Team GetOriginalTeam(VirtualTeam currentVirtual) => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId);
+        public Team GetOriginalTeam(VirtualTeam currentVirtual,Game CurrentGame) => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId);
         public VirtualTeam GetTeamById(int teamId) => this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
         public List<Team> GetAllPlayableTeams() => this.data.Teams.Where(x => x.IsPlayable == true).ToList();
     }

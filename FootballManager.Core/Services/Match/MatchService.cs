@@ -19,7 +19,7 @@
         }
         public Fixture GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
         {
-            var currentTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId);
+            var currentTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId && x.GameId == currentGame.Id);
 
             return dayFixtures.FirstOrDefault(x => x.HomeTeamId == currentTeam.Id
                                                     || x.AwayTeamId == currentTeam.Id);
@@ -27,7 +27,7 @@
         }
         public List<Fixture> GetFixturesByDay(Game CurrentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == CurrentGame.Day && x.GameId == CurrentGame.Id);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == CurrentGame.Day && x.GameId == CurrentGame.Id && x.Year == CurrentGame.Year);
             if (currentDay == null)
             {
                 return null;
@@ -234,7 +234,7 @@
         }
         public List<Fixture> GetResults(Game currentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentGame.Day - 1 && x.GameId == currentGame.Id);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentGame.Day - 1 && x.GameId == currentGame.Id && x.Year == currentGame.Year);
             return this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.DayId == currentDay.Id).ToList();
         }
         public void DeleteMatches(Game CurrentGame)

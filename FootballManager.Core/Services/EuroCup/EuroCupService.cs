@@ -26,7 +26,6 @@
 
             if (euroBgTeams.Count > 0)
             {
-                euroBgTeams.ForEach(x => x.IsEuroParticipant = true);
                 championsCupParticipants = 30;
                 euroCupParticipants = 30;
             }
@@ -36,7 +35,7 @@
                 euroCupParticipants = 32;
             }
 
-            var allEuroTeams = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.GameId == game.Id && x.Name != "FreeAgents").ToList();
+            var allEuroTeams = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.GameId == game.Id && x.Name != "FreeAgents" && x.League.Nation.Name != "Bulgaria").ToList();
 
             for (int i = 0; i < championsCupParticipants; i++)
             {

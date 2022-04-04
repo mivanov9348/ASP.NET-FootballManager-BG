@@ -24,28 +24,28 @@
 
             this.data.SaveChanges();
         }
-        public List<Player> GetAllFreeAgents(int gameId, int orderId)
+        public List<Player> GetAllFreeAgents(int gameId, int orderId,Game Game)
         {
             switch (orderId)
             {
                 case 0:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true).ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true&&x.GameId==Game.Id).ToList();
                 case 1:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Goalkeeper").ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Goalkeeper" && x.GameId == Game.Id).ToList();
                 case 2:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Defender").ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Defender" && x.GameId == Game.Id).ToList();
                 case 3:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Midlefielder").ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Midlefielder" && x.GameId == Game.Id).ToList();
                 case 4:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Striker").ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Striker" && x.GameId == Game.Id).ToList();
                 case 5:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true).OrderByDescending(x => x.Attack).ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Attack).ToList();
                 case 6:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true).OrderByDescending(x => x.Defense).ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Defense).ToList();
                 case 7:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true).OrderByDescending(x => x.Overall).ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Overall).ToList();
                 case 8:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true).OrderByDescending(x => x.Price).ToList();
+                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Price).ToList();
             }
             return null;
         }

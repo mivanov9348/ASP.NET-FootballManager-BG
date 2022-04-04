@@ -39,7 +39,7 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             return View(new TransferViewModel
             {
-                FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, 0),
+                FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, 0, CurrentGame),
                 CurrentTeamPlayers = transferService.GetCurrentTeamPlayers(currentTeam.Id),
                 Nations = commonService.GetAllNations(),
                 Positions = commonService.GetAllPositions(),
@@ -52,7 +52,7 @@
 
             return View("Market", new TransferViewModel
             {
-                FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, id),
+                FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, id, CurrentGame),
                 CurrentTeamPlayers = transferService.GetCurrentTeamPlayers(currentTeam.Id),
                 Nations = commonService.GetAllNations(),
                 Positions = commonService.GetAllPositions(),

@@ -27,7 +27,7 @@
         }
         public void CreateFreeAgents(Game game, int gk, int df, int mf, int st)
         {
-            var freeAgentsTeam = this.data.VirtualTeams.FirstOrDefault(x => x.IsPlayable == false);
+            var freeAgentsTeam = this.data.VirtualTeams.FirstOrDefault(x => x.IsPlayable == false && x.Name == "FreeAgents");
             RemovePlayers(freeAgentsTeam);
             for (int i = 0; i < gk; i++)
             {
@@ -49,12 +49,13 @@
             void FillFreeAgents(string position)
             {
                 var positionType = this.data.Positions.FirstOrDefault(x => x.Name == position);
-                (string firstName, string lastName, City city, int age, Nation nation) = getPlayerInfo();
+                (string FirstName, string LastName) = getPlayerNames(freeAgentsTeam);
+                (City city, int age, Nation nation) = getPlayerInfo(freeAgentsTeam);
                 (int defense, int attack, int speed, int overall) = CalculatePlayerAttributes(position);
                 var newPlayer = new Player
                 {
-                    FirstName = firstName,
-                    LastName = lastName,
+                    FirstName = FirstName,
+                    LastName = LastName,
                     City = city,
                     CityId = city.Id,
                     Age = age,
@@ -87,7 +88,8 @@
             for (int i = 0; i < count; i++)
             {
                 var positionType = this.data.Positions.FirstOrDefault(x => x.Name == position);
-                (string firstName, string lastName, City city, int age, Nation nation) = getPlayerInfo();
+                (string firstName, string lastName) = getPlayerNames(team);
+                (City city, int age, Nation nation) = getPlayerInfo(team);
                 (int defense, int attack, int speed, int overall) = CalculatePlayerAttributes(position);
                 var newPlayer = new Player
                 {
@@ -120,28 +122,6 @@
                 this.data.SaveChanges();
             }
         }
-        public void Substitution(int playerId, string action)
-        {
-            var currentPlayer = this.data.Players.FirstOrDefault(x => x.Id == playerId);
-            switch (action)
-            {
-                case "Add":
-                    currentPlayer.IsStarting11 = true;
-                    break;
-                case "Remove":
-                    currentPlayer.IsStarting11 = false;
-                    break;
-                default:
-                    break;
-            }
-            this.data.SaveChanges();
-        }
-        public void CalculatingPlayersPrice()
-        {
-            var allTeams = this.data.Players.ToList();
-            allTeams.ForEach(x => x.Price = x.Overall * 3);
-            this.data.SaveChanges();
-        }
         public Player GetRandomPlayer(VirtualTeam team)
         {
             var players = this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList();
@@ -172,20 +152,20 @@
             }
             this.data.SaveChanges();
         }
-        public PlayersViewModel SortingPlayers(PlayerSorting sortBy, int id)
+        public PlayersViewModel SortingPlayers(PlayerSorting sortBy, int id, Game currentGame)
         {
             var allPlayers = new List<Player>();
 
             switch (id)
             {
                 case 0:
-                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true && x.Team.LeagueId != null).ToList();
+                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true && x.Team.LeagueId != null && x.GameId == currentGame.Id).ToList();
                     break;
                 case 1:
-                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true && x.Team.LeagueId != null).ToList();
+                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == true && x.Team.LeagueId != null && x.GameId == currentGame.Id).ToList();
                     break;
                 case 2:
-                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == false && x.Team.Name != "FreeAgents").ToList();
+                    allPlayers = this.data.Players.Where(x => x.Team.IsPlayable == false && x.Team.Name != "FreeAgents" && x.GameId == currentGame.Id).ToList();
                     break;
             }
 
@@ -234,6 +214,67 @@
 
             return newModel;
         }
+        public void Substitution(int playerId, string action)
+        {
+            var currentPlayer = this.data.Players.FirstOrDefault(x => x.Id == playerId);
+            switch (action)
+            {
+                case "Add":
+                    currentPlayer.IsStarting11 = true;
+                    break;
+                case "Remove":
+                    currentPlayer.IsStarting11 = false;
+                    break;
+                default:
+                    break;
+            }
+            this.data.SaveChanges();
+        }
+        public void CalculatingPlayersPrice(Game CurrentGame)
+        {
+            var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
+            allPlayers.ForEach(x => x.Price = x.Overall * 3);
+            this.data.SaveChanges();
+        }
+        private (string firstName, string lastName) getPlayerNames(VirtualTeam team)
+        {
+            var firstName = "";
+            var lastName = "";
+
+            var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == team.TeamId);
+            var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == currentTeam.NationId);
+
+            if (currentNation == null)
+            {
+                var allNations = this.data.Nations.ToList();
+                currentNation = allNations[rnd.Next(0, allNations.Count())];
+            }
+
+            var currentDirectory = Environment.CurrentDirectory;
+            currentDirectory = currentDirectory.Remove(currentDirectory.IndexOf(@"\ASP.NET-FootballManager"));
+
+            var firstNamesPath = File.ReadAllText(@$"{currentDirectory}\ASP.NET-FootballManager\FootballManager.Infrastructure\Seeding\NamesData\FirstNames.json");
+            var lastNamesPath = File.ReadAllText(@$"{currentDirectory}\ASP.NET-FootballManager\FootballManager.Infrastructure\Seeding\NamesData\LastNames.json");
+
+            var firstNames = JsonConvert.DeserializeObject<FirstNamesDto[]>(firstNamesPath);
+            var lastNames = JsonConvert.DeserializeObject<LastNamesDto[]>(lastNamesPath);
+
+            var firstNamesByNation = firstNames.Where(x => x.NationName == currentNation.Name).ToList();
+            var lastNamesByNation = lastNames.Where(x => x.NationName == currentNation.Name).ToList();
+
+            if (firstNamesByNation.Count > 1 && lastNamesByNation.Count > 1)
+            {
+                firstName = firstNamesByNation[rnd.Next(0, firstNamesByNation.Count)].FirstName;
+                lastName = lastNamesByNation[rnd.Next(0, lastNamesByNation.Count)].LastName;
+            }
+            else
+            {
+                firstName = firstNames[rnd.Next(0, firstNames.Length)].FirstName;
+                lastName = lastNames[rnd.Next(0, lastNames.Length)].LastName;
+            }
+
+            return (firstName, lastName);
+        }
         private (int defense, int attack, int speed, int overall) CalculatePlayerAttributes(string position)
         {
             if (position == "Goalkeeper" || position == "Defender")
@@ -257,26 +298,30 @@
             return (20, 20, 20, 20);
 
         }
-        private (string firstName, string lastName, City city, int age, Nation nation) getPlayerInfo()
+        private (City city, int age, Nation nation) getPlayerInfo(VirtualTeam team)
         {
+            var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == team.TeamId);
+            var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == currentTeam.NationId);
 
-            var firstNamesPath = File.ReadAllText(@"C:\Users\mivan\source\repos\ASP.NET-FootballManager\FootballManager.Infrastructure\Data\Database\FirstNames.json");
-            var lastNamesPath = File.ReadAllText(@"C:\Users\mivan\source\repos\ASP.NET-FootballManager\FootballManager.Infrastructure\Data\Database\LastNames.json");
-
-            var firstNames = JsonConvert.DeserializeObject<FirstNamesDto[]>(firstNamesPath);
-            var lastNames = JsonConvert.DeserializeObject<LastNamesDto[]>(lastNamesPath);
-            var allCities = this.data.Cities.ToList();
-
-            var randomFN = firstNames[rnd.Next(0, firstNames.Length)];
-
-            var lastNamesByNation = lastNames.Where(x => x.NationId == randomFN.NationId).ToList();
-            var randomLN = lastNamesByNation[rnd.Next(0, lastNamesByNation.Count)];
+            if (currentNation == null)
+            {
+                var allNations = this.data.Nations.ToList();
+                currentNation = allNations[rnd.Next(0, allNations.Count())];
+            }
 
             var age = rnd.Next(17, 33);
-            var nation = this.data.Nations.FirstOrDefault(x => x.Id == int.Parse(randomFN.NationId));
-            var city = allCities.Where(x => x.NationId == nation.Id).ToList()[rnd.Next(0, allCities.Count())];
+            var nation = this.data.Nations.FirstOrDefault(x => x.Id == currentNation.Id);
 
-            return (randomFN.FirstName, randomLN.LastName, city, age, nation);
+            var allCities = this.data.Cities.Where(x => x.NationId == nation.Id).ToList();
+
+            if (allCities.Count < 1)
+            {
+                allCities = this.data.Cities.Where(x => x.Nation.Name == "Bulgaria").ToList();
+            }
+
+            var city = allCities[rnd.Next(0, allCities.Count())];
+
+            return (city, age, nation);
 
         }
         private void GetProfileImage(Player player)
@@ -286,6 +331,50 @@
 
             var randomFileNum = rnd.Next(1, filesCount);
             player.ProfileImage = $"{randomFileNum}.png";
+            this.data.SaveChanges();
+        }
+        public void ResetPlayerStats(Game CurrentGame)
+        {
+            var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
+
+            foreach (var player in allPlayers)
+            {
+                player.Goals = 0;
+                player.Passes = 0;
+            }
+
+            this.data.SaveChanges();
+        }
+        public void UpdateAttributes(Game CurrentGame)
+        {
+            var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
+
+            foreach (var player in allPlayers)
+            {
+                player.Attack += player.Goals / 2;
+                player.Defense += player.Passes / 2;
+                player.Age += 1;
+
+                if (player.Position.Name == "Striker" || player.Position.Name == "Midlefielder" && player.Goals <= 5)
+                {
+                    player.Attack -= 3;
+                }
+
+                if (player.Position.Name == "Defender" || player.Position.Name == "Goalkeeper" && player.Passes <= 5)
+                {
+                    player.Defense -= 3;
+                }
+
+                if (player.Attack > 100)
+                {
+                    player.Attack = 100;
+                }
+
+                if (player.Defense > 100)
+                {
+                    player.Defense = 100;
+                }
+            }
             this.data.SaveChanges();
         }
     }

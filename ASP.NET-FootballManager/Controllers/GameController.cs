@@ -50,7 +50,7 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var goalScorer = playerService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
-            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId);
+            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
             var league = leagueService.GetLeague(esvm.LeagueId);
             var euroCup = euroCupService.GetEuropeanCup(esvm.EuroCupId);
             var cup = cupService.GetCurrentCup();
@@ -88,6 +88,9 @@
             euroCupService.DistributionEuroParticipant(CurrentGame);
             fixtureService.GenerateEuroFixtures(CurrentGame);
             playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgents.gk, DataConstants.FreeAgents.df, DataConstants.FreeAgents.mf, DataConstants.FreeAgents.st);
+            playerService.CalculatingPlayersPrice(CurrentGame);
+            playerService.UpdateAttributes(CurrentGame);
+            playerService.ResetPlayerStats(CurrentGame);
             teamService.ResetTeams(CurrentGame);           
             inboxService.NewSeasonNews(CurrentGame);
 
@@ -96,7 +99,7 @@
         public IActionResult EndSeason(EndSeasonViewModel esvm)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId);
+            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
 
             return View(new EndSeasonViewModel
             {

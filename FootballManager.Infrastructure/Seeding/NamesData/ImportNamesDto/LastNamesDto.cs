@@ -7,7 +7,8 @@ namespace ASP.NET_FootballManager.Data.Database.ImportDto
         [JsonProperty("lastName")]
         public string LastName { get; set; }
 
-        [JsonProperty("NationId")]
-        public string NationId { get; set; }
+        [JsonProperty("NationName")]
+        public string NationName { get; set; }
+                
     }
 }

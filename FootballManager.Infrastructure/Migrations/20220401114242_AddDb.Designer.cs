@@ -9,17 +9,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ASP.NET_FootballManager.Migrations
+namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20220324130535_EuroCupAndCup")]
-    partial class EuroCupAndCup
+    [Migration("20220401114242_AddDb")]
+    partial class AddDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.2")
+                .HasAnnotation("ProductVersion", "6.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -129,6 +129,9 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Participants")
                         .HasColumnType("int");
 
+                    b.Property<int>("Rank")
+                        .HasColumnType("int");
+
                     b.Property<int>("Rounds")
                         .HasColumnType("int");
 
@@ -152,6 +155,9 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AwayTeamName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompetitionName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CupId")
@@ -211,6 +217,9 @@ namespace ASP.NET_FootballManager.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CupRound")
+                        .HasColumnType("int");
 
                     b.Property<int>("Day")
                         .HasColumnType("int");
@@ -538,6 +547,12 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsCupParticipant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEuroParticipant")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsPlayable")
                         .HasColumnType("bit");
 
@@ -578,7 +593,13 @@ namespace ASP.NET_FootballManager.Migrations
                     b.Property<int>("Budget")
                         .HasColumnType("int");
 
+                    b.Property<int>("ChampionsCup")
+                        .HasColumnType("int");
+
                     b.Property<int?>("CupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cups")
                         .HasColumnType("int");
 
                     b.Property<int>("Draws")
@@ -604,6 +625,12 @@ namespace ASP.NET_FootballManager.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCupParticipant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEuroParticipant")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPlayable")
                         .HasColumnType("bit");

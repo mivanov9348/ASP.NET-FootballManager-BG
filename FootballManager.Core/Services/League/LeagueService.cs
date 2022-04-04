@@ -26,15 +26,15 @@
             }
 
         }
-        public List<VirtualTeam> GetStandingsByLeague(int id)
+        public List<VirtualTeam> GetStandingsByLeague(int id, Game CurrentGame)
         {
             if (id == 0)
             {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == 1).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
+                return this.data.VirtualTeams.Where(x => x.LeagueId == 1 && x.GameId == CurrentGame.Id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
             }
             else
             {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
+                return this.data.VirtualTeams.Where(x => x.LeagueId == id && x.GameId == CurrentGame.Id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
 
             }
         }
@@ -68,7 +68,7 @@
         {
             var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
             var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
-            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentFixt.Day.CurrentDay);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentFixt.Day.CurrentDay && x.Year == currentFixt.Day.Year);
 
             currentFixt.IsPlayed = true;
             currentDay.IsPlayed = true;
@@ -131,11 +131,17 @@
 
             foreach (var league in leagues)
             {
-                var standings = GetStandingsByLeague(league.Id);
-                var nextLeagueLevel = league.Level += 1;
+                var standings = GetStandingsByLeague(league.Id, CurrentGame);
+                var nextLeagueTeams = new List<VirtualTeam>();
+                var nextLeagueLevel = league.Level + 1;
                 var nextLeague = this.data.Leagues.FirstOrDefault(x => x.Level == nextLeagueLevel && x.NationId == league.NationId);
-                var nextLeagueTeams = this.data.VirtualTeams.Where(x => x.LeagueId == nextLeague.Id).ToList();
-                var upLeagueLevel = league.Level -= 1;
+
+                if (nextLeague != null)
+                {
+                    nextLeagueTeams = this.data.VirtualTeams.Where(x => x.LeagueId == nextLeague.Id).ToList();
+                }
+
+                var upLeagueLevel = league.Level - 1;
                 var upLeague = this.data.Leagues.FirstOrDefault(x => x.Level == upLeagueLevel && x.NationId == league.NationId);
 
                 if (league.Level == 1)
@@ -150,9 +156,13 @@
 
                     champion.Titles += 1;
                     champion.EuropeanCupId = championsCup.Id;
+                    champion.IsEuroParticipant = true;
                     secondChampionsCupParticipant.EuropeanCupId = championsCup.Id;
+                    secondChampionsCupParticipant.IsEuroParticipant = true;
                     firstEuroCupParticipant.EuropeanCupId = euroCup.Id;
+                    firstEuroCupParticipant.IsEuroParticipant = true;
                     secondEuroCupParticipant.EuropeanCupId = euroCup.Id;
+                    secondEuroCupParticipant.IsEuroParticipant = true;
 
                     if (nextLeague != null && nextLeagueTeams.Count > 0)
                     {

@@ -11,7 +11,7 @@
         TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam);
         void ResetTeams(Game currentGame);
         VirtualTeam GetCurrentTeam(Game currentGame);
-        Team GetOriginalTeam(VirtualTeam currentVirtual);
+        Team GetOriginalTeam(VirtualTeam currentVirtual,Game CurrentGame);
         VirtualTeam GetTeamById(int teamId);
         List<VirtualTeam> GetAllVirtualTeams(Game currentGame);
         List<Team> GetAllTeams();

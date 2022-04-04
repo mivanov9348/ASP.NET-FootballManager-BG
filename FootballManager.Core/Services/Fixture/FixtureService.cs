@@ -14,12 +14,12 @@
         public void GenerateLeagueFixtures(Game game)
         {
             var allLeagues = this.data.Leagues.ToList();
-            var leagueDays = this.data.Days.Where(x => x.isLeagueDay == true && x.GameId == game.Id);
+            var leagueDays = this.data.Days.Where(x => x.isLeagueDay == true && x.GameId == game.Id && x.Year == game.Year).ToList();
 
             foreach (var item in allLeagues)
-            {               
+            {
                 var currL = this.data.Leagues.FirstOrDefault(x => x.Id == item.Id);
-                var teams = this.data.VirtualTeams.Where(x => x.LeagueId == currL.Id).ToList();
+                var teams = this.data.VirtualTeams.Where(x => x.LeagueId == currL.Id && x.GameId == game.Id).ToList();
                 ShuffleTeams(teams);
                 var numOfMatches = teams.Count / 2 * (teams.Count - 1);
                 int numFixt = 0;
@@ -53,15 +53,15 @@
                             AwayTeamId = atId,
                             Day = currentDay,
                             DayId = currentDay.Id
-
                         };
 
                         this.data.Fixtures.Add(newFixt);
                         numFixt++;
                     }
+
                     round++;
                     dayCount++;
-                   
+
                     for (int i = teams.Count - 1; i > 1; i--)
                     {
                         VirtualTeam temp = teams[i - 1];
@@ -77,10 +77,10 @@
             var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
             var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
 
-            var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null).ToList();
-            var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null).ToList();
+            var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null&&x.GameId==game.Id).ToList();
+            var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
 
-            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true);
+            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true && x.Year == game.Year);
 
             if (currentDay != null)
             {
@@ -143,13 +143,13 @@
                 }
             }
 
-           
+
         }
         public void GenerateCupFixtures(Game game)
         {
             var teamsInCup = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true && x.GameId == game.Id).ToList();
             var currentCup = this.data.Cups.First();
-            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.GameId == game.Id && x.IsPlayed == false && x.isCupDay);
+            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.GameId == game.Id && x.IsPlayed == false && x.isCupDay && x.Year == game.Year);
 
             if (currentDay != null)
             {
@@ -181,7 +181,7 @@
                     this.data.SaveChanges();
                 }
             }
-          
+
         }
         public void DeleteFixtures(Game game)
         {
@@ -207,18 +207,18 @@
                 currl[i] = value;
             }
         }
-        public List<Fixture> GetFixture(int id, int round)
+        public List<Fixture> GetFixture(int id, int round, Game CurrentGame)
         {
             if (id == 0 && round == 0 || id == 0 && round != 0)
             {
-                return this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == 1).ToList();
+                return this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == 1 && x.GameId == CurrentGame.Id).ToList();
             }
             if (id != 0 && round == 0)
             {
-                return this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == id).ToList();
+                return this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == id && x.GameId == CurrentGame.Id).ToList();
             }
 
-            return this.data.Fixtures.Where(x => x.LeagueId == id && x.Round == round).ToList();
+            return this.data.Fixtures.Where(x => x.LeagueId == id && x.Round == round && x.GameId == CurrentGame.Id).ToList();
 
         }
         public int GetAllRounds(int leagueId)

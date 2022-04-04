@@ -72,11 +72,11 @@
                 }
             </select>
             <input type="submit" value="Choose" asp-action="Fixtures" />
+            <input type="submit" style="color:brown" value="Cup" asp-action="CupsFixture" asp-route-id="1" />
+            <input type="submit" style="color:brown" value="Champions Cup" asp-action="CupsFixture" asp-route-id="2" />
+            <input type="submit" style="color:brown" value="Euro Cup" asp-action="CupsFixture" asp-route-id="3" />
             <br />
-            <input type="submit" value="Cup" asp-action="CupsFixture" asp-route-id="1" />
-            <input type="submit" value="ChampionsCup" asp-action="CupsFixture" asp-route-id="2" />
-            <input type="submit" value="EuroCup" asp-action="CupsFixture" asp-route-id="3" />
-            <br />
+
             @for (var i = 1; i <= @Model.AllRounds; i++)
             {
                 <input type="hidden" asp-for="LeagueId">

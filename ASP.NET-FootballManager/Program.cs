@@ -1,4 +1,5 @@
 using ASP.NET_FootballManager.Data;
+using FootballManager.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,10 +29,28 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+IConfiguration configuration = app.Configuration;
+IWebHostEnvironment environment = app.Environment;
+
+// Seed data on application startup
+using (var serviceScope = app.Services.CreateScope())
+{
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<FootballManagerDbContext>();
+
+    if (environment.IsDevelopment())
+    {
+        dbContext.Database.Migrate();
+    }
+
+    new FootballManagerDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+}
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+
 }
 else
 {

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ASP.NET_FootballManager.Migrations
+namespace FootballManager.Infrastructure.Migrations
 {
-    public partial class AddDatabase : Migration
+    public partial class AddDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,7 +56,8 @@ namespace ASP.NET_FootballManager.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Participants = table.Column<int>(type: "int", nullable: false),
-                    Rounds = table.Column<int>(type: "int", nullable: false)
+                    Rounds = table.Column<int>(type: "int", nullable: false),
+                    Rank = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -268,13 +269,15 @@ namespace ASP.NET_FootballManager.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    IsPlayable = table.Column<bool>(type: "bit", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CityId = table.Column<int>(type: "int", nullable: true),
                     NationId = table.Column<int>(type: "int", nullable: true),
                     LeagueId = table.Column<int>(type: "int", nullable: true),
                     CupId = table.Column<int>(type: "int", nullable: true),
-                    EuropeanCupId = table.Column<int>(type: "int", nullable: true)
+                    EuropeanCupId = table.Column<int>(type: "int", nullable: true),
+                    IsEuroParticipant = table.Column<bool>(type: "bit", nullable: false),
+                    IsCupParticipant = table.Column<bool>(type: "bit", nullable: false),
+                    IsPlayable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -364,7 +367,8 @@ namespace ASP.NET_FootballManager.Migrations
                     Year = table.Column<int>(type: "int", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     LeagueRound = table.Column<int>(type: "int", nullable: false),
-                    EuroCupRound = table.Column<int>(type: "int", nullable: false)
+                    EuroCupRound = table.Column<int>(type: "int", nullable: false),
+                    CupRound = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -440,11 +444,12 @@ namespace ASP.NET_FootballManager.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsPlayable = table.Column<bool>(type: "bit", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TeamId = table.Column<int>(type: "int", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
                     LeagueId = table.Column<int>(type: "int", nullable: true),
+                    CupId = table.Column<int>(type: "int", nullable: true),
+                    EuropeanCupId = table.Column<int>(type: "int", nullable: true),
                     Matches = table.Column<int>(type: "int", nullable: false),
                     Wins = table.Column<int>(type: "int", nullable: false),
                     Draws = table.Column<int>(type: "int", nullable: false),
@@ -454,14 +459,31 @@ namespace ASP.NET_FootballManager.Migrations
                     GoalDifference = table.Column<int>(type: "int", nullable: false),
                     Points = table.Column<int>(type: "int", nullable: false),
                     Titles = table.Column<int>(type: "int", nullable: false),
+                    Cups = table.Column<int>(type: "int", nullable: false),
+                    ChampionsCup = table.Column<int>(type: "int", nullable: false),
                     EuroCups = table.Column<int>(type: "int", nullable: false),
                     Budget = table.Column<int>(type: "int", nullable: false),
                     Overall = table.Column<int>(type: "int", nullable: false),
+                    IsEuroParticipant = table.Column<bool>(type: "bit", nullable: false),
+                    IsCupParticipant = table.Column<bool>(type: "bit", nullable: false),
+                    IsPlayable = table.Column<bool>(type: "bit", nullable: false),
                     ManagerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VirtualTeams", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VirtualTeams_Cups_CupId",
+                        column: x => x.CupId,
+                        principalTable: "Cups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VirtualTeams_EuropeanCups_EuropeanCupId",
+                        column: x => x.EuropeanCupId,
+                        principalTable: "EuropeanCups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VirtualTeams_Games_GameId",
                         column: x => x.GameId,
@@ -495,6 +517,7 @@ namespace ASP.NET_FootballManager.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GameId = table.Column<int>(type: "int", nullable: false),
                     Round = table.Column<int>(type: "int", nullable: false),
+                    CompetitionName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HomeTeamName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AwayTeamName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HomeTeamId = table.Column<int>(type: "int", nullable: false),
@@ -836,6 +859,16 @@ namespace ASP.NET_FootballManager.Migrations
                 name: "IX_Teams_NationId",
                 table: "Teams",
                 column: "NationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VirtualTeams_CupId",
+                table: "VirtualTeams",
+                column: "CupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VirtualTeams_EuropeanCupId",
+                table: "VirtualTeams",
+                column: "EuropeanCupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VirtualTeams_GameId",
