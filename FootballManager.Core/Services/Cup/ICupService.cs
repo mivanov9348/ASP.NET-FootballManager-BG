@@ -7,6 +7,7 @@
         void GenerateCupParticipants(Game curentGame);
         void CheckWinner(Fixture currentFixture);
         void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture);
+        List<Fixture> GetCupFixtures(Game CurrentGame);
         Cup GetCurrentCup();
         VirtualTeam GetWinner(Game game);
 

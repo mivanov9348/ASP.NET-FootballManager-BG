@@ -1,5 +1,4 @@
 ﻿@model InboxViewModel
-
 <partial name="~/Views/Shared/_SideBar.cshtml" />
 
 <style>
@@ -32,6 +31,7 @@
         }
 
     .title {
+       
         margin-left: 160px;
         font-size: 30px;
         font-family: fantasy;
@@ -43,7 +43,8 @@
 
     .FullNews {
         position: absolute;
-        top: 30px;
+        margin-top:70px;
+        top: 50px;
         margin-left: 590px;
         border-radius: 10px 10px 10px 10px;
         border: 3px solid white;
@@ -58,8 +59,11 @@
 </style>
 
 <body>
-    <label>Year: @Model.Year Day:@Model.Day</label>
-    <hr />
+
+    <label style="color:red;font-size:20px">Year: @Model.Year Day:@Model.Day</label>
+    <hr style="color:red" />
+    <button onclick="getLocation()">Get Current Position</button>
+    <p id="demo"></p>
     <div class="Inbox">
         <label class="title">INBOX</label>
         <hr style="color:red;font-weight:bolder" />
@@ -86,3 +90,19 @@
 </body>
 
 
+<script>
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+
+    function showPosition(position) {
+      x.innerHTML = "Latitude: " + position.coords.latitude +
+      "<br>Longitude: " + position.coords.longitude;
+    }
+</script>

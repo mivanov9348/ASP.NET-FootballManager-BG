@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Cup
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Data.DataModels;   
+    using ASP.NET_FootballManager.Data.DataModels;
     using System.Collections.Generic;
 
     public class CupService : ICupService
@@ -17,7 +17,7 @@
         {
             RemoveAllTeamsFromCup(curentGame);
             var currentCup = this.data.Cups.First();
-            var teamsParticipants = this.data.VirtualTeams.Where(x => (x.League.Id == 1 || x.League.Id == 2) && x.GameId == curentGame.Id).ToList();
+            var teamsParticipants = this.data.VirtualTeams.Where(x => x.League.Nation.Name=="Bulgaria" && x.GameId == curentGame.Id).ToList();
 
             foreach (var team in teamsParticipants)
             {
@@ -34,6 +34,7 @@
         }
         public void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture)
         {
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == dayFixtures.First().GameId);
 
             if (currentFixture != null)
             {
@@ -50,6 +51,7 @@
                 GetGoalScorers(fixture.HomeTeam, fixture.HomeTeamGoal, fixture);
                 WinnerCalculate(fixture);
             }
+            currentGame.CupRound += 1;
             this.data.SaveChanges();
         }
         private void GetGoalScorers(VirtualTeam currentTeam, int teamGoals, Fixture fixture)
@@ -120,6 +122,6 @@
             this.data.SaveChanges();
             return winner;
         }
-
+        public List<Fixture> GetCupFixtures(Game CurrentGame) => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.CupId != null).ToList();
     }
 }

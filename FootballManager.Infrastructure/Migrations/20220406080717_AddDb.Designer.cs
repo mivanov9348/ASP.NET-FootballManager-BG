@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20220401114242_AddDb")]
+    [Migration("20220406080717_AddDb")]
     partial class AddDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

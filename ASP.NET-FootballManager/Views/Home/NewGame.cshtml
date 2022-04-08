@@ -4,7 +4,7 @@
 
     body {
         background-color: black;
-        font-family:'OLD SPORT 02 ATHLETIC NCV';
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
     }
 
     .FormInput {
@@ -42,7 +42,7 @@
     <h5 style="color:white;font-family:fantasy;text-align:center">@ViewData["Error"]</h5>
     <form method="get">
         <div class="FormInput">
-            
+
             <hr />
             <input type="text" asp-for="@Model.FirstName" placeholder="First Name" />
             <br />
@@ -67,8 +67,23 @@
             </select>
             <hr />
 
-            <input class="SubmitBtn" type="submit" asp-action="StartGame" value="Start Game" />
-
+            <input class="SubmitBtn" id="SubmitBtn" type="submit" asp-action="StartGame" onclick="funct1()" value="Start Game" />
+            <br />
+            <span hidden id="timerLabel">90</span>
+            <p id="p"> </p>
+            <p id="left" style="color:red"></p>
         </div>
     </form>
 </body>
+
+<script>
+            document.getElementById("SubmitBtn").addEventListener("click", function() {
+          document.getElementById("p").innerHTML = "Loading! Estimating time remaining....";
+          let current = parseInt(document.getElementById("timerLabel").innerHTML);
+    const countdown = function() {
+      document.getElementById("left").innerHTML = --current || "Done"; // using current when 0 it is false
+      if (current <= 0) clearTimeout(tId); // stop the interval
+    };
+    const tId = setInterval(countdown, 1000)
+        });
+</script>

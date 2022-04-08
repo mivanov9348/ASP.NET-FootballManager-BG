@@ -119,7 +119,7 @@
         public IActionResult TeamSquad()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var currPlayers = playerService.GetPlayersByTeam(currentTeam.Id);
+            var currPlayers = playerService.GetPlayersByTeam(currentTeam.Id).OrderBy(x=>x.PositionId).ToList();
             var model = teamService.GetTeamViewModel(currPlayers, currentTeam);
 
             return View(model);

@@ -13,7 +13,7 @@
             {
                 Cup[] cups = new Cup[]
                 {
-                   new Cup() { Name = "Bulgarian Cup", Participants=32,Rounds=5,NationId = dbContext.Nations.FirstOrDefault(x=>x.Name=="Bulgaria").Id },
+                   new Cup() { Name = "Bulgarian Cup", Participants=32,Rounds=6,NationId = dbContext.Nations.FirstOrDefault(x=>x.Name=="Bulgaria").Id },
                 };
 
                 await dbContext.Cups.AddRangeAsync(cups);

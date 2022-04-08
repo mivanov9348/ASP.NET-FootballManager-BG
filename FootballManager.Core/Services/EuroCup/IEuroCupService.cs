@@ -10,5 +10,6 @@
         List<EuropeanCup> AllEuroCups();
         VirtualTeam GetChampionsCupWinner(Game game);
         VirtualTeam GetEuroCupWinner(Game game);
+        List<Fixture> GetEuroCupFixtures(Game CurrentGame, int euroCupRank);
     }
 }

@@ -131,7 +131,6 @@
         public Player GetPlayerById(int id) => this.data.Players.FirstOrDefault(x => x.Id == id);
         public Player GetLeagueGoalscorer(Game CurrentGame, int leagueId)
         {
-
             if (leagueId == 0)
             {
                 leagueId = this.data.Leagues.FirstOrDefault(x => x.Level == 1).Id;
@@ -233,7 +232,7 @@
         public void CalculatingPlayersPrice(Game CurrentGame)
         {
             var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
-            allPlayers.ForEach(x => x.Price = x.Overall * 3);
+            allPlayers.ForEach(x => x.Price = x.Overall * 4);
             this.data.SaveChanges();
         }
         private (string firstName, string lastName) getPlayerNames(VirtualTeam team)
@@ -280,9 +279,9 @@
             if (position == "Goalkeeper" || position == "Defender")
             {
                 var defense = rnd.Next(50, 100);
-                var attack = rnd.Next(20, 60);
-                var speed = rnd.Next(20, 60);
-                var overall = (defense + attack + speed) / 3;
+                var attack = rnd.Next(20, 70);
+                var speed = rnd.Next(20, 65);
+                var overall = (defense * 2 + attack / 2 + speed) / 3;
 
                 return (defense, attack, speed, overall);
             }
@@ -290,13 +289,12 @@
             {
                 var defense = rnd.Next(20, 70);
                 var attack = rnd.Next(40, 100);
-                var speed = rnd.Next(30, 100);
-                var overall = (defense + attack + speed) / 3;
+                var speed = rnd.Next(30, 65);
+                var overall = (defense / 2 + attack * 2 + speed) / 3;
 
                 return (defense, attack, speed, overall);
             }
             return (20, 20, 20, 20);
-
         }
         private (City city, int age, Nation nation) getPlayerInfo(VirtualTeam team)
         {

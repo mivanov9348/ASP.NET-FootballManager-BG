@@ -55,6 +55,8 @@
         }
         public void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture)
         {
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == dayFixtures.First().GameId);
+
             if (currentFixture != null)
             {
                 dayFixtures = dayFixtures.Where(x => x.Id != currentFixture.Id).ToList();
@@ -70,6 +72,7 @@
                 GetGoalScorers(fixture.HomeTeam, fixture.HomeTeamGoal, fixture);
                 WinnerCalculate(fixture);
             }
+            currentGame.EuroCupRound += 1;
             this.data.SaveChanges();
         }
         public void CheckWinner(Fixture currentFixture)
@@ -156,5 +159,6 @@
             winner.EuroCups += 1;
             return winner;
         }
+        public List<Fixture> GetEuroCupFixtures(Game CurrentGame, int euroCupRank) => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.EuropeanCupId == euroCupRank).ToList();
     }
 }

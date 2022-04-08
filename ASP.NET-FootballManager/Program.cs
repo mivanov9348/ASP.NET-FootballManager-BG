@@ -12,7 +12,7 @@ builder.Services.AddDbContext<FootballManagerDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddApplicationServices();
-
+builder.Services.AddSignalR();
 builder.Services.AddDefaultIdentity<IdentityUser>(o =>
 {
     // configure identity options

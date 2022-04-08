@@ -4,6 +4,8 @@
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Models.Sorting;
     using ASP.NET_FootballManager.Services.Common;
+    using ASP.NET_FootballManager.Services.Cup;
+    using ASP.NET_FootballManager.Services.EuroCup;
     using ASP.NET_FootballManager.Services.Fixture;
     using ASP.NET_FootballManager.Services.Game;
     using ASP.NET_FootballManager.Services.Inbox;
@@ -12,7 +14,6 @@
     using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
     using Microsoft.AspNetCore.Mvc;
-    using System;
     using System.Security.Claims;
 
     public class MenuController : Controller
@@ -20,13 +21,15 @@
         private readonly ICommonService commonService;
         private readonly IManagerService managerService;
         private readonly ILeagueService leagueService;
+        private readonly ICupService cupService;
+        private readonly IEuroCupService euroCupService;
         private readonly IGameService gameService;
         private readonly IPlayerService playerService;
         private readonly IFixtureService fixtureService;
         private readonly ITeamService teamService;
         private readonly IInboxService inboxService;
         private readonly IDayService dayService;
-        public MenuController(IInboxService inboxService, ITeamService teamService, IFixtureService fixtureService, IPlayerService playerService, IGameService gameService, ICommonService commonService, ILeagueService leagueService, IManagerService managerService, IDayService dayService)
+        public MenuController(ICupService cupService, IEuroCupService euroCupService, IInboxService inboxService, ITeamService teamService, IFixtureService fixtureService, IPlayerService playerService, IGameService gameService, ICommonService commonService, ILeagueService leagueService, IManagerService managerService, IDayService dayService)
         {
             this.commonService = commonService;
             this.leagueService = leagueService;
@@ -37,6 +40,8 @@
             this.teamService = teamService;
             this.inboxService = inboxService;
             this.dayService = dayService;
+            this.cupService = cupService;
+            this.euroCupService = euroCupService;
         }
         public IActionResult Inbox(int id)
         {
@@ -85,21 +90,37 @@
                 CurrentLeagueName = currentLeague.Name.ToUpper()
             });
         }
-        public IActionResult CupsFixture(FixturesViewModel fvm)
+        public IActionResult CupsFixture(FixturesViewModel fvm, int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var allLeagues = leagueService.GetAllLeagues();
-            var currentFixtures = fixtureService.GetFixture(fvm.LeagueId, fvm.CurrentRound, CurrentGame);
-            var rounds = fixtureService.GetAllRounds(fvm.LeagueId);
-            var currentLeague = leagueService.GetLeague(fvm.LeagueId);
+            var currentFixtures = new List<Fixture>();
+            string CupName = "";
+            var rounds = 1;
 
-            return View(new FixturesViewModel
+            switch (id)
+            {
+                case 1:
+                    currentFixtures = cupService.GetCupFixtures(CurrentGame);
+                    CupName = "Cup";
+                    break;
+                case 2:
+                    currentFixtures = euroCupService.GetEuroCupFixtures(CurrentGame, 1);
+                    CupName = "Champions Cup";
+                    break;
+                case 3:
+                    currentFixtures = euroCupService.GetEuroCupFixtures(CurrentGame, 2);
+                    CupName = "Champions Cup";
+                    break;
+            }
+
+            return View("Fixtures", new FixturesViewModel
             {
                 Leagues = allLeagues,
                 Fixtures = currentFixtures,
                 AllRounds = rounds,
                 LeagueId = fvm.LeagueId,
-                CurrentLeagueName = currentLeague.Name.ToUpper()
+                CurrentLeagueName = CupName.ToUpper()
             });
         }
         public IActionResult ChooseRound(int id, FixturesViewModel fvm)
@@ -195,6 +216,7 @@
 
             });
         }
+      
         private (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

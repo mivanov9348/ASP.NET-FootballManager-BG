@@ -14,6 +14,7 @@
             var firstleague = dbContext.Leagues.FirstOrDefault(x => x.NationId == bulgaria.Id && x.Level == 1);
             var secondLeague = dbContext.Leagues.FirstOrDefault(x => x.NationId == bulgaria.Id && x.Level == 2);
             var thirdLeague = dbContext.Leagues.FirstOrDefault(x => x.NationId == bulgaria.Id && x.Level == 3);
+            var fourthLeague = dbContext.Leagues.FirstOrDefault(x => x.NationId == bulgaria.Id && x.Level == 4);
 
             if (!dbContext.Teams.Any())
             {
@@ -60,6 +61,50 @@
                };
 
                 await dbContext.Teams.AddRangeAsync(secondLeagueTeams);
+
+                Team[] thirdLeagueTeams = new Team[]
+             {
+                   new Team() { Name = "Spartak Pleven", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Pleven")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="SpartakPleven.jpg" },
+                   new Team() { Name = "Maritsa Plovdiv", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Plovdiv")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="MaritsaPlovdiv.jpg" },
+                   new Team() { Name = "Volov", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Shumen")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="VolovShumen.jpg" },
+                   new Team() { Name = "Lokomotiv Ruse", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Ruse")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="LokomotivRuse.jpg" },
+                   new Team() { Name = "Nesebar", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Nesebar")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Nesebar.jpg" },
+                   new Team() { Name = "Rodopa Smolyan", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Smolyan")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="RodopaSmolyan.jpg" },
+                   new Team() { Name = "Levski Lom", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Lom")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="LevskiLom.jpg" },
+                   new Team() { Name = "Sozopol", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Sozopol")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Sozopol.jpg" },
+                   new Team() { Name = "Balkan Botevgrad", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Botevgrad")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="BalkanBotevgrad.jpg" },
+                   new Team() { Name = "Chavdar Etropole", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Etropole")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="ChavdarEtropole.jpg" },
+                   new Team() { Name = "Belasitsa Petrich", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Petrich")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Belasitsa.jpg" },
+                   new Team() { Name = "Zagorets", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Zagorets")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Zagorets.jpg" },
+                   new Team() { Name = "Bdin", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Vidin")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Bdin.jpg" },
+                   new Team() { Name = "Yantra", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Gabrovo")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Yantra.jpg" },
+                   new Team() { Name = "Dorostol", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Silistra")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Dorostol.jpg" },
+                   new Team() { Name = "Vihar Sandanski", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Sandanski")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=thirdLeague.Id,IsPlayable=true,ImageUrl="Vihar.jpg" },
+             };
+
+                await dbContext.Teams.AddRangeAsync(thirdLeagueTeams);
+
+                Team[] fourthLeagueTeams = new Team[]
+             {
+                   new Team() { Name = "Sevlievo", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Sevlievo")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="Sevlievo.jpg" },
+                   new Team() { Name = "Vihar Slavyanovo", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Slavyanovo")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="ViharSlavyanovo.jpg" },
+                   new Team() { Name = "Drenovets", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Drenovets")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="Drenovets.jpg" },
+                   new Team() { Name = "Akademik Svishtov", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Svishtov")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="AkademikSvishtov.jpg" },
+                   new Team() { Name = "Chernomorets Balchik", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Balchik")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="ChernomoretsBalchik.jpg" },
+                   new Team() { Name = "Riltsi", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Riltsi")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="Riltsi.jpg" },
+                   new Team() { Name = "Slivnishki Geroi", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Slivnitsa")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="SlivnishkiGeroi.jpg" },
+                   new Team() { Name = "Granit Vladaya", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Vladaya")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="GranitVladaya.jpg" },
+                   new Team() { Name = "Oborishte", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Oborishte")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="Oborishte.jpg" },
+                   new Team() { Name = "Kyustendil", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Kyustendil")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="Kyustendil.jpg" },
+                   new Team() { Name = "Gigant Saedinenie", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Saedinenie")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="GigantSaedinenie.jpg" },
+                   new Team() { Name = "Levski Karlovo", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Karlovo")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="LevskiKarlovo.jpg" },
+                   new Team() { Name = "Rozova Dolina", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Kazanlak")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="RozovaDolina.jpg" },
+                   new Team() { Name = "Sokol", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Makovo")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="SokolMarkovo.jpg" },
+                   new Team() { Name = "Dimitrovgrad", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Dimitrovgrad")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="Dimitrovgrad.jpg" },
+                   new Team() { Name = "Dulo", CityId=dbContext.Cities.FirstOrDefault(x=>x.Name=="Vidin")?.Id??null,NationId = bulgaria.Id,CupId = null,EuropeanCupId=null,LeagueId=fourthLeague.Id,IsPlayable=true,ImageUrl="Dulo.jpg" },
+             };
+
+                await dbContext.Teams.AddRangeAsync(fourthLeagueTeams);
 
                 Team[] europeanTeams = new Team[]
                {

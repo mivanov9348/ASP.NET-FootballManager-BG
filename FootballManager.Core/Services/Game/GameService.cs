@@ -59,8 +59,32 @@
             CurrentGame.Day = 1;
             CurrentGame.Year += 1;
             CurrentGame.Season += 1;
+            CurrentGame.CupRound = 1;
             CurrentGame.LeagueRound = 1;
             CurrentGame.EuroCupRound = 1;
+            this.data.SaveChanges();
+        }
+        public void ResetSave(string UserId)
+        {
+            var userManager = this.data.Managers.FirstOrDefault(x => x.UserId == UserId);
+            var userGame = this.data.Games.FirstOrDefault(x => x.ManagerId == userManager.Id);
+
+            var matches = this.data.Matches.Where(x => x.GameId == userGame.Id).ToList();
+            matches.RemoveRange(0, matches.Count());
+            var players = this.data.Players.Where(x => x.GameId == userGame.Id).ToList();
+            matches.RemoveRange(0, players.Count());
+            var fixtures = this.data.Fixtures.Where(x => x.GameId == userGame.Id).ToList();
+            matches.RemoveRange(0, fixtures.Count());
+            var inboxes = this.data.Inboxes.Where(x => x.GameId == userGame.Id).ToList();
+            matches.RemoveRange(0, inboxes.Count());
+            var virtualTeams = this.data.VirtualTeams.Where(x => x.GameId == userGame.Id).ToList();
+            matches.RemoveRange(0, virtualTeams.Count());
+            var days = this.data.Days.Where(x => x.GameId == userGame.Id).ToList();
+            matches.RemoveRange(0, days.Count());
+
+            this.data.Games.Remove(userGame);
+            this.data.Managers.Remove(userManager);
+
             this.data.SaveChanges();
         }
     }

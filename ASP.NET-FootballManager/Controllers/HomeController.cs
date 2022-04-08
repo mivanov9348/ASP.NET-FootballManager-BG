@@ -14,6 +14,7 @@
     using ASP.NET_FootballManager.Services.Fixture;
     using ASP.NET_FootballManager.Services.EuroCup;
     using ASP.NET_FootballManager.Services.Cup;
+    using System.Text;
 
     public class HomeController : Controller
     {
@@ -30,6 +31,7 @@
         private readonly IEuroCupService euroCupService;
         private readonly ICupService cupService;
         private string UserId;
+        private Stopwatch sw;
         public HomeController(ILogger<HomeController> logger,
             IGameService gameService,
             IManagerService managerService,
@@ -55,6 +57,7 @@
             this.dayService = dayService;
             this.euroCupService = euroCupService;
             this.cupService = cupService;
+            this.sw = new Stopwatch();
         }
         public IActionResult Index()
         {
@@ -72,13 +75,22 @@
             }
             return View(new GameViewModel { ExistGame = false });
         }
-        public IActionResult NewGame()
+        public IActionResult NewGame(int id)
         {
             CurrentUser();
             bool isExistGame = gameService.isExistGame(UserId);
 
             if (isExistGame)
             {
+                if (id == 1)
+                {
+                    gameService.ResetSave(UserId);
+                    return View(new NewManagerViewModel
+                    {
+                        Nations = commonService.GetAllNations(),
+                        Teams = teamService.GetAllPlayableTeams()
+                    });
+                }
                 return RedirectToAction("ExistingGame");
             }
 
@@ -102,17 +114,18 @@
 
             if (isValid)
             {
-                //CreateManager
+                StringBuilder sb = new StringBuilder();
+                //CreateManager               
                 var currentManager = managerService.CreateNewManager(ngvm, UserId);
                 var currentGame = gameService.CreateNewGame(currentManager);
-                //CalculateDaysForSeason
+                //CalculateDaysForSeason              
                 dayService.CalculateDays(currentGame);
                 fixtureService.AddFixtureToDay(currentGame);
-                //NewManagerNews
+                //NewManagerNews                
                 inboxService.CreateManagerNews(currentManager, currentGame);
-                //GenerateTeamsForGame
+                //GenerateTeamsForGame             
                 var teams = teamService.GenerateTeams(currentGame).ToList();
-                //GenerateCup
+                //GenerateCup               
                 cupService.GenerateCupParticipants(currentGame);
                 fixtureService.GenerateCupFixtures(currentGame);
                 //GenerateEuroCup
@@ -124,7 +137,7 @@
                 playerService.CalculatingPlayersPrice(currentGame);
                 teams.ForEach(x => teamService.CalculateTeamOverall(x));
                 //GenerateLeagueFixtures
-                fixtureService.GenerateLeagueFixtures(currentGame);          
+                fixtureService.GenerateLeagueFixtures(currentGame);
                 return RedirectToAction("Inbox", "Menu");
             }
             else

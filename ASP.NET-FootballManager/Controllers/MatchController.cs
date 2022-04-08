@@ -83,9 +83,7 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
-            var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var homeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId);
-            var awayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId);
+            var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);           
 
             return View(new MatchViewModel
             {
@@ -93,15 +91,15 @@
                 HomeTeamName = currentFixture.HomeTeamName,
                 AwayTeamName = currentFixture.AwayTeamName,
                 CurrentFixture = currentFixture,
-                HomeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId),
-                AwayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId)
+                HomeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId).OrderBy(x=>x.PositionId).ToList(),
+                AwayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId).OrderBy(x => x.PositionId).ToList()
             });
         }
         public IActionResult Tactics()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var clubStartingEleven = playerService.GetStartingEleven(currentTeam.Id);
-            var clubSubstitutes = playerService.GetSubstitutes(currentTeam.Id);
+            var clubStartingEleven = playerService.GetStartingEleven(currentTeam.Id).OrderBy(x => x.PositionId).ToList();
+            var clubSubstitutes = playerService.GetSubstitutes(currentTeam.Id).OrderBy(x => x.PositionId).ToList();
             var positions = commonService.GetAllPositions();
             var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
@@ -112,13 +110,14 @@
                 if (currentDay.isCupDay)
                 {
                     cupService.CalculateOtherMatches(dayFixtures, currentFixture);
-                    fixtureService.GenerateCupFixtures(CurrentGame);
+                    fixtureService.GenerateCupFixtures(CurrentGame);                    
                 }
                 if (currentDay.isEuroCupDay)
                 {
                     euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
                     fixtureService.GenerateEuroFixtures(CurrentGame);
                 }
+                inboxService.CupMatchesInfo(dayFixtures,CurrentGame);
                 gameService.NextDay(CurrentGame);
                 return RedirectToAction("Results", "Match");
             }
@@ -136,8 +135,8 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
             var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var homeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId);
-            var awayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId);
+            var homeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId).OrderBy(x => x.PositionId).ToList();
+            var awayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId).OrderBy(x => x.PositionId).ToList();
             var currentMatch = matchService.CreateMatch(currentFixture, CurrentGame);
             var newModel = matchService.GetMatchModel(currentMatch, currentFixture, homeTeamPlayers.First());
             return View(newModel);
@@ -150,19 +149,7 @@
             var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
             var currentDay = dayService.GetCurrentDay(CurrentGame);
             var player = new Player();
-
-            if (currentMatch.Turn == 1)
-            {
-                var homeTeam = teamService.GetTeamById(currentFixture.HomeTeamId);
-                player = playerService.GetRandomPlayer(homeTeam);
-                matchService.PlayerAction(homeTeam, player, currentMatch);
-            }
-            else
-            {
-                var awayTeam = teamService.GetTeamById(currentFixture.AwayTeamId);
-                player = playerService.GetRandomPlayer(awayTeam);
-                matchService.PlayerAction(awayTeam, player, currentMatch);
-            }
+            
             matchService.Time(currentMatch);
             if (currentMatch.Minute > 90)
             {
@@ -187,6 +174,19 @@
                 gameService.NextDay(CurrentGame);
                 inboxService.MatchFinishedNews(CurrentGame, currentFixture);
                 return RedirectToAction("Results");
+            }
+
+            if (currentMatch.Turn == 1)
+            {
+                var homeTeam = teamService.GetTeamById(currentFixture.HomeTeamId);
+                player = playerService.GetRandomPlayer(homeTeam);
+                matchService.PlayerAction(homeTeam, player, currentMatch);
+            }
+            else
+            {
+                var awayTeam = teamService.GetTeamById(currentFixture.AwayTeamId);
+                player = playerService.GetRandomPlayer(awayTeam);
+                matchService.PlayerAction(awayTeam, player, currentMatch);
             }
 
             var newModel = matchService.GetMatchModel(currentMatch, currentFixture, player);

@@ -15,8 +15,8 @@ namespace ASP.NET_FootballManager.Services.Common
         public void CalculateDays(Game currentGame)
         {
             var leagueFixtures = this.data.Leagues.First().Rounds;
-            var cupFixtures = 5;
-            var euroCupFixtures = 5;
+            var cupFixtures = this.data.Cups.First().Rounds;
+            var euroCupFixtures = this.data.EuropeanCups.First().Rounds;
 
             var year = currentGame.Year;
             var days = leagueFixtures + cupFixtures + euroCupFixtures;
@@ -74,9 +74,7 @@ namespace ASP.NET_FootballManager.Services.Common
             }
 
         }
-
         public List<Day> GetAllDays(Game currentGame) => this.data.Days.Where(x => x.GameId == currentGame.Id && x.Year == currentGame.Year).ToList();
-
         public Day GetCurrentDay(Game currentGame) => this.data.Days.FirstOrDefault(x => x.GameId == currentGame.Id && x.CurrentDay == currentGame.Day && x.Year == currentGame.Year);
     }
 }

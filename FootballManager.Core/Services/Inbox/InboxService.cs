@@ -2,6 +2,7 @@
 {
     using ASP.NET_FootballManager.Data;
     using NET_FootballManager.Data.DataModels;
+    using System.Text;
 
     public class InboxService : IInboxService
     {
@@ -137,10 +138,37 @@
             };
             AddAndSave(inbox);
         }
+        public void CupMatchesInfo(List<Fixture> dayFixtures, Game CurrentGame)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var fixture in dayFixtures)
+            {
+                sb.AppendLine($"{fixture.HomeTeamName} {fixture.HomeTeamGoal}:{fixture.AwayTeamGoal} {fixture.AwayTeamName}");
+                sb.AppendLine(Environment.NewLine);
+            }
+
+            var messageReview = "Results..";
+            var fullMessage = sb.ToString().TrimEnd();
+
+            var MatchesInfo = new Inbox
+            {
+                Day = CurrentGame.Day,
+                Year = CurrentGame.Year,
+                Game = CurrentGame,
+                GameId = CurrentGame.Id,
+                MessageReview = messageReview,
+                FullMessage = fullMessage
+            };
+
+            AddAndSave(MatchesInfo);
+
+        }
         private void AddAndSave(Inbox inbox)
         {
             this.data.Inboxes.Add(inbox);
             this.data.SaveChanges();
         }
+        
     }
 }

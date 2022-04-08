@@ -10,5 +10,7 @@
         void MatchFinishedNews(Game CurrentGame, Fixture currentFixture);
         List<Inbox> GetInboxMessages(int managerId);
         Inbox GetFullMessage(int id, Game CurrentGame);
+
+        void CupMatchesInfo(List<Fixture> dayFixtures,Game CurrentGame);
     }
 }
