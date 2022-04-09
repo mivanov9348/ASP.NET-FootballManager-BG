@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
-    using Data.Constant;  
+    using Data.Constant;
     using ASP.NET_FootballManager.Data.DataModels;
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
@@ -31,7 +31,7 @@
         private readonly ICupService cupService;
         private readonly IEuroCupService euroCupService;
         private readonly IDayService dayService;
-        public GameController(IDayService dayService,ICupService cupService, IEuroCupService euroCupService, IFixtureService fixtureService, IInboxService inboxService, ITeamService teamService, IMatchService matchService, ILeagueService leagueService, IPlayerService playerService, ICommonService commonService, IManagerService managerService, IGameService gameService)
+        public GameController(IDayService dayService, ICupService cupService, IEuroCupService euroCupService, IFixtureService fixtureService, IInboxService inboxService, ITeamService teamService, IMatchService matchService, ILeagueService leagueService, IPlayerService playerService, ICommonService commonService, IManagerService managerService, IGameService gameService)
         {
             this.playerService = playerService;
             this.commonService = commonService;
@@ -44,25 +44,25 @@
             this.fixtureService = fixtureService;
             this.euroCupService = euroCupService;
             this.cupService = cupService;
-            this.dayService= dayService;
+            this.dayService = dayService;
         }
-        public IActionResult SeasonStats(EndSeasonViewModel esvm)
+        public async Task<IActionResult> SeasonStats(EndSeasonViewModel esvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var goalScorer = playerService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
-            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
-            var league = leagueService.GetLeague(esvm.LeagueId);
-            var euroCup = euroCupService.GetEuropeanCup(esvm.EuroCupId);
-            var cup = cupService.GetCurrentCup();
-            var cupWinner = cupService.GetWinner(CurrentGame);
-            var championsCupWinner = euroCupService.GetChampionsCupWinner(CurrentGame);
-            var euroCupWinner = euroCupService.GetEuroCupWinner(CurrentGame);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var goalScorer = await playerService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
+            var teams = await leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
+            var league = await leagueService.GetLeague(esvm.LeagueId);
+            var euroCup = await euroCupService.GetEuropeanCup(esvm.EuroCupId);
+            var cup = await cupService.GetCurrentCup();
+            var cupWinner = await cupService.GetWinner(CurrentGame);
+            var championsCupWinner = await euroCupService.GetChampionsCupWinner(CurrentGame);
+            var euroCupWinner = await euroCupService.GetEuroCupWinner(CurrentGame);
 
             return View(new EndSeasonViewModel
             {
                 GoalScorer = goalScorer,
-                Leagues = leagueService.GetAllLeagues(),
-                EuroCups = euroCupService.AllEuroCups(),
+                Leagues = await leagueService.GetAllLeagues(),
+                EuroCups = await euroCupService.AllEuroCups(),
                 EuroCup = euroCup,
                 Teams = teams,
                 League = league,
@@ -72,11 +72,11 @@
                 ChampionsCupWinner = championsCupWinner
             });
         }
-        public IActionResult NewSeason()
+        public async Task<IActionResult> NewSeason()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
 
-            leagueService.PromotedRelegated(CurrentGame);
+            await leagueService.PromotedRelegated(CurrentGame);
             gameService.ResetGame(CurrentGame);
             dayService.CalculateDays(CurrentGame);
             fixtureService.AddFixtureToDay(CurrentGame);
@@ -91,28 +91,28 @@
             playerService.CalculatingPlayersPrice(CurrentGame);
             playerService.UpdateAttributes(CurrentGame);
             playerService.ResetPlayerStats(CurrentGame);
-            teamService.ResetTeams(CurrentGame);           
+            teamService.ResetTeams(CurrentGame);
             inboxService.NewSeasonNews(CurrentGame);
 
             return RedirectToAction("Inbox", "Menu");
         }
-        public IActionResult EndSeason(EndSeasonViewModel esvm)
+        public async Task<IActionResult> EndSeason(EndSeasonViewModel esvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var teams = leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var teams = await leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
 
             return View(new EndSeasonViewModel
             {
-                Leagues = leagueService.GetAllLeagues(),
+                Leagues = await leagueService.GetAllLeagues(),
                 Teams = teams
             });
         }
-        private (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo()
+        private async Task<(string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam)> CurrentGameInfo()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var currentManager = managerService.GetCurrentManager(userId);
             var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = teamService.GetCurrentTeam(currentGame);
+            var currentTeam = await teamService.GetCurrentTeam(currentGame);
             return (userId, currentManager, currentGame, currentTeam);
         }
 

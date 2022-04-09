@@ -122,25 +122,25 @@
                 this.data.SaveChanges();
             }
         }
-        public Player GetRandomPlayer(VirtualTeam team)
+        public async Task<Player> GetRandomPlayer(VirtualTeam team)
         {
-            var players = this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList();
+            var players = await Task.Run(() => this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList());
             return players[rnd.Next(0, players.Count)];
         }
-        public List<Player> GetPlayersByTeam(int teamId) => this.data.Players.Where(x => x.TeamId == teamId).ToList();
-        public Player GetPlayerById(int id) => this.data.Players.FirstOrDefault(x => x.Id == id);
-        public Player GetLeagueGoalscorer(Game CurrentGame, int leagueId)
+        public async Task<List<Player>> GetPlayersByTeam(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId).ToList());
+        public async Task<Player> GetPlayerById(int id) => await Task.Run(() => this.data.Players.FirstOrDefault(x => x.Id == id));
+        public async Task<Player> GetLeagueGoalscorer(Game CurrentGame, int leagueId)
         {
             if (leagueId == 0)
             {
-                leagueId = this.data.Leagues.FirstOrDefault(x => x.Level == 1).Id;
+                leagueId = await Task.Run(() => this.data.Leagues.FirstOrDefault(x => x.Level == 1).Id);
             }
 
             var currentComp = this.data.Leagues.FirstOrDefault(x => x.Id == leagueId);
-            return this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.Matches).FirstOrDefault(x => x.GameId == CurrentGame.Id && x.LeagueId == leagueId);
+            return await Task.Run(() => this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.Matches).FirstOrDefault(x => x.GameId == CurrentGame.Id && x.LeagueId == leagueId));
         }
-        public List<Player> GetStartingEleven(int teamId) => this.data.Players.Where(x => x.IsStarting11 == true && x.TeamId == teamId).ToList();
-        public List<Player> GetSubstitutes(int teamId) => this.data.Players.Where(x => x.IsStarting11 == false && x.TeamId == teamId).ToList();
+        public async Task<List<Player>> GetStartingEleven(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.IsStarting11 == true && x.TeamId == teamId).ToList());
+        public async Task<List<Player>> GetSubstitutes(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.IsStarting11 == false && x.TeamId == teamId).ToList());
         public void RemovePlayers(VirtualTeam freeAgentsTeam)
         {
             var allPlayers = this.data.Players.Where(x => x.TeamId == freeAgentsTeam.Id).ToList();

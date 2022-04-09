@@ -75,7 +75,8 @@
             }
             return View(new GameViewModel { ExistGame = false });
         }
-        public IActionResult NewGame(int id)
+
+        public async Task<IActionResult> NewGame(int id)
         {
             CurrentUser();
             bool isExistGame = gameService.isExistGame(UserId);
@@ -87,8 +88,8 @@
                     gameService.ResetSave(UserId);
                     return View(new NewManagerViewModel
                     {
-                        Nations = commonService.GetAllNations(),
-                        Teams = teamService.GetAllPlayableTeams()
+                        Nations = await commonService.GetAllNations(),
+                        Teams = await teamService.GetAllPlayableTeams()
                     });
                 }
                 return RedirectToAction("ExistingGame");
@@ -96,11 +97,11 @@
 
             return View(new NewManagerViewModel
             {
-                Nations = commonService.GetAllNations(),
-                Teams = teamService.GetAllPlayableTeams()
+                Nations = await commonService.GetAllNations(),
+                Teams = await teamService.GetAllPlayableTeams()
             });
         }
-        public IActionResult StartGame(NewManagerViewModel ngvm)
+        public async Task<IActionResult> StartGame(NewManagerViewModel ngvm)
         {
             CurrentUser();
             bool isExistGame = gameService.isExistGame(UserId);
@@ -145,8 +146,8 @@
                 ViewData["Error"] = ErrorMessage;
                 return View("NewGame", new NewManagerViewModel
                 {
-                    Nations = commonService.GetAllNations(),
-                    Teams = teamService.GetAllTeams()
+                    Nations = await commonService.GetAllNations(),
+                    Teams = await teamService.GetAllTeams()
                 });
             }
         }

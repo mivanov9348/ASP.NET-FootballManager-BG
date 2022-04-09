@@ -58,11 +58,11 @@
             this.fixtureService = fixtureService;
         }
 
-    
-        public IActionResult MatchDayPreview()
+
+        public async Task<IActionResult> MatchDayPreview()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var dayFixtures = await matchService.GetFixturesByDay(CurrentGame);
 
             if (dayFixtures == null || dayFixtures.Count == 0)
             {
@@ -77,35 +77,37 @@
                 Day = CurrentGame.Day,
                 Year = CurrentGame.Year,
                 Round = round,
-                Leagues = leagueService.GetAllLeagues(),
+                Leagues = await leagueService.GetAllLeagues(),
                 CurrentTeam = currentTeam
             });
-        }       
-        public IActionResult MatchPreview()
+        }
+        public async Task<IActionResult> MatchPreview()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
-            var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var dayFixtures = await matchService.GetFixturesByDay(CurrentGame);
+            var currentFixture = await matchService.GetCurrentFixture(dayFixtures, CurrentGame);
+            var homeTeamPlayers = await matchService.GetStarting11(currentFixture.HomeTeamId);
+            var awayTeamPlayers = await matchService.GetStarting11(currentFixture.AwayTeamId);
 
             return View(new MatchViewModel
             {
-                Positions = commonService.GetAllPositions(),
+                Positions = await commonService.GetAllPositions(),
                 HomeTeamName = currentFixture.HomeTeamName,
                 AwayTeamName = currentFixture.AwayTeamName,
                 CurrentFixture = currentFixture,
-                HomeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId).OrderBy(x => x.PositionId).ToList(),
-                AwayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId).OrderBy(x => x.PositionId).ToList()
+                HomeTeamPlayers = homeTeamPlayers.OrderBy(x => x.PositionId).ToList(),
+                AwayTeamPlayers = awayTeamPlayers.OrderBy(x => x.PositionId).ToList()
             });
-        }       
-        public IActionResult Tactics()
+        }
+        public async Task<IActionResult> Tactics()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var clubStartingEleven = playerService.GetStartingEleven(currentTeam.Id).OrderBy(x => x.PositionId).ToList();
-            var clubSubstitutes = playerService.GetSubstitutes(currentTeam.Id).OrderBy(x => x.PositionId).ToList();
-            var positions = commonService.GetAllPositions();
-            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
-            var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay = dayService.GetCurrentDay(CurrentGame);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var clubStartingEleven = await playerService.GetStartingEleven(currentTeam.Id);
+            var clubSubstitutes = await playerService.GetSubstitutes(currentTeam.Id);
+            var positions = await commonService.GetAllPositions();
+            var dayFixtures = await matchService.GetFixturesByDay(CurrentGame);
+            var currentFixture = await matchService.GetCurrentFixture(dayFixtures, CurrentGame);
+            var currentDay = await dayService.GetCurrentDay(CurrentGame);
 
             if (currentFixture == null)
             {
@@ -127,29 +129,28 @@
             return View(new TacticsViewModel
             {
                 CurrentTeam = currentTeam,
-                Substitutes = clubSubstitutes,
-                StartingEleven = clubStartingEleven,
+                Substitutes = clubSubstitutes.OrderBy(x => x.PositionId).ToList(),
+                StartingEleven = clubStartingEleven.OrderBy(x => x.PositionId).ToList(),
                 Positions = positions
             });
         }
-        public IActionResult Match(MatchViewModel mvm)
+        public async Task<IActionResult> Match(MatchViewModel mvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
-            var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var homeTeamPlayers = matchService.GetStarting11(currentFixture.HomeTeamId).OrderBy(x => x.PositionId).ToList();
-            var awayTeamPlayers = matchService.GetStarting11(currentFixture.AwayTeamId).OrderBy(x => x.PositionId).ToList();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var dayFixtures = await matchService.GetFixturesByDay(CurrentGame);
+            var currentFixture = await matchService.GetCurrentFixture(dayFixtures, CurrentGame);
+            var homeTeamPlayers = await matchService.GetStarting11(currentFixture.HomeTeamId);
             var currentMatch = matchService.CreateMatch(currentFixture, CurrentGame);
-            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, homeTeamPlayers.First());
+            var newModel = await matchService.GetMatchModel(currentMatch, currentFixture, homeTeamPlayers.OrderBy(x => x.PositionId).First());
             return View(newModel);
         }
-        public IActionResult GetAction(int id)
+        public async Task<IActionResult> GetAction(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var currentMatch = matchService.GetCurrentMatch(id);
-            var dayFixtures = matchService.GetFixturesByDay(CurrentGame);
-            var currentFixture = matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay = dayService.GetCurrentDay(CurrentGame);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var currentMatch = await matchService.GetCurrentMatch(id);
+            var dayFixtures = await matchService.GetFixturesByDay(CurrentGame);
+            var currentFixture = await matchService.GetCurrentFixture(dayFixtures, CurrentGame);
+            var currentDay = await dayService.GetCurrentDay(CurrentGame);
             var player = new Player();
 
             matchService.Time(currentMatch);
@@ -180,25 +181,25 @@
 
             if (currentMatch.Turn == 1)
             {
-                var homeTeam = teamService.GetTeamById(currentFixture.HomeTeamId);
-                player = playerService.GetRandomPlayer(homeTeam);
+                var homeTeam = await teamService.GetTeamById(currentFixture.HomeTeamId);
+                player = await playerService.GetRandomPlayer(homeTeam);
                 matchService.PlayerAction(homeTeam, player, currentMatch);
             }
             else
             {
-                var awayTeam = teamService.GetTeamById(currentFixture.AwayTeamId);
-                player = playerService.GetRandomPlayer(awayTeam);
+                var awayTeam = await teamService.GetTeamById(currentFixture.AwayTeamId);
+                player = await playerService.GetRandomPlayer(awayTeam);
                 matchService.PlayerAction(awayTeam, player, currentMatch);
             }
 
-            var newModel = matchService.GetMatchModel(currentMatch, currentFixture, player);
+            var newModel = await matchService.GetMatchModel(currentMatch, currentFixture, player);
 
             return View("Match", newModel);
         }
-        public IActionResult Results(MatchViewModel mvm)
+        public async Task<IActionResult> Results(MatchViewModel mvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var dayResults = matchService.GetResults(CurrentGame);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var dayResults = await matchService.GetResults(CurrentGame);
             var round = dayResults.First().Round;
 
             return View(new MatchDayViewModel
@@ -207,12 +208,12 @@
                 Day = CurrentGame.Day,
                 Year = CurrentGame.Year,
                 Round = round,
-                Leagues = leagueService.GetAllLeagues()
+                Leagues = await leagueService.GetAllLeagues()
             });
         }
-        public IActionResult ValidTactics(MatchViewModel mvm)
+        public async Task<IActionResult> ValidTactics(MatchViewModel mvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
             (bool isValid, string error) = matchService.ValidateTactics(currentTeam);
             if (isValid)
             {
@@ -235,12 +236,12 @@
             playerService.Substitution(id, "Remove");
             return RedirectToAction("Tactics");
         }
-        private (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo()
+        private async Task<(string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam)> CurrentGameInfo()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var currentManager = managerService.GetCurrentManager(userId);
             var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = teamService.GetCurrentTeam(currentGame);
+            var currentTeam = await teamService.GetCurrentTeam(currentGame);
             return (userId, currentManager, currentGame, currentTeam);
         }
 

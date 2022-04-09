@@ -8,6 +8,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using System;
+    using System.Threading.Tasks;
 
     public class TeamTests : IDisposable
     {
@@ -67,7 +68,7 @@
 
         }
         [Test]
-        public void GetAllTeams()
+        public async Task GetAllTeams()
         {
             var service = serviceProvider.GetService<ITeamService>();
 
@@ -82,7 +83,9 @@
                 context.VirtualTeams.Add(newteam);
                 context.SaveChanges();
 
-                Assert.AreEqual(4, service.GetAllVirtualTeams(game).Count);
+                var allTeams = await service.GetAllVirtualTeams(game);
+
+                Assert.AreEqual(4, allTeams.Count);
 
             }
 

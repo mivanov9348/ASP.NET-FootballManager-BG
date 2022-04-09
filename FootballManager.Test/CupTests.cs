@@ -10,6 +10,7 @@
     using NUnit.Framework;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class CupTests : IDisposable
     {
@@ -39,7 +40,7 @@
         }
 
         [Test]
-        public void GetCurrentCup()
+        public async Task GetCurrentCup()
         {
             var service = serviceProvider.GetService<ICupService>();
 
@@ -64,7 +65,7 @@
                 context.VirtualTeams.Add(team2);
                 context.SaveChanges();
 
-                var cup = service.GetCurrentCup();
+                var cup = await Task.Run(() => service.GetCurrentCup());
                 Assert.AreEqual("Cup1", cup.Name);
             }
         }
@@ -80,7 +81,7 @@
                 var newfixture = new Fixture
                 {
                     HomeTeamId = 1,
-                    AwayTeamId= 2,
+                    AwayTeamId = 2,
                     HomeTeamGoal = 1,
                     AwayTeamGoal = 2,
                     DayId = newDay.Id
@@ -89,9 +90,9 @@
                 context.SaveChanges();
 
                 service.CheckWinner(newfixture);
-                Assert.AreEqual(newfixture.AwayTeamId,newfixture.WinnerTeamId);
+                Assert.AreEqual(newfixture.AwayTeamId, newfixture.WinnerTeamId);
 
-                               
+
 
             }
         }

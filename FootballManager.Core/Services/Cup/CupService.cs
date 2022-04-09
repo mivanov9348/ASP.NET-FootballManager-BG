@@ -17,7 +17,7 @@
         {
             RemoveAllTeamsFromCup(curentGame);
             var currentCup = this.data.Cups.First();
-            var teamsParticipants = this.data.VirtualTeams.Where(x => x.League.Nation.Name=="Bulgaria" && x.GameId == curentGame.Id).ToList();
+            var teamsParticipants = this.data.VirtualTeams.Where(x => x.League.Nation.Name == "Bulgaria" && x.GameId == curentGame.Id).ToList();
 
             foreach (var team in teamsParticipants)
             {
@@ -112,16 +112,16 @@
             allTeams.ForEach(x => x.IsCupParticipant = false);
             this.data.SaveChanges();
         }
-        public Cup GetCurrentCup() => this.data.Cups.First();
-        public VirtualTeam GetWinner(Game game)
+        public async Task<Cup> GetCurrentCup() => await Task.Run(()=>this.data.Cups.First());
+        public async Task<VirtualTeam> GetWinner(Game game)
         {
             var cup = this.data.Cups.FirstOrDefault();
-            var finalMatch = this.data.Fixtures.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == game.Id && x.CupId == cup.Id);
+            var finalMatch =  this.data.Fixtures.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == game.Id && x.CupId == cup.Id);
             var winner = this.data.VirtualTeams.FirstOrDefault(x => x.Id == finalMatch.WinnerTeamId);
             winner.Cups += 1;
             this.data.SaveChanges();
-            return winner;
+            return await Task.Run(() => winner);
         }
-        public List<Fixture> GetCupFixtures(Game CurrentGame) => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.CupId != null).ToList();
+        public async Task<List<Fixture>> GetCupFixtures(Game CurrentGame) => await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.CupId != null).ToList());
     }
 }

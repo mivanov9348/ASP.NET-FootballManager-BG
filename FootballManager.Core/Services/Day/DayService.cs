@@ -74,7 +74,7 @@ namespace ASP.NET_FootballManager.Services.Common
             }
 
         }
-        public List<Day> GetAllDays(Game currentGame) => this.data.Days.Where(x => x.GameId == currentGame.Id && x.Year == currentGame.Year).ToList();
-        public Day GetCurrentDay(Game currentGame) => this.data.Days.FirstOrDefault(x => x.GameId == currentGame.Id && x.CurrentDay == currentGame.Day && x.Year == currentGame.Year);
+        public async Task<List<Day>> GetAllDays(Game currentGame) => await Task.Run(()=>this.data.Days.Where(x => x.GameId == currentGame.Id && x.Year == currentGame.Year).ToList());
+        public async Task<Day> GetCurrentDay(Game currentGame) => await Task.Run(()=>this.data.Days.FirstOrDefault(x => x.GameId == currentGame.Id && x.CurrentDay == currentGame.Day && x.Year == currentGame.Year));
     }
 }

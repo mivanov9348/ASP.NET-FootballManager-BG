@@ -104,16 +104,16 @@
 
             AddAndSave(matchNews);
         }
-        public List<Inbox> GetInboxMessages(int gameId) => this.data.Inboxes.Where(x => x.GameId == gameId).ToList();
-        public Inbox GetFullMessage(int id, Game CurrentGame)
+        public async Task<List<Inbox>> GetInboxMessages(int gameId) => await Task.Run(() => this.data.Inboxes.Where(x => x.GameId == gameId).ToList());
+        public async Task<Inbox> GetFullMessage(int id, Game CurrentGame)
         {
             if (id == 0)
             {
-                return this.data.Inboxes.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == CurrentGame.Id);
+                return await Task.Run(() => this.data.Inboxes.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == CurrentGame.Id));
             }
             else
             {
-                return this.data.Inboxes.FirstOrDefault(x => x.Id == id);
+                return await Task.Run(() => this.data.Inboxes.FirstOrDefault(x => x.Id == id));
             }
 
         }
@@ -169,6 +169,6 @@
             this.data.Inboxes.Add(inbox);
             this.data.SaveChanges();
         }
-        
+
     }
 }

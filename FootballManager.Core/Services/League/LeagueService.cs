@@ -13,28 +13,28 @@
             this.rnd = new Random();
             this.data = data;
         }
-        public List<League> GetAllLeagues() => this.data.Leagues.ToList();
-        public League GetLeague(int id)
+        public async Task<List<League>> GetAllLeagues() => await Task.Run(() => this.data.Leagues.ToList());
+        public async Task<League> GetLeague(int id)
         {
             if (id == 0)
             {
-                return this.data.Leagues.FirstOrDefault(x => x.Id == 1);
+                return await Task.Run(() => this.data.Leagues.FirstOrDefault(x => x.Id == 1));
             }
             else
             {
-                return this.data.Leagues.FirstOrDefault(x => x.Id == id);
+                return await Task.Run(() => this.data.Leagues.FirstOrDefault(x => x.Id == id));
             }
 
         }
-        public List<VirtualTeam> GetStandingsByLeague(int id, Game CurrentGame)
+        public async Task<List<VirtualTeam>> GetStandingsByLeague(int id, Game CurrentGame)
         {
             if (id == 0)
             {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == 1 && x.GameId == CurrentGame.Id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
+                return await Task.Run(() => this.data.VirtualTeams.Where(x => x.LeagueId == 1 && x.GameId == CurrentGame.Id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList());
             }
             else
             {
-                return this.data.VirtualTeams.Where(x => x.LeagueId == id && x.GameId == CurrentGame.Id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList();
+                return await Task.Run(() => this.data.VirtualTeams.Where(x => x.LeagueId == id && x.GameId == CurrentGame.Id).OrderByDescending(x => x.Points).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalDifference).ThenByDescending(x => x.GoalScored).ToList());
 
             }
         }
@@ -123,7 +123,7 @@
 
             this.data.SaveChanges();
         }
-        public void PromotedRelegated(Game CurrentGame)
+        public async Task PromotedRelegated(Game CurrentGame)
         {
             var leagues = this.data.Leagues.ToList();
             var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
@@ -131,7 +131,7 @@
 
             foreach (var league in leagues)
             {
-                var standings = GetStandingsByLeague(league.Id, CurrentGame);
+                var standings = await GetStandingsByLeague(league.Id, CurrentGame);
                 var nextLeagueTeams = new List<VirtualTeam>();
                 var nextLeagueLevel = league.Level + 1;
                 var nextLeague = this.data.Leagues.FirstOrDefault(x => x.Level == nextLeagueLevel && x.NationId == league.NationId);

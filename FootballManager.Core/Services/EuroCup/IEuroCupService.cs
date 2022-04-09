@@ -2,14 +2,14 @@
 {
     using Data.DataModels;
     public interface IEuroCupService
-    { 
-        void DistributionEuroParticipant(Game game);       
+    {
+        void DistributionEuroParticipant(Game game);
         void CheckWinner(Fixture currentFixture);
         void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture);
-        EuropeanCup GetEuropeanCup(int cupId);
-        List<EuropeanCup> AllEuroCups();
-        VirtualTeam GetChampionsCupWinner(Game game);
-        VirtualTeam GetEuroCupWinner(Game game);
-        List<Fixture> GetEuroCupFixtures(Game CurrentGame, int euroCupRank);
+        Task<EuropeanCup> GetEuropeanCup(int cupId);
+        Task<List<EuropeanCup>> AllEuroCups();
+        Task<VirtualTeam> GetChampionsCupWinner(Game game);
+        Task<VirtualTeam> GetEuroCupWinner(Game game);
+        Task<List<Fixture>> GetEuroCupFixtures(Game CurrentGame, int euroCupRank);
     }
 }

@@ -4,8 +4,8 @@ namespace ASP.NET_FootballManager.Services.Common
     public interface IDayService
     {     
         void CalculateDays(Game currentGame);
-        Day GetCurrentDay(Game currentGame);
-        List<Day> GetAllDays(Game currentGame);
+        Task<Day> GetCurrentDay(Game currentGame);
+        Task<List<Day>> GetAllDays(Game currentGame);
     }
 
 }

@@ -6,17 +6,17 @@
 
     public interface IPlayerService
     {
-        PlayersViewModel SortingPlayers(PlayerSorting s, int id,Game currentGame);   
-        List<Player> GetPlayersByTeam(int teamId);
+        PlayersViewModel SortingPlayers(PlayerSorting s, int id, Game currentGame);
+        Task<List<Player>> GetPlayersByTeam(int teamId);
         void GeneratePlayers(Game game, VirtualTeam team);
         void CreateFreeAgents(Game game, int gk, int df, int mf, int st);
         void CalculatingPlayersPrice(Game CurrentGame);
-        List<Player> GetStartingEleven(int teamId);
-        List<Player> GetSubstitutes(int teamId);
+        Task<List<Player>> GetStartingEleven(int teamId);
+        Task<List<Player>> GetSubstitutes(int teamId);
         void Substitution(int playerId, string action);
-        Player GetPlayerById(int id);
-        Player GetRandomPlayer(VirtualTeam team);
-        Player GetLeagueGoalscorer(Game CurrentGame, int leagueId);
+        Task<Player> GetPlayerById(int id);
+        Task<Player> GetRandomPlayer(VirtualTeam team);
+        Task<Player> GetLeagueGoalscorer(Game CurrentGame, int leagueId);
         void RemovePlayers(VirtualTeam freeAgentsTeam);
         void ResetPlayerStats(Game CurrentGame);
 

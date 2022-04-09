@@ -34,36 +34,36 @@
             this.inboxService = inboxService;
 
         }
-        public IActionResult Market()
+        public async Task<IActionResult> Market()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
             return View(new TransferViewModel
             {
-                FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, 0, CurrentGame),
-                CurrentTeamPlayers = transferService.GetCurrentTeamPlayers(currentTeam.Id),
-                Nations = commonService.GetAllNations(),
-                Positions = commonService.GetAllPositions(),
+                FreeAgents = await transferService.GetAllFreeAgents(CurrentGame.Id, 0, CurrentGame),
+                CurrentTeamPlayers = await transferService.GetCurrentTeamPlayers(currentTeam.Id),
+                Nations = await commonService.GetAllNations(),
+                Positions = await commonService.GetAllPositions(),
                 CurrentTeam = currentTeam
             });
         }
-        public IActionResult SortPlayers(string text, int id)
+        public async Task<IActionResult> SortPlayers(string text, int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
 
             return View("Market", new TransferViewModel
             {
-                FreeAgents = transferService.GetAllFreeAgents(CurrentGame.Id, id, CurrentGame),
-                CurrentTeamPlayers = transferService.GetCurrentTeamPlayers(currentTeam.Id),
-                Nations = commonService.GetAllNations(),
-                Positions = commonService.GetAllPositions(),
+                FreeAgents = await transferService.GetAllFreeAgents(CurrentGame.Id, id, CurrentGame),
+                CurrentTeamPlayers = await transferService.GetCurrentTeamPlayers(currentTeam.Id),
+                Nations = await commonService.GetAllNations(),
+                Positions = await commonService.GetAllPositions(),
                 CurrentTeam = currentTeam
             });
         }
-        public IActionResult Buy(int id)
+        public async Task<IActionResult> Buy(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
             bool isValid = validatorService.BuyValidator(id, currentTeam);
-            var currPl = playerService.GetPlayerById(id);
+            var currPl = await playerService.GetPlayerById(id);
 
             if (isValid)
             {
@@ -79,29 +79,29 @@
                 {
                     CurrentTeam = currentTeam,
                     PlayerToBuy = currPl,
-                    Nations = commonService.GetAllNations(),
-                    Positions = commonService.GetAllPositions()
+                    Nations = await commonService.GetAllNations(),
+                    Positions = await commonService.GetAllPositions()
                 });
             }
         }
-        public IActionResult ConfirmationTransfer(int id)
+        public async Task<IActionResult> ConfirmationTransfer(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var currPl = playerService.GetPlayerById(id);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var currPl = await playerService.GetPlayerById(id);
             return View(new TransferViewModel
             {
                 CurrentTeam = currentTeam,
                 PlayerToBuy = currPl,
-                Nations = commonService.GetAllNations(),
-                Positions = commonService.GetAllPositions()
+                Nations = await commonService.GetAllNations(),
+                Positions = await commonService.GetAllPositions()
             });
         }
-        public IActionResult Sell(int id)
+        public async Task<IActionResult> Sell(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
 
             bool isValid = validatorService.SellValidator(currentTeam);
-            var currPlayers = playerService.GetPlayersByTeam(currentTeam.Id);
+            var currPlayers = await playerService.GetPlayersByTeam(currentTeam.Id);
 
             if (isValid)
             {
@@ -116,20 +116,20 @@
             var model = teamService.GetTeamViewModel(currPlayers, currentTeam);
             return View("TeamSquad", model);
         }
-        public IActionResult TeamSquad()
+        public async Task<IActionResult> TeamSquad()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = CurrentGameInfo();
-            var currPlayers = playerService.GetPlayersByTeam(currentTeam.Id).OrderBy(x=>x.PositionId).ToList();
-            var model = teamService.GetTeamViewModel(currPlayers, currentTeam);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            var currPlayers = await playerService.GetPlayersByTeam(currentTeam.Id);
+            var model = teamService.GetTeamViewModel(currPlayers.OrderBy(x => x.PositionId).ToList(), currentTeam);
 
             return View(model);
         }
-        private (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo()
+        private async Task<(string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam)> CurrentGameInfo()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var currentManager = managerService.GetCurrentManager(userId);
             var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = teamService.GetCurrentTeam(currentGame);
+            var currentTeam = await teamService.GetCurrentTeam(currentGame);
             return (userId, currentManager, currentGame, currentTeam);
         }
     }

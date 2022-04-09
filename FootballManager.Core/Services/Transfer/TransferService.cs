@@ -24,32 +24,32 @@
 
             this.data.SaveChanges();
         }
-        public List<Player> GetAllFreeAgents(int gameId, int orderId,Game Game)
+        public async Task<List<Player>> GetAllFreeAgents(int gameId, int orderId,Game Game)
         {
             switch (orderId)
             {
                 case 0:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true&&x.GameId==Game.Id).ToList();
+                    return await Task.Run(()=> this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true&&x.GameId==Game.Id).ToList());
                 case 1:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Goalkeeper" && x.GameId == Game.Id).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Goalkeeper" && x.GameId == Game.Id).ToList());
                 case 2:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Defender" && x.GameId == Game.Id).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Defender" && x.GameId == Game.Id).ToList());
                 case 3:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Midlefielder" && x.GameId == Game.Id).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Midlefielder" && x.GameId == Game.Id).ToList());
                 case 4:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Striker" && x.GameId == Game.Id).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Striker" && x.GameId == Game.Id).ToList());
                 case 5:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Attack).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Attack).ToList());
                 case 6:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Defense).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Defense).ToList());
                 case 7:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Overall).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Overall).ToList());
                 case 8:
-                    return this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Price).ToList();
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Price).ToList());
             }
             return null;
         }
-        public List<Player> GetCurrentTeamPlayers(int teamId) => this.data.Players.Where(x => x.TeamId == teamId).ToList();
+        public async Task<List<Player>> GetCurrentTeamPlayers(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId).ToList());
 
         public string Sell(int playerId)
         {

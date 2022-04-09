@@ -11,6 +11,8 @@
     using NUnit.Framework;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
+
     public class LeagueTests : IDisposable
     {
 
@@ -38,7 +40,7 @@
         }
 
         [Test]
-        public void GetAllLeagues()
+        public async Task GetAllLeagues()
         {
             var service = serviceProvider.GetService<ILeagueService>();
 
@@ -51,7 +53,7 @@
                 context.Leagues.Add(newLeague);
                 context.SaveChanges();
 
-                var allLeagues = service.GetAllLeagues();
+                var allLeagues = await service.GetAllLeagues();
 
                 Assert.AreEqual(1, allLeagues.Count());
             }
@@ -82,7 +84,7 @@
 
         }
         [Test]
-        public void GetStandings()
+        public async Task GetStandings()
         {
             var service = serviceProvider.GetService<ILeagueService>();
 
@@ -113,7 +115,7 @@
                 context.VirtualTeams.Add(teamTwo);
                 context.SaveChanges();
 
-                var standings = service.GetStandingsByLeague(newLeague.Id, newGame);
+                var standings = await service.GetStandingsByLeague(newLeague.Id, newGame);
 
                 Assert.AreEqual(teamTwo.Name, standings.First().Name);
             }

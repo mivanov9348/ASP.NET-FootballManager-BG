@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FootballManager.Test
 {
@@ -42,7 +43,7 @@ namespace FootballManager.Test
         }
 
         [Test]
-        public void PositionsTest()
+        public async Task PositionsTest()
         {
             var service = serviceProvider.GetService<ICommonService>();
 
@@ -52,8 +53,10 @@ namespace FootballManager.Test
                 context.Positions.Add(position);
                 context.SaveChanges();
 
+                var positions = await service.GetAllPositions();
+
                 Assert.AreEqual(1, context.Positions.Count());
-                Assert.AreEqual(1, service.GetAllPositions().Where(x => x.Name == "Striker").ToList().Count());
+                Assert.AreEqual(1, positions.Where(x => x.Name == "Striker").ToList().Count());
             }
         }
         [Test]

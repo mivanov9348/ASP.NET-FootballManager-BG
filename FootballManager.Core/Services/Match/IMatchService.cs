@@ -6,17 +6,17 @@
     public interface IMatchService
     {
 
-        List<Fixture> GetFixturesByDay(Game CurrentGame);
-        Fixture GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame);
-        List<Player> GetStarting11(int teamId);
+        Task<List<Fixture>> GetFixturesByDay(Game CurrentGame);
+        Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame);
+        Task<List<Player>> GetStarting11(int teamId);
         (bool isValid, string error) ValidateTactics(VirtualTeam currentTeam);
         Match CreateMatch(Fixture currentFixture, Game CurrentGame);
-        Match GetCurrentMatch(int matchId);
+        Task<Match> GetCurrentMatch(int matchId);
         void PlayerAction(VirtualTeam team, Player player, Match match);
         void Time(Match match);
         void EndMatch(Match match);
-        MatchViewModel GetMatchModel(Match match, Fixture fixture, Player player);
-        List<Fixture> GetResults(Game currentGame);
+        Task<MatchViewModel> GetMatchModel(Match match, Fixture fixture, Player player);
+        Task<List<Fixture>> GetResults(Game currentGame);
 
         void DeleteMatches(Game CurrentGame);
     }

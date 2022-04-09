@@ -3,10 +3,10 @@
     using ASP.NET_FootballManager.Data.DataModels;
     public interface ICommonService
     {
-        List<Nation> GetAllNations();    
-        List<Position> GetAllPositions();
-        List<City> GetAllCities();
-        List<Player> GetAllPlayers();       
+        Task<List<Nation>> GetAllNations();
+        Task<List<Position>> GetAllPositions();
+        Task<List<City>> GetAllCities();
+        Task<List<Player>> GetAllPlayers();
 
     }
 }

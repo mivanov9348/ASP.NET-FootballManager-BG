@@ -9,10 +9,10 @@
         {
             this.data = data;
         }
-        public List<City> GetAllCities() => this.data.Cities.ToList();
-        public List<Nation> GetAllNations() => this.data.Nations.ToList();
-        public List<Player> GetAllPlayers() => this.data.Players.ToList();
-        public List<Position> GetAllPositions() => this.data.Positions.ToList();     
-      
+        public async Task<List<City>> GetAllCities() => await Task.Run(() => this.data.Cities.ToList());
+        public async Task<List<Nation>> GetAllNations() => await Task.Run(() => this.data.Nations.ToList());
+        public async Task<List<Player>> GetAllPlayers() => await Task.Run(() => this.data.Players.ToList());
+        public async Task<List<Position>> GetAllPositions() => await Task.Run(() => this.data.Positions.ToList());
+
     }
 }

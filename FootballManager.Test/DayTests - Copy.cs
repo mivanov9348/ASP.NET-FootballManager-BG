@@ -11,6 +11,7 @@
     using NUnit.Framework;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class DayTests : IDisposable
     {
@@ -40,7 +41,7 @@
         }
 
         [Test]
-        public void CalculateDays()
+        public async void CalculateDays()
         {
             var service = serviceProvider.GetService<IDayService>();
 
@@ -58,13 +59,15 @@
                     GameId = game.Id
                 };
                 context.Days.Add(day1);
-                context.SaveChanges();              
+                context.SaveChanges();
 
-                Assert.AreEqual(2, service.GetAllDays(game).Count);
+                var days = await service.GetAllDays(game);
+
+                Assert.AreEqual(2, days.Count);
             }
         }
         [Test]
-        public void GetCurrentDay()
+        public async Task GetCurrentDay()
         {
             var service = serviceProvider.GetService<IDayService>();
 
@@ -73,12 +76,12 @@
                 var game = new Game
                 {
                     Day = 5,
-                    Year= 1
+                    Year = 1
                 };
                 context.Games.Add(game);
                 var day = new Day
                 {
-                    CurrentDay= 5,
+                    CurrentDay = 5,
                     Year = 1,
                     GameId = game.Id
                 };
@@ -92,9 +95,9 @@
                 context.Days.Add(day1);
                 context.SaveChanges();
 
-                var sadda = service.GetCurrentDay(game);
+                var sadda = await service.GetCurrentDay(game);
 
-                Assert.AreEqual(5, service.GetCurrentDay(game).CurrentDay);
+                Assert.AreEqual(5, sadda.CurrentDay);
             }
         }
 

@@ -140,25 +140,25 @@
             allEuroTeams.ForEach(x => x.EuropeanCupId = null);
             this.data.SaveChanges();
         }
-        public List<EuropeanCup> AllEuroCups() => this.data.EuropeanCups.ToList();
-        public EuropeanCup GetEuropeanCup(int cupId) => this.data.EuropeanCups.FirstOrDefault(x => x.Id == cupId);
-        public VirtualTeam GetChampionsCupWinner(Game game)
+        public async Task<List<EuropeanCup>> AllEuroCups() => await Task.Run(() => this.data.EuropeanCups.ToList());
+        public async Task<EuropeanCup> GetEuropeanCup(int cupId) => await Task.Run(() => this.data.EuropeanCups.FirstOrDefault(x => x.Id == cupId));
+        public async Task<VirtualTeam> GetChampionsCupWinner(Game game)
         {
             var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
             var finalMatch = this.data.Fixtures.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == game.Id && x.EuropeanCupId == championsCup.Id);
             var winner = this.data.VirtualTeams.FirstOrDefault(x => x.Id == finalMatch.WinnerTeamId);
             winner.ChampionsCup += 1;
             this.data.SaveChanges();
-            return winner;
+            return await Task.Run(() => winner);
         }
-        public VirtualTeam GetEuroCupWinner(Game game)
+        public async Task<VirtualTeam> GetEuroCupWinner(Game game)
         {
             var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
             var finalMatch = this.data.Fixtures.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == game.Id && x.EuropeanCupId == euroCup.Id);
             var winner = this.data.VirtualTeams.FirstOrDefault(x => x.Id == finalMatch.WinnerTeamId);
             winner.EuroCups += 1;
-            return winner;
+            return await Task.Run(() => winner);
         }
-        public List<Fixture> GetEuroCupFixtures(Game CurrentGame, int euroCupRank) => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.EuropeanCupId == euroCupRank).ToList();
+        public async Task<List<Fixture>> GetEuroCupFixtures(Game CurrentGame, int euroCupRank) => await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.EuropeanCupId == euroCupRank).ToList());
     }
 }

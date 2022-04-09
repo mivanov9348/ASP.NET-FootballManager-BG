@@ -9,8 +9,8 @@
         void AddFixtureToDay(Game game);
         void ShuffleTeams(List<VirtualTeam> currl);
         void DeleteFixtures(Game game);
-        List<Fixture> GetFixture(int id, int round,Game CurrentGame);    
-        int GetAllRounds(int leagueId);
+        Task<List<Fixture>> GetFixture(int id, int round,Game CurrentGame);    
+        Task<int> GetAllRounds(int leagueId);
 
 
     }

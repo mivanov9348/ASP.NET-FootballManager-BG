@@ -77,7 +77,7 @@
             var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
             var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
 
-            var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null&&x.GameId==game.Id).ToList();
+            var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
             var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
 
             var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true && x.Year == game.Year);
@@ -207,30 +207,30 @@
                 currl[i] = value;
             }
         }
-        public List<Fixture> GetFixture(int id, int round, Game CurrentGame)
+        public async Task<List<Fixture>> GetFixture(int id, int round, Game CurrentGame)
         {
             if (id == 0 && round == 0 || id == 0 && round != 0)
             {
-                return this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == 1 && x.GameId == CurrentGame.Id).ToList();
+                return await Task.Run(() => this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == 1 && x.GameId == CurrentGame.Id).ToList());
             }
             if (id != 0 && round == 0)
             {
-                return this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == id && x.GameId == CurrentGame.Id).ToList();
+                return await Task.Run(() => this.data.Fixtures.Where(x => x.Round == 1 && x.League.Level == id && x.GameId == CurrentGame.Id).ToList());
             }
 
             return this.data.Fixtures.Where(x => x.LeagueId == id && x.Round == round && x.GameId == CurrentGame.Id).ToList();
 
         }
-        public int GetAllRounds(int leagueId)
+        public async Task<int> GetAllRounds(int leagueId)
         {
             var allFixt = new List<Fixture>();
             if (leagueId == 0)
             {
-                allFixt = this.data.Fixtures.Where(x => x.League.Level == 1).ToList();
+                allFixt = await Task.Run(() => this.data.Fixtures.Where(x => x.League.Level == 1).ToList());
             }
             else
             {
-                allFixt = this.data.Fixtures.Where(x => x.LeagueId == leagueId).ToList();
+                allFixt = await Task.Run(() => this.data.Fixtures.Where(x => x.LeagueId == leagueId).ToList());
             }
             allFixt.Reverse();
             return allFixt.First().Round;

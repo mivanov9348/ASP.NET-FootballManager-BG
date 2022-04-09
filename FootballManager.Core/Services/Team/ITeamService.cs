@@ -10,11 +10,11 @@
         void CalculateTeamOverall(VirtualTeam team);
         TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam);
         void ResetTeams(Game currentGame);
-        VirtualTeam GetCurrentTeam(Game currentGame);
-        Team GetOriginalTeam(VirtualTeam currentVirtual,Game CurrentGame);
-        VirtualTeam GetTeamById(int teamId);
-        List<VirtualTeam> GetAllVirtualTeams(Game currentGame);
-        List<Team> GetAllTeams();
-        List<Team> GetAllPlayableTeams();
+        Task<VirtualTeam> GetCurrentTeam(Game currentGame);
+        Task<Team> GetOriginalTeam(VirtualTeam currentVirtual,Game CurrentGame);
+        Task<VirtualTeam> GetTeamById(int teamId);
+        Task<List<VirtualTeam>> GetAllVirtualTeams(Game currentGame);
+        Task<List<Team>> GetAllTeams();
+        Task<List<Team>> GetAllPlayableTeams();
     }
 }

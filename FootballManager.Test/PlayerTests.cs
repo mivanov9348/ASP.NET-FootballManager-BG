@@ -9,6 +9,8 @@
     using NUnit.Framework;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
+
     public class PlayerTests : IDisposable
     {
 
@@ -36,7 +38,7 @@
         }
 
         [Test]
-        public void GetPlayerById()
+        public async void GetPlayerById()
         {
             var service = serviceProvider.GetService<IPlayerService>();
 
@@ -45,11 +47,12 @@
             var player = NewPlayer(team, game, "Gosho", "Petrov");
 
             Assert.AreEqual(game.Id, player.GameId);
-            Assert.AreEqual(player.FirstName, service.GetPlayerById(player.Id).FirstName);
+            var playerFirstName = await service.GetPlayerById(player.Id);
+            Assert.AreEqual(player.FirstName, playerFirstName.FirstName);
 
         }
         [Test]
-        public void GetRandomPlayerFromTeam()
+        public async Task GetRandomPlayerFromTeam()
         {
             var service = serviceProvider.GetService<IPlayerService>();
 
@@ -61,16 +64,17 @@
             var player3 = NewPlayer(team, game, "Petur", "Stoyanov");
             var player4 = NewPlayer(team, game, "Hristo", "Kolev");
 
-            var randomPlayer = service.GetRandomPlayer(team);
+            var randomPlayer = await service.GetRandomPlayer(team);
 
             using (var context = new FootballManagerDbContext(options))
             {
-                Assert.IsTrue(context.Players.Where(x => x.TeamId == team.Id).Contains(randomPlayer));
+                var rndPl = await Task.Run(()=>context.Players);
+                Assert.IsTrue(rndPl.Where(x => x.TeamId == team.Id).Contains(randomPlayer));
             }
         }
 
         [Test]
-        public void GetStartingPlayers()
+        public async Task GetStartingPlayers()
         {
             var service = serviceProvider.GetService<IPlayerService>();
 
@@ -82,7 +86,7 @@
             var player3 = NewPlayer(team, game, "Petur", "Stoyanov");
             var player4 = NewPlayer(team, game, "Hristo", "Kolev");
 
-            var startingPlayers = service.GetStartingEleven(team.Id);
+            var startingPlayers = await service.GetStartingEleven(team.Id);
 
             using (var context = new FootballManagerDbContext(options))
             {
@@ -90,7 +94,7 @@
             }
         }
         [Test]
-        public void GetPlayersByTeam()
+        public async Task GetPlayersByTeam()
         {
             var service = serviceProvider.GetService<IPlayerService>();
 
@@ -102,7 +106,7 @@
             var player3 = NewPlayer(team, game, "Petur", "Stoyanov");
             var player4 = NewPlayer(team, game, "Hristo", "Kolev");
 
-            var players = service.GetPlayersByTeam(team.Id);
+            var players = await service.GetPlayersByTeam(team.Id);
 
             using (var context = new FootballManagerDbContext(options))
             {

@@ -17,25 +17,25 @@
             rnd = new Random();
             this.data = data;
         }
-        public Fixture GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
+        public async Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
         {
             var currentTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId && x.GameId == currentGame.Id);
 
-            return dayFixtures.FirstOrDefault(x => x.HomeTeamId == currentTeam.Id
-                                                    || x.AwayTeamId == currentTeam.Id);
+            return await Task.Run(() => dayFixtures.FirstOrDefault(x => x.HomeTeamId == currentTeam.Id
+                                                     || x.AwayTeamId == currentTeam.Id));
 
         }
-        public List<Fixture> GetFixturesByDay(Game CurrentGame)
+        public async Task<List<Fixture>> GetFixturesByDay(Game CurrentGame)
         {
             var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == CurrentGame.Day && x.GameId == CurrentGame.Id && x.Year == CurrentGame.Year);
             if (currentDay == null)
             {
                 return null;
             }
-            return this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.DayId == currentDay.Id).ToList();
+            return await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.DayId == currentDay.Id).ToList());
 
         }
-        public List<Player> GetStarting11(int teamId) => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList();
+        public async Task<List<Player>> GetStarting11(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList());
         public (bool isValid, string error) ValidateTactics(VirtualTeam currentTeam)
         {
             var allStartingPlayers = this.data.Players.Where(x => x.TeamId == currentTeam.Id && x.IsStarting11 == true).ToList();
@@ -91,7 +91,7 @@
 
             return newMatch;
         }
-        public Match GetCurrentMatch(int matchId) => this.data.Matches.FirstOrDefault(x => x.Id == matchId);
+        public async Task<Match> GetCurrentMatch(int matchId) => await Task.Run(() => this.data.Matches.FirstOrDefault(x => x.Id == matchId));
         public void PlayerAction(VirtualTeam team, Player player, Match match)
         {
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
@@ -211,7 +211,7 @@
             match.Minute += rnd.Next(1, Data.Constant.DataConstants.Match.Timespan);
             this.data.SaveChanges();
         }
-        public MatchViewModel GetMatchModel(Match match, Fixture fixture, Player player)
+        public async Task<MatchViewModel> GetMatchModel(Match match, Fixture fixture, Player player)
         {
             return new MatchViewModel
             {
@@ -221,8 +221,8 @@
                 HomeTeamName = fixture.HomeTeamName,
                 AwayTeamName = fixture.AwayTeamName,
                 Positions = this.data.Positions.ToList(),
-                HomeTeamPlayers = GetStarting11(fixture.HomeTeamId),
-                AwayTeamPlayers = GetStarting11(fixture.AwayTeamId),
+                HomeTeamPlayers = await GetStarting11(fixture.HomeTeamId),
+                AwayTeamPlayers = await GetStarting11(fixture.AwayTeamId),
                 CurrentPlayerName = player.FirstName + " " + player.LastName
             };
         }
@@ -232,10 +232,10 @@
             match.Minute = 0;
             this.data.SaveChanges();
         }
-        public List<Fixture> GetResults(Game currentGame)
+        public async Task<List<Fixture>> GetResults(Game currentGame)
         {
             var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentGame.Day - 1 && x.GameId == currentGame.Id && x.Year == currentGame.Year);
-            return this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.DayId == currentDay.Id).ToList();
+            return await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.DayId == currentDay.Id).ToList());
         }
         public void DeleteMatches(Game CurrentGame)
         {
@@ -247,5 +247,6 @@
             }
             this.data.SaveChanges();
         }
+               
     }
 }
