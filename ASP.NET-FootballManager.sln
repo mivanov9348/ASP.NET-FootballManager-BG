@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballManager.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballManager.Core", "FootballManager.Core\FootballManager.Core.csproj", "{ACB8E9C2-86AC-4781-BDDD-48F55DCB9E22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballManager.Test", "FootballManager.Test\FootballManager.Test.csproj", "{84FF485D-B132-49CE-9741-025260E45029}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballManager.Test", "FootballManager.Test\FootballManager.Test.csproj", "{84FF485D-B132-49CE-9741-025260E45029}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
