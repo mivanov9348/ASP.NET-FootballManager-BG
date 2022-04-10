@@ -1,8 +1,6 @@
-namespace ASP.NET_FootballManager.Data.DataModels
-{
-    using Microsoft.EntityFrameworkCore;
+namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+{    
     using System.ComponentModel.DataAnnotations;
-
     public class Day
     {
         public int Id { get; set; }

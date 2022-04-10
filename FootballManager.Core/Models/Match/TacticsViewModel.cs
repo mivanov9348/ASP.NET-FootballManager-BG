@@ -1,7 +1,6 @@
-﻿using ASP.NET_FootballManager.Data.DataModels;
-
-namespace ASP.NET_FootballManager.Models
+﻿namespace ASP.NET_FootballManager.Models
 {
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public class TacticsViewModel
     {
         public int PlayerId { get; set; }

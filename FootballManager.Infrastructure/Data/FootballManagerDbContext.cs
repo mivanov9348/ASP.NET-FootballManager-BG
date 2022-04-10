@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Data
 {
-    using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
@@ -23,6 +23,7 @@
         public DbSet<Day> Days { get; set; }
         public DbSet<EuropeanCup> EuropeanCups { get; set; }
         public DbSet<Cup> Cups { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public FootballManagerDbContext(DbContextOptions<FootballManagerDbContext> options)
             : base(options)
         {

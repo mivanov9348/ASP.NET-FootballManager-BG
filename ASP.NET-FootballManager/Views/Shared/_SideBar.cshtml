@@ -85,7 +85,7 @@
         }
 
         .main-menu > ul.logout {
-            position: absolute;
+            position: relative;
             left: 0;
             bottom: 0;
         }
@@ -136,6 +136,19 @@
         src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url("http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff") format('woff');
     }
 
+    .Chat {     
+        margin-top:-20px;
+        font-size: 15px;
+        color: red;
+        text-decoration: none;
+        font-weight: bolder;       
+        border-radius: 10px 10px;
+    }
+
+    .Chat:hover{
+        color:white;
+    }
+
 </style>
 
 <head>
@@ -148,6 +161,11 @@
     <div class="area"></div>
     <nav class="main-menu">
         <p style="color:yellow;font-weight:bolder;margin-top:10px;font-size:20px">Football Manager</p>
+        <a class="Chat" asp-action="ChatRoom" asp-controller="Chat">
+            <span class="nav-text">
+              Chat
+            </span>
+        </a>
         <hr style="color:yellow;margin-left:-50px;" />
         <ul>
             <li>
@@ -226,7 +244,7 @@
         <ul class="logout">
             <li>
                 <a asp-action="Index" asp-controller="Home">
-                    <i class="fa fa-power-off fa-2x"></i>
+                    <i class="fa fa-power-off fa-2x" style="font-size:30px;"></i>
                     <span class="nav-text">
                         EXIT
                     </span>

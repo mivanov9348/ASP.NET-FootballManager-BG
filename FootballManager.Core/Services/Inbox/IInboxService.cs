@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Services.Inbox
 {
-    using NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public interface IInboxService
     {
         void CreateManagerNews(Manager currentManager, Game currentGame);

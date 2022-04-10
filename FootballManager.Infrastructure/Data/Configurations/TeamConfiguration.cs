@@ -1,4 +1,4 @@
-﻿using ASP.NET_FootballManager.Data.DataModels;
+﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

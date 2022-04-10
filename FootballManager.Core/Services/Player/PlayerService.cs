@@ -3,7 +3,7 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Data.Database.ImportDto;
-    using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Models.Sorting;
     using Newtonsoft.Json;

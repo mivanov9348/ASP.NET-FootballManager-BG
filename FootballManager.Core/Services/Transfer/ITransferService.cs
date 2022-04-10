@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Transfer
 {
     using ASP.NET_FootballManager.Models;
-    using Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public interface ITransferService
     {
        Task<List<Player>> GetAllFreeAgents(int gameId, int orderId,Game CurrentGame);

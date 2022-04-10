@@ -1,8 +1,8 @@
-﻿using ASP.NET_FootballManager.Data.DataModels;
-using System.ComponentModel.DataAnnotations;
-
-namespace ASP.NET_FootballManager.Models
+﻿namespace ASP.NET_FootballManager.Models
 {
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using System.ComponentModel.DataAnnotations;
+
     public class NewManagerViewModel
     {
         [MinLength(3)]

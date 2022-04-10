@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.EuroCup
 {
     using ASP.NET_FootballManager.Data;
-    using Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System.Collections.Generic;
 
     public class EuroCupService : IEuroCupService

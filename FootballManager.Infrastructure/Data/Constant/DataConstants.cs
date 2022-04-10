@@ -1,6 +1,4 @@
-﻿using ASP.NET_FootballManager.Data.DataModels;
-
-namespace ASP.NET_FootballManager.Data.Constant
+﻿namespace ASP.NET_FootballManager.Data.Constant
 {
     public class DataConstants
     {
@@ -39,9 +37,6 @@ namespace ASP.NET_FootballManager.Data.Constant
 
         public class InboxMessages
         {
-
-
-
             public (string messageReview, string fullMessage) MatchNews(string homeTeamName, string awayTeamName, int homeTeamGoal, int awayTeamGoal, int currentRound)
             {
                 var messageReview = "";

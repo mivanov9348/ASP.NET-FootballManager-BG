@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.League
 {
     using ASP.NET_FootballManager.Models;
-    using NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public interface ILeagueService
     {
 

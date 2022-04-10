@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Services.Fixture
 {
-    using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public interface IFixtureService
     {
         void GenerateLeagueFixtures(Game game);

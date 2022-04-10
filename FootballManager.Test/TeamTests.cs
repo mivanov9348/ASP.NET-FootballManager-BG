@@ -1,7 +1,7 @@
 ﻿namespace FootballManager.Test
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using ASP.NET_FootballManager.Services.Team;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;

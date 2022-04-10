@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Match
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Data.DataModels;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System;
     using System.Collections.Generic;
     using System.Text;

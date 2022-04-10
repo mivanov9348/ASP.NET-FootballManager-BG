@@ -22,7 +22,7 @@ namespace FootballManager.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.City", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Cup", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +73,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Cups");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Day", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Day", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,7 +112,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Days");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.EuropeanCup", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -138,7 +138,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("EuropeanCups");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Fixture", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -208,7 +208,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Fixtures");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Game", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -249,7 +249,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Inbox", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Inbox", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -282,7 +282,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Inboxes");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.League", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -309,7 +309,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Leagues");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Manager", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -357,7 +357,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Managers");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Match", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Match", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -392,7 +392,29 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Matches");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Nation", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages", (string)null);
+                });
+
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -415,7 +437,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Nations");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Player", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -502,7 +524,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Position", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Position", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -525,7 +547,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Positions");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Team", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -580,7 +602,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -882,9 +904,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.City", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
                         .WithMany("Cities")
                         .HasForeignKey("NationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -893,9 +915,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Nation");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Cup", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
                         .WithMany("Cups")
                         .HasForeignKey("NationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -904,9 +926,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Nation");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Day", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Day", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Game", "Game")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Days")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -915,36 +937,36 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Fixture", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", "AwayTeam")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "AwayTeam")
                         .WithMany("AwayMatches")
                         .HasForeignKey("AwayTeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Cup", "Cup")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
                         .WithMany("Fixtures")
                         .HasForeignKey("CupId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Day", "Day")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Day", "Day")
                         .WithMany("Fixtures")
                         .HasForeignKey("DayId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.EuropeanCup", "EuropeanCup")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
                         .WithMany("Fixtures")
                         .HasForeignKey("EuropeanCupId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", "HomeTeam")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "HomeTeam")
                         .WithMany("HomeMatches")
                         .HasForeignKey("HomeTeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
                         .WithMany("Fixtures")
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -962,15 +984,15 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("League");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Game", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Manager", "Manager")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", "Manager")
                         .WithMany("Games")
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Team", "Team")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", "Team")
                         .WithMany("Games")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -981,9 +1003,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Inbox", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Inbox", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Game", "Game")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Inboxes")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -992,9 +1014,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.League", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
                         .WithMany("Leagues")
                         .HasForeignKey("NationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1003,14 +1025,14 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Nation");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Manager", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Team", "CurrentTeam")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", "CurrentTeam")
                         .WithMany("Managers")
                         .HasForeignKey("CurrentTeamId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
                         .WithMany("Managers")
                         .HasForeignKey("NationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1018,7 +1040,7 @@ namespace FootballManager.Infrastructure.Migrations
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithOne()
-                        .HasForeignKey("ASP.NET_FootballManager.Data.DataModels.Manager", "UserId")
+                        .HasForeignKey("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1033,15 +1055,15 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Match", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Match", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Fixture", "CurrentFixture")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", "CurrentFixture")
                         .WithMany("Matches")
                         .HasForeignKey("CurrentFixtureId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Game", "Game")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Matches")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1052,38 +1074,38 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Player", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.City", "City")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", "City")
                         .WithMany("Players")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Game", "Game")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Players")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
                         .WithMany("Players")
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
                         .WithMany("Players")
                         .HasForeignKey("NationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Position", "Position")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Position", "Position")
                         .WithMany("Players")
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", "Team")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "Team")
                         .WithMany("Players")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1102,28 +1124,28 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Team", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.City", "City")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", "City")
                         .WithMany("Teams")
                         .HasForeignKey("CityId");
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Cup", "Cup")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
                         .WithMany("Teams")
                         .HasForeignKey("CupId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.EuropeanCup", "EuropeanCup")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
                         .WithMany("Teams")
                         .HasForeignKey("EuropeanCupId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
                         .WithMany("Teams")
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Nation", "Nation")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
                         .WithMany("Teams")
                         .HasForeignKey("NationId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1139,34 +1161,34 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Nation");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Cup", "Cup")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("CupId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.EuropeanCup", "EuropeanCup")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("EuropeanCupId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Game", "Game")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.League", "League")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Manager", null)
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", null)
                         .WithMany("VirtualTeams")
                         .HasForeignKey("ManagerId");
 
-                    b.HasOne("ASP.NET_FootballManager.Data.DataModels.Team", "Team")
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", "Team")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1234,14 +1256,14 @@ namespace FootballManager.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.City", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
                 {
                     b.Navigation("Players");
 
                     b.Navigation("Teams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Cup", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", b =>
                 {
                     b.Navigation("Fixtures");
 
@@ -1250,12 +1272,12 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("VirtualTeams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Day", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Day", b =>
                 {
                     b.Navigation("Fixtures");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.EuropeanCup", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
                 {
                     b.Navigation("Fixtures");
 
@@ -1264,12 +1286,12 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("VirtualTeams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Fixture", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
                 {
                     b.Navigation("Matches");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Game", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
                 {
                     b.Navigation("Days");
 
@@ -1282,7 +1304,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("VirtualTeams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.League", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", b =>
                 {
                     b.Navigation("Fixtures");
 
@@ -1293,14 +1315,14 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("VirtualTeams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Manager", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", b =>
                 {
                     b.Navigation("Games");
 
                     b.Navigation("VirtualTeams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Nation", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", b =>
                 {
                     b.Navigation("Cities");
 
@@ -1315,12 +1337,12 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Teams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Position", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Position", b =>
                 {
                     b.Navigation("Players");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.Team", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", b =>
                 {
                     b.Navigation("Games");
 
@@ -1329,7 +1351,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("VirtualTeams");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Data.DataModels.VirtualTeam", b =>
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
                 {
                     b.Navigation("AwayMatches");
 

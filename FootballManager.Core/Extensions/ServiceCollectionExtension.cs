@@ -11,6 +11,7 @@ using ASP.NET_FootballManager.Services.Player;
 using ASP.NET_FootballManager.Services.Team;
 using ASP.NET_FootballManager.Services.Transfer;
 using ASP.NET_FootballManager.Services.Validation;
+using FootballManager.Core.Services.Chat;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -33,7 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IEuroCupService, EuroCupService>();
             services.AddScoped<IDayService, DayService>();
             services.AddScoped<ICupService, CupService>();
-
+            services.AddScoped<IChatService, ChatService>();
             return services;
         }
 

@@ -1,8 +1,7 @@
-﻿using ASP.NET_FootballManager.Data.DataModels;
-using ASP.NET_FootballManager.Models;
-
-namespace ASP.NET_FootballManager.Services.Validation
+﻿namespace ASP.NET_FootballManager.Services.Validation
 {
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using ASP.NET_FootballManager.Models;
     public interface IValidationService
     {
         (bool isValid, string ErrorMessage) NewManagerValidator(NewManagerViewModel ngvm);

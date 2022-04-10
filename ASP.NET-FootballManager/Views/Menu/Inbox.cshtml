@@ -8,7 +8,7 @@
     }
 
     .Inbox {
-        margin-top: 30px;
+        margin-top: 60px;
         margin-left: 180px;
         border-radius: 10px 10px 10px 10px;
         border: 3px solid white;
@@ -31,7 +31,6 @@
         }
 
     .title {
-       
         margin-left: 160px;
         font-size: 30px;
         font-family: fantasy;
@@ -43,7 +42,7 @@
 
     .FullNews {
         position: absolute;
-        margin-top:70px;
+        margin-top: 70px;
         top: 50px;
         margin-left: 590px;
         border-radius: 10px 10px 10px 10px;
@@ -59,10 +58,13 @@
 </style>
 
 <body>
-
-    <label style="color:red;font-size:20px">Year: @Model.Year Day:@Model.Day</label>
+    <div class="row" style="font-size:100px">
+        <div class="col-12">
+            <ul id="serverDate" style="color:red"></ul>
+        </div>
+    </div>
+    <label style="font-weight:bolder;color:red;font-size:20px;margin-left:600px">Year: @Model.Year Day:@Model.Day</label>
     <hr style="color:red" />
-    <button onclick="getLocation()">Get Current Position</button>
     <p id="demo"></p>
     <div class="Inbox">
         <label class="title">INBOX</label>
@@ -88,21 +90,30 @@
     </div>
 
 </body>
-
-
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script>
-    var x = document.getElementById("demo");
 
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-      } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
-      }
-    }
+       var connection = new signalR.HubConnectionBuilder().withUrl("/clockHub").build();
 
-    function showPosition(position) {
-      x.innerHTML = "Latitude: " + position.coords.latitude +
-      "<br>Longitude: " + position.coords.longitude;
-    }
+    connection.on("DisplayTime", function (time) {
+        var li = document.createElement("li");
+        li.textContent = time;
+        document.getElementById("serverDate").appendChild(li);
+    });
+
+    connection.start().then(function () {
+
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    setInterval(function () {
+
+        connection.invoke("DisplayTime").catch(function (err) {
+            return console.error(err.toString());
+        });
+
+    }, 1000);
+
 </script>

@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Data.DataModels
+﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
 {
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;

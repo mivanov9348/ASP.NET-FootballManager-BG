@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ASP.NET_FootballManager.Data.DataModels
+namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
 {
     public class EuropeanCup
     {
