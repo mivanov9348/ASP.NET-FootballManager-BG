@@ -2,8 +2,7 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models;
-
+    using FootballManager.Core.Models.Team;
     public class TeamService : ITeamService
     {
         private readonly FootballManagerDbContext data;

@@ -10,6 +10,7 @@
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
+    using FootballManager.Core.Models.Player;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
     public class TransferController : Controller

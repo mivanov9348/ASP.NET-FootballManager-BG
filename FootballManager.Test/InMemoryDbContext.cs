@@ -1,10 +1,9 @@
-﻿using ASP.NET_FootballManager.Data;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-
-
-namespace FootballManager.Test
+﻿namespace FootballManager.Test
 {
+    using ASP.NET_FootballManager.Data;
+    using Microsoft.Data.Sqlite;
+    using Microsoft.EntityFrameworkCore;
+
     public class InMemoryDbContext
     {
         private readonly SqliteConnection connection;

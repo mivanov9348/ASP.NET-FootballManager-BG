@@ -1,4 +1,5 @@
-﻿@model InboxViewModel
+﻿@using FootballManager.Core.Models.Menu
+@model InboxViewModel
 <partial name="~/Views/Shared/_SideBar.cshtml" />
 
 <style>
@@ -58,11 +59,12 @@
 </style>
 
 <body>
-    <div class="row" style="font-size:100px">
-        <div class="col-12">
-            <ul id="serverDate" style="color:red"></ul>
-        </div>
+
+    <div class="modal-footer">
+        <button data-dismiss="modal" class="btn  btn-large"> Close</button>
+        <asp:Button runat="server" ID="btnSaveImage" Text="Save Image" CssClass="Greengradiant btn- large" OnClick="btnSaveImage_Click" UseSubmitBehavior="false" data-dismiss="modal" />
     </div>
+
     <label style="font-weight:bolder;color:red;font-size:20px;margin-left:600px">Year: @Model.Year Day:@Model.Day</label>
     <hr style="color:red" />
     <p id="demo"></p>
@@ -92,28 +94,4 @@
 </body>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-<script>
-
-       var connection = new signalR.HubConnectionBuilder().withUrl("/clockHub").build();
-
-    connection.on("DisplayTime", function (time) {
-        var li = document.createElement("li");
-        li.textContent = time;
-        document.getElementById("serverDate").appendChild(li);
-    });
-
-    connection.start().then(function () {
-
-    }).catch(function (err) {
-        return console.error(err.toString());
-    });
-
-    setInterval(function () {
-
-        connection.invoke("DisplayTime").catch(function (err) {
-            return console.error(err.toString());
-        });
-
-    }, 1000);
-
-</script>
+<script src="~/js/clock.js"></script>

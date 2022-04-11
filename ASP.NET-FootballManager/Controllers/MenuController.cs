@@ -1,8 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models;
-    using ASP.NET_FootballManager.Models.Sorting;
     using ASP.NET_FootballManager.Services.Common;
     using ASP.NET_FootballManager.Services.Cup;
     using ASP.NET_FootballManager.Services.EuroCup;
@@ -13,6 +11,10 @@
     using ASP.NET_FootballManager.Services.Manager;
     using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
+    using FootballManager.Core.Models.League;
+    using FootballManager.Core.Models.Menu;
+    using FootballManager.Core.Models.Player;
+    using FootballManager.Core.Models.Team;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
 

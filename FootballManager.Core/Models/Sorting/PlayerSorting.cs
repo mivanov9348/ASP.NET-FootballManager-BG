@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Models.Sorting
+﻿namespace FootballManager.Core.Models.Sorting
 {
     public enum PlayerSorting
     {

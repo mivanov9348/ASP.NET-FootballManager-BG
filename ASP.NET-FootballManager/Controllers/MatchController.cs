@@ -13,6 +13,7 @@
     using ASP.NET_FootballManager.Services.Match;
     using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
+    using FootballManager.Core.Models.Match;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
 

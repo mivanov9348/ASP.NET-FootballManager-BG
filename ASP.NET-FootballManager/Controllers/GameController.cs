@@ -1,7 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
     using Data.Constant;
-    using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
     using ASP.NET_FootballManager.Services.Game;
     using ASP.NET_FootballManager.Services.League;
@@ -16,6 +15,7 @@
     using ASP.NET_FootballManager.Services.EuroCup;
     using ASP.NET_FootballManager.Services.Cup;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Game;
 
     public class GameController : Controller
     {

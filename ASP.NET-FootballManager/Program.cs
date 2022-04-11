@@ -1,5 +1,5 @@
 using ASP.NET_FootballManager.Data;
-using FarmHeroes.Web.Hubs;
+using ASP.NET_FootballManager.Hubs;
 using FootballManager.Core.Extensions;
 using FootballManager.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Identity;
@@ -74,7 +74,7 @@ app.UseEndpoints(
 routes =>
 {
     routes.MapHub<ChatHub>("/chatHub");
-    routes.MapHub<ClockHub>("/clock");
+    routes.MapHub<ClockHub>("/clockHub");
 });
 
 app.MapControllerRoute(

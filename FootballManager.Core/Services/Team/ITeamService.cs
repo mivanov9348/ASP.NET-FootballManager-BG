@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Team
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models;
+    using FootballManager.Core.Models.Team;
 
     public interface ITeamService
     {

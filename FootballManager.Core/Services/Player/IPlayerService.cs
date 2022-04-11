@@ -1,8 +1,8 @@
 ﻿namespace ASP.NET_FootballManager.Services.Player
 {
-    using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models.Sorting;
+    using FootballManager.Core.Models.Player;
+    using FootballManager.Core.Models.Sorting;
 
     public interface IPlayerService
     {

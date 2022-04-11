@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Models
+﻿namespace FootballManager.Core.Models.Game
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
         public class EndSeasonViewModel

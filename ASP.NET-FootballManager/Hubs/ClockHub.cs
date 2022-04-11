@@ -1,17 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace FootballManager.Core.Extensions
+﻿namespace ASP.NET_FootballManager.Hubs
 {
-   
+    using Microsoft.AspNetCore.SignalR;
     public class ClockHub : Hub
     {
         public ClockHub()
         {
         }
 
-        public async Task DisplayTime()
+        public async Task PrintTime()
         {
-            await Clients.All.SendAsync("DisplayTime", DateTime.Now.TimeOfDay);
+            await Clients.All.SendAsync("DisplayTime", DateTime.Now.Hour.ToString(), DateTime.Now.Minute.ToString());
         }
     }
 }

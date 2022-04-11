@@ -1,17 +1,15 @@
-﻿using ASP.NET_FootballManager.Data;
-using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-using ASP.NET_FootballManager.Services.Common;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FootballManager.Test
+﻿namespace FootballManager.Test
 {
-
+    using ASP.NET_FootballManager.Data;
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using ASP.NET_FootballManager.Services.Common;
+    using Microsoft.Data.Sqlite;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using NUnit.Framework;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     public class CommonTest : IDisposable
     {
         private SqliteConnection connection;

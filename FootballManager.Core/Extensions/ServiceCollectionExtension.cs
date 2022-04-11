@@ -1,20 +1,21 @@
-﻿using ASP.NET_FootballManager.Services.Common;
-using ASP.NET_FootballManager.Services.Cup;
-using ASP.NET_FootballManager.Services.EuroCup;
-using ASP.NET_FootballManager.Services.Fixture;
-using ASP.NET_FootballManager.Services.Game;
-using ASP.NET_FootballManager.Services.Inbox;
-using ASP.NET_FootballManager.Services.League;
-using ASP.NET_FootballManager.Services.Manager;
-using ASP.NET_FootballManager.Services.Match;
-using ASP.NET_FootballManager.Services.Player;
-using ASP.NET_FootballManager.Services.Team;
-using ASP.NET_FootballManager.Services.Transfer;
-using ASP.NET_FootballManager.Services.Validation;
-using FootballManager.Core.Services.Chat;
-
-namespace Microsoft.Extensions.DependencyInjection
+﻿namespace FootballManager.Core.Extensions
 {
+    using ASP.NET_FootballManager.Services.Common;
+    using ASP.NET_FootballManager.Services.Cup;
+    using ASP.NET_FootballManager.Services.EuroCup;
+    using ASP.NET_FootballManager.Services.Fixture;
+    using ASP.NET_FootballManager.Services.Game;
+    using ASP.NET_FootballManager.Services.Inbox;
+    using ASP.NET_FootballManager.Services.League;
+    using ASP.NET_FootballManager.Services.Manager;
+    using ASP.NET_FootballManager.Services.Match;
+    using ASP.NET_FootballManager.Services.Player;
+    using ASP.NET_FootballManager.Services.Team;
+    using ASP.NET_FootballManager.Services.Transfer;
+    using ASP.NET_FootballManager.Services.Validation;
+    using FootballManager.Core.Services.Chat;
+    using Microsoft.Extensions.DependencyInjection;
+
     public static class ServiceCollectionExtension
     {
 

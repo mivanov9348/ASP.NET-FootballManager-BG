@@ -1,4 +1,4 @@
-﻿namespace FarmHeroes.Web.Hubs
+﻿namespace ASP.NET_FootballManager.Hubs
 {
     using FootballManager.Core.Services.Chat;
     using Microsoft.AspNetCore.Identity;

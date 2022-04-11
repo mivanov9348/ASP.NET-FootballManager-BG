@@ -1,8 +1,7 @@
-﻿namespace ASP.NET_FootballManager.Models
+﻿namespace FootballManager.Core.Models.Player
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models.Sorting;
-
+    using FootballManager.Core.Models.Sorting;
     public class PlayersViewModel
     {
         public int SortBy { get; set; }

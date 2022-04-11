@@ -4,10 +4,8 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System;
     using System.Collections.Generic;
-    using System.Text;
-    using Data.Constant;
-    using ASP.NET_FootballManager.Models;
-
+    using System.Text; 
+    using FootballManager.Core.Models.Match;
     public class MatchService : IMatchService
     {
         private readonly FootballManagerDbContext data;

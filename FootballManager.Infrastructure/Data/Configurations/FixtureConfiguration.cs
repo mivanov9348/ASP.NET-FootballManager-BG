@@ -1,14 +1,8 @@
-﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FootballManager.Infrastructure.Data.Configurations
+﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;   
     public class FixtureConfiguration : IEntityTypeConfiguration<Fixture>
     {
         public void Configure(EntityTypeBuilder<Fixture> builder)

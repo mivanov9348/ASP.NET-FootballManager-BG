@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Models
+﻿namespace FootballManager.Core.Models.Player
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public class TransferViewModel

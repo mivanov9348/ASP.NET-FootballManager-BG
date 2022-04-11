@@ -4,8 +4,8 @@
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Data.Database.ImportDto;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models;
-    using ASP.NET_FootballManager.Models.Sorting;
+    using FootballManager.Core.Models.Player;
+    using FootballManager.Core.Models.Sorting;
     using Newtonsoft.Json;
     using System.Collections.Generic;
 
