@@ -1,16 +1,11 @@
 ﻿namespace ASP.NET_FootballManager.Services.Game
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Data.Database.ImportDto;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Services.League;
-    using ASP.NET_FootballManager.Services.Team;
-    using Newtonsoft.Json;
 
     public class GameService : IGameService
     {
         private readonly FootballManagerDbContext data;
-
         private Random rnd;
         public GameService(FootballManagerDbContext data)
         {
@@ -69,22 +64,14 @@
             var userManager = this.data.Managers.FirstOrDefault(x => x.UserId == UserId);
             var userGame = this.data.Games.FirstOrDefault(x => x.ManagerId == userManager.Id);
 
-            var matches = this.data.Matches.Where(x => x.GameId == userGame.Id).ToList();
-            matches.RemoveRange(0, matches.Count());
-            var players = this.data.Players.Where(x => x.GameId == userGame.Id).ToList();
-            matches.RemoveRange(0, players.Count());
-            var fixtures = this.data.Fixtures.Where(x => x.GameId == userGame.Id).ToList();
-            matches.RemoveRange(0, fixtures.Count());
-            var inboxes = this.data.Inboxes.Where(x => x.GameId == userGame.Id).ToList();
-            matches.RemoveRange(0, inboxes.Count());
-            var virtualTeams = this.data.VirtualTeams.Where(x => x.GameId == userGame.Id).ToList();
-            matches.RemoveRange(0, virtualTeams.Count());
-            var days = this.data.Days.Where(x => x.GameId == userGame.Id).ToList();
-            matches.RemoveRange(0, days.Count());
-
-            this.data.Games.Remove(userGame);
-            this.data.Managers.Remove(userManager);
-
+            this.data.Matches.RemoveRange(this.data.Matches.Where(c => c.GameId == userGame.Id));
+            this.data.Players.RemoveRange(this.data.Players.Where(c => c.GameId == userGame.Id));
+            this.data.Fixtures.RemoveRange(this.data.Fixtures.Where(c => c.GameId == userGame.Id));
+            this.data.Inboxes.RemoveRange(this.data.Inboxes.Where(c => c.GameId == userGame.Id));
+            this.data.VirtualTeams.RemoveRange(this.data.VirtualTeams.Where(c => c.GameId == userGame.Id));
+            this.data.Days.RemoveRange(this.data.Days.Where(c => c.GameId == userGame.Id));
+            this.data.Games.RemoveRange(this.data.Games.Where(x => x.Id == userGame.Id));
+            this.data.Managers.RemoveRange(this.data.Managers.Where(x => x.Id == userManager.Id));
             this.data.SaveChanges();
         }
     }

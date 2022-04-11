@@ -114,8 +114,7 @@
             (bool isValid, string ErrorMessage) = validationService.NewManagerValidator(ngvm);
 
             if (isValid)
-            {
-                StringBuilder sb = new StringBuilder();
+            {              
                 //CreateManager               
                 var currentManager = managerService.CreateNewManager(ngvm, UserId);
                 var currentGame = gameService.CreateNewGame(currentManager);

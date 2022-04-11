@@ -16,7 +16,7 @@ namespace FootballManager.Infrastructure.Data.Configurations
 
             builder.HasOne(x => x.City)
               .WithMany(x => x.Players)
-             .HasForeignKey(x => x.CityId);
+              .HasForeignKey(x => x.CityId);
 
             builder.HasOne(x => x.Game)
               .WithMany(x => x.Players)
