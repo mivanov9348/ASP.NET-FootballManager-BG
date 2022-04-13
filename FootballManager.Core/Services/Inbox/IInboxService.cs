@@ -8,7 +8,7 @@
         void SellPlayerNews(int playerId, Game currentGame);
         void NewSeasonNews(Game currentGame);
         void MatchFinishedNews(Game CurrentGame, Fixture currentFixture);
-        Task<List<Inbox>> GetInboxMessages(int managerId);
+        Task<List<Inbox>> GetInboxMessages(int gameId);
         Task<Inbox> GetFullMessage(int id, Game CurrentGame);
 
         void CupMatchesInfo(List<Fixture> dayFixtures,Game CurrentGame);
