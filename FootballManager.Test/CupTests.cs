@@ -17,6 +17,11 @@
         private SqliteConnection connection;
         private DbContextOptions<FootballManagerDbContext> options;
         private ServiceProvider serviceProvider;
+        private Cup cup;
+        private VirtualTeam team1;
+        private VirtualTeam team2;
+        private Fixture fixture;
+        private Day day;
 
         [SetUp]
         public void Setup()
@@ -36,64 +41,63 @@
 
             serviceProvider.GetService<ICupService>();
 
-
+            Create(options);
         }
 
         [Test]
         public async Task GetCurrentCup()
         {
             var service = serviceProvider.GetService<ICupService>();
+            var cup = await Task.Run(() => service.GetCurrentCup());
 
-            using (var context = new FootballManagerDbContext(options))
-            {
-                var newCup = new Cup
-                {
-                    Name = "Cup1"
-                };
-                context.Cups.Add(newCup);
-                var team1 = new VirtualTeam
-                {
-                    CupId = newCup.Id,
-                    Name = "team1"
-                };
-                var team2 = new VirtualTeam
-                {
-                    CupId = newCup.Id,
-                    Name = "team2"
-                };
-                context.VirtualTeams.Add(team1);
-                context.VirtualTeams.Add(team2);
-                context.SaveChanges();
+            Assert.AreEqual("Cup1", cup.Name);
 
-                var cup = await Task.Run(() => service.GetCurrentCup());
-                Assert.AreEqual("Cup1", cup.Name);
-            }
         }
         [Test]
-        public void GetWinner()
+        public async Task GetWinner()
         {
             var service = serviceProvider.GetService<ICupService>();
+            await Task.Run(() => service.CheckWinner(fixture));
 
+            Assert.AreEqual(fixture.AwayTeamId, fixture.WinnerTeamId);
+        }
+        private void Create(DbContextOptions<FootballManagerDbContext> options)
+        {
             using (var context = new FootballManagerDbContext(options))
             {
-                var newDay = new Day();
-                context.Days.Add(newDay);
-                var newfixture = new Fixture
+                day = new Day();
+                context.Days.Add(day);
+
+                fixture = new Fixture
                 {
                     HomeTeamId = 1,
                     AwayTeamId = 2,
                     HomeTeamGoal = 1,
                     AwayTeamGoal = 2,
-                    DayId = newDay.Id
+                    DayId = day.Id
                 };
-                context.Fixtures.Add(newfixture);
+                context.Fixtures.Add(fixture);
+
+                cup = new Cup
+                {
+                    Name = "Cup1"
+                };
+                context.Cups.Add(cup);
+
+                team1 = new VirtualTeam
+                {
+                    CupId = cup.Id,
+                    Name = "team1"
+                };
+                team2 = new VirtualTeam
+                {
+                    CupId = cup.Id,
+                    Name = "team2"
+                };
+                context.VirtualTeams.Add(team1);
+                context.VirtualTeams.Add(team2);
+
                 context.SaveChanges();
-
-                service.CheckWinner(newfixture);
-                Assert.AreEqual(newfixture.AwayTeamId, newfixture.WinnerTeamId);
-
-
-
             }
         }
 

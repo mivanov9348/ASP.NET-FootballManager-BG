@@ -3,8 +3,6 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using ASP.NET_FootballManager.Services.League;
-    using ASP.NET_FootballManager.Services.Player;
-    using ASP.NET_FootballManager.Services.Team;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -12,13 +10,15 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
     public class LeagueTests : IDisposable
     {
-
         private SqliteConnection connection;
         private DbContextOptions<FootballManagerDbContext> options;
         private ServiceProvider serviceProvider;
+        private League league;
+        private Game game;
+        private VirtualTeam team1;
+        private VirtualTeam team2;
 
         [SetUp]
         public void Setup()
@@ -37,93 +37,63 @@
             .BuildServiceProvider();
 
             serviceProvider.GetService<ILeagueService>();
+            Create(options);
         }
 
         [Test]
         public async Task GetAllLeagues()
         {
             var service = serviceProvider.GetService<ILeagueService>();
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                var newLeague = new League
-                {
-                    Name = "League1"
-                };
-                context.Leagues.Add(newLeague);
-                context.SaveChanges();
-
-                var allLeagues = await service.GetAllLeagues();
-
-                Assert.AreEqual(1, allLeagues.Count());
-            }
-
-
-
+            var allLeagues = await service.GetAllLeagues();
+            Assert.AreEqual(1, allLeagues.Count());
         }
+
         [Test]
-        public void GetLeagueById()
+        public async Task GetLeagueById()
         {
             var service = serviceProvider.GetService<ILeagueService>();
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                var newLeague = new League
-                {
-                    Name = "League1"
-                };
-                context.Leagues.Add(newLeague);
-                context.SaveChanges();
-
-                var currentLeague = service.GetLeague(newLeague.Id);
-
-                Assert.AreEqual(newLeague.Id, currentLeague.Id);
-            }
-
-
-
+            var currentLeague = await service.GetLeague(league.Id);
+            Assert.AreEqual(league.Id, currentLeague.Id);
         }
+
         [Test]
         public async Task GetStandings()
         {
             var service = serviceProvider.GetService<ILeagueService>();
+            var standings = await service.GetStandingsByLeague(league.Id, game);
+            Assert.AreEqual(team2.Name, standings.First().Name);
 
+        }
+        private void Create(DbContextOptions<FootballManagerDbContext> options)
+        {
             using (var context = new FootballManagerDbContext(options))
             {
-                var newGame = new Game();
-                context.Games.Add(newGame);
-                var newLeague = new League
+                league = new League
                 {
                     Name = "League1"
                 };
-                context.Leagues.Add(newLeague);
-                var teamOne = new VirtualTeam
+                context.Leagues.Add(league);
+                game = new Game();
+                context.Games.Add(game);
+                team1 = new VirtualTeam
                 {
                     Name = "ds",
-                    GameId = newGame.Id,
+                    GameId = game.Id,
                     Points = 10,
-                    LeagueId = newLeague.Id
+                    LeagueId = league.Id
                 };
-                context.VirtualTeams.Add(teamOne);
-                var teamTwo = new VirtualTeam
+                context.VirtualTeams.Add(team1);
+                team2 = new VirtualTeam
                 {
                     Name = "ds",
-                    GameId = newGame.Id,
+                    GameId = game.Id,
                     Points = 12,
-                    LeagueId = newLeague.Id
+                    LeagueId = league.Id
                 };
-                context.VirtualTeams.Add(teamTwo);
+                context.VirtualTeams.Add(team2);
                 context.SaveChanges();
-
-                var standings = await service.GetStandingsByLeague(newLeague.Id, newGame);
-
-                Assert.AreEqual(teamTwo.Name, standings.First().Name);
             }
-
-
-
         }
-
         public void Dispose()
         {
             connection.Close();

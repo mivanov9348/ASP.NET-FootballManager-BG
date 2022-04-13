@@ -23,8 +23,8 @@
               .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne<IdentityUser>()
-              .WithOne()
-              .HasForeignKey<Manager>(x => x.UserId);
+                   .WithOne()
+                   .HasForeignKey<Manager>(x => x.UserId);
         }
     }
 }

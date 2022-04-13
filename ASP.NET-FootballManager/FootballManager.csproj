@@ -6,9 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-ASP.NET_FootballManager-4F4EA278-39D8-4CA9-A67B-C2ED5CD27EBB</UserSecretsId>
     <RootNamespace>ASP.NET_FootballManager</RootNamespace>
+    <ApplicationInsightsResourceId>/subscriptions/5f97a1d2-8c19-441c-819d-ba87df004857/resourceGroups/FootballManager20220411143224ResourceGroup/providers/microsoft.insights/components/FootballManager</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.3" />

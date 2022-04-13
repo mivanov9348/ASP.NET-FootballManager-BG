@@ -2,23 +2,26 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Services.Team;
+    using ASP.NET_FootballManager.Services.Transfer;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class TeamTests : IDisposable
+    public class TransferTests : IDisposable
     {
+
         private SqliteConnection connection;
         private DbContextOptions<FootballManagerDbContext> options;
         private ServiceProvider serviceProvider;
-        private VirtualTeam team;
-        private Player player;
+        private ITransferService transferService;
         private Game game;
+        private Player player;
+        private Player player2;
+        private VirtualTeam team;
+        private Position position;
 
         [SetUp]
         public void Setup()
@@ -33,64 +36,49 @@
 
             serviceProvider = serviceCollection
             .AddSingleton(x => new FootballManagerDbContext(options))
-            .AddSingleton<ITeamService, TeamService>()
+            .AddSingleton<ITransferService, TransferService>()
             .BuildServiceProvider();
 
-            serviceProvider.GetService<ITeamService>();
+            serviceProvider.GetService<ITransferService>();
 
             Create(options);
         }
 
         [Test]
-        public void CalculateTeamOverall()
+        public async Task GetAllFreeAgents()
         {
-            var service = serviceProvider.GetService<ITeamService>();
-            service.CalculateTeamOverall(team);
-            Assert.AreEqual(70, team.Overall);
+            var freeAgents = await transferService.GetAllFreeAgents(game.Id, 1, game);
+            Assert.AreEqual(1, freeAgents.Count);
         }
 
         [Test]
-        public async Task GetAllTeams()
+        public async Task GetCurrentTeamPlayers()
         {
-            var service = serviceProvider.GetService<ITeamService>();
-            var allTeams = await service.GetAllVirtualTeams(game);
-            Assert.AreEqual(1, allTeams.Count);
-        }
+            var players = await transferService.GetCurrentTeamPlayers(team.Id);
+            Assert.AreEqual(1, players.Count);
+        }     
 
-        [Test]
-        public async Task GetTeamById()
-        {
-            var service = serviceProvider.GetService<ITeamService>();
-            var currentTeam = await service.GetTeamById(team.Id);
-            Assert.AreEqual(team.Id, currentTeam.Id);
-        }
         private void Create(DbContextOptions<FootballManagerDbContext> options)
         {
+            transferService = serviceProvider.GetService<ITransferService>();
             using (var context = new FootballManagerDbContext(options))
             {
                 game = new Game();
                 context.Games.Add(game);
-                team = new VirtualTeam
-                {
-                    Name = "CSKA",
-                    Game = game,
-                    GameId = game.Id
-                };
+                position = new Position { Name = "Goalkeeper", Abbr = "GK" };
+                context.Positions.Add(position);
+                team = new VirtualTeam { Name = "GornoDolnishte", Game = game, GameId = game.Id };
                 context.VirtualTeams.Add(team);
-                player = new Player
-                {
-                    FirstName = "Hulk",
-                    LastName = "Hogan",
-                    TeamId = team.Id,
-                    Attack = 50,
-                    Defense = 60,
-                    Speed = 100,
-                    Overall = 70
-                };
+                player = new Player { FirstName = "Petur", LastName = "Georgiev", Position = position, Game = game, GameId = game.Id, FreeAgent = true };
+                player2 = new Player { FirstName = "Georgi", LastName = "Petrov", Position = position, Game = game, GameId = game.Id, FreeAgent = false, TeamId = team.Id, Team = team };
                 context.Players.Add(player);
+                context.Players.Add(player2);
+
                 context.SaveChanges();
             }
         }
+
+        [TearDown]
         public void Dispose()
         {
             connection.Close();

@@ -2,19 +2,14 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
-    using ASP.NET_FootballManager.Services.Cup;
-    using ASP.NET_FootballManager.Services.League;
-    using ASP.NET_FootballManager.Services.Manager;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using NUnit.Framework;
     using System;
-    using System.Linq;
-
-    public class ManagerTests : IDisposable
+    using System.Threading.Tasks;
+    public class DayTests : IDisposable
     {
         private SqliteConnection connection;
         private DbContextOptions<FootballManagerDbContext> options;
@@ -33,20 +28,73 @@
 
             serviceProvider = serviceCollection
             .AddSingleton(x => new FootballManagerDbContext(options))
-            .AddSingleton<IManagerService, ManagerService>()
+            .AddSingleton<IDayService, DayService>()
             .BuildServiceProvider();
 
-            serviceProvider.GetService<IManagerService>();
-
+            serviceProvider.GetService<IDayService>();
 
         }
 
         [Test]
-        public void CreateManager()
+        public async Task CalculateDays()
         {
-           
+            var service = serviceProvider.GetService<IDayService>();
+
+            using (var context = new FootballManagerDbContext(options))
+            {
+                var game = new Game();
+                context.Games.Add(game);
+                var day = new Day
+                {
+                    GameId = game.Id
+                };
+                context.Days.Add(day);
+                var day1 = new Day()
+                {
+                    GameId = game.Id
+                };
+                context.Days.Add(day1);
+                context.SaveChanges();
+
+                var days = await service.GetAllDays(game);
+
+                Assert.AreEqual(2, days.Count);
+            }
         }
-    
+        [Test]
+        public async Task GetCurrentDay()
+        {
+            var service = serviceProvider.GetService<IDayService>();
+
+            using (var context = new FootballManagerDbContext(options))
+            {
+                var game = new Game
+                {
+                    Day = 5,
+                    Year = 1
+                };
+                context.Games.Add(game);
+                var day = new Day
+                {
+                    CurrentDay = 5,
+                    Year = 1,
+                    GameId = game.Id
+                };
+                context.Days.Add(day);
+                var day1 = new Day()
+                {
+                    CurrentDay = 6,
+                    Year = 1,
+                    GameId = game.Id
+                };
+                context.Days.Add(day1);
+                context.SaveChanges();
+
+                var sadda = await service.GetCurrentDay(game);
+
+                Assert.AreEqual(5, sadda.CurrentDay);
+            }
+        }
 
         [TearDown]
         public void Dispose()

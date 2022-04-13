@@ -24,12 +24,12 @@
 
             this.data.SaveChanges();
         }
-        public async Task<List<Player>> GetAllFreeAgents(int gameId, int orderId,Game Game)
+        public async Task<List<Player>> GetAllFreeAgents(int gameId, int orderId, Game Game)
         {
             switch (orderId)
             {
                 case 0:
-                    return await Task.Run(()=> this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true&&x.GameId==Game.Id).ToList());
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).ToList());
                 case 1:
                     return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Goalkeeper" && x.GameId == Game.Id).ToList());
                 case 2:
@@ -50,7 +50,6 @@
             return null;
         }
         public async Task<List<Player>> GetCurrentTeamPlayers(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId).ToList());
-
         public string Sell(int playerId)
         {
             var currPl = this.data.Players.FirstOrDefault(x => x.Id == playerId);

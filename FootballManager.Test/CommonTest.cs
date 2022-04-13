@@ -15,6 +15,9 @@
         private SqliteConnection connection;
         private DbContextOptions<FootballManagerDbContext> options;
         private ServiceProvider serviceProvider;
+        private Position position;
+        private Nation nation;
+        private City city;
 
         [SetUp]
         public void Setup()
@@ -33,6 +36,47 @@
             .BuildServiceProvider();
 
             serviceProvider.GetService<ICommonService>();
+
+            Create(options);
+        }
+               
+        [Test]
+        public async Task PositionsTest()
+        {
+            var service = serviceProvider.GetService<ICommonService>();
+            var positions = await service.GetAllPositions();
+
+            Assert.AreEqual(1, positions.Count());          
+        }
+        [Test]
+        public async Task NationsTest()
+        {
+            var service = serviceProvider.GetService<ICommonService>();
+            var nations = await service.GetAllNations();
+            Assert.AreEqual(2, nations.Count);
+        }
+
+        [Test]
+        public async Task CitiesTest()
+        {
+            var service = serviceProvider.GetService<ICommonService>();
+            var cities = await service.GetAllCities();
+         
+            Assert.AreEqual(1, cities.Count());
+        }
+        private void Create(DbContextOptions<FootballManagerDbContext> options)
+        {
+            using (var context = new FootballManagerDbContext(options))
+            {
+                position = new Position { Name = "Striker", Abbr = "ST" };
+                context.Positions.Add(position);
+                nation = new Nation { Name = "Bolivia", Abbr = "BOL" };
+                context.Nations.Add(nation);
+                city = new City { Name = "Pregrad", NationId = 1 };
+                context.Cities.Add(city);
+
+                context.SaveChanges();
+            }
         }
 
         public void Dispose()
@@ -40,69 +84,6 @@
             connection.Close();
         }
 
-        [Test]
-        public async Task PositionsTest()
-        {
-            var service = serviceProvider.GetService<ICommonService>();
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                var position = new Position { Name = "Striker", Abbr = "ST" };
-                context.Positions.Add(position);
-                context.SaveChanges();
-
-                var positions = await service.GetAllPositions();
-
-                Assert.AreEqual(1, context.Positions.Count());
-                Assert.AreEqual(1, positions.Where(x => x.Name == "Striker").ToList().Count());
-            }
-        }
-        [Test]
-        public void NationsTest()
-        {
-            var service = serviceProvider.GetService<ICommonService>();
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    var nation = new Nation
-                    {
-                        Name = "Bolivia",
-                        Abbr = "BOL"
-                    };
-
-                    context.Nations.Add(nation);
-                    context.SaveChanges();
-                }
-
-                Assert.AreEqual(10, context.Nations.Count());
-
-            }
-        }
-        [Test]
-        public void CitiesTest()
-        {
-            var service = serviceProvider.GetService<ICommonService>();
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-
-                var city = new City
-                {
-                    Name = "Pregrad",
-                    NationId = 1
-                };
-
-                Assert.DoesNotThrow(() => context.Cities.Add(city));
-
-                context.Cities.Add(city);
-                context.SaveChanges();
-                Assert.AreEqual(1, context.Cities.Count());
-
-            }
-        }
-        
     }
 
 

@@ -35,10 +35,11 @@
             .BuildServiceProvider();
 
             serviceProvider.GetService<IPlayerService>();
+
         }
 
         [Test]
-        public async void GetPlayerById()
+        public async Task GetPlayerById()
         {
             var service = serviceProvider.GetService<IPlayerService>();
 
@@ -49,8 +50,8 @@
             Assert.AreEqual(game.Id, player.GameId);
             var playerFirstName = await service.GetPlayerById(player.Id);
             Assert.AreEqual(player.FirstName, playerFirstName.FirstName);
-
         }
+
         [Test]
         public async Task GetRandomPlayerFromTeam()
         {
@@ -68,7 +69,7 @@
 
             using (var context = new FootballManagerDbContext(options))
             {
-                var rndPl = await Task.Run(()=>context.Players);
+                var rndPl = await Task.Run(() => context.Players);
                 Assert.IsTrue(rndPl.Where(x => x.TeamId == team.Id).Contains(randomPlayer));
             }
         }
@@ -112,9 +113,7 @@
             {
                 Assert.AreEqual(5, players.Count);
             }
-
         }
-
         public VirtualTeam NewTeam(Game currentgame)
         {
             using (var context = new FootballManagerDbContext(options))
