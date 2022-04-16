@@ -6,7 +6,6 @@
         public class Match
         {
             public const int Timespan = 20;
-
         }
 
         public class Prize

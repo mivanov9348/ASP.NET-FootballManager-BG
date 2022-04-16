@@ -5,10 +5,8 @@
     using ASP.NET_FootballManager.Services.Cup;
     using ASP.NET_FootballManager.Services.EuroCup;
     using ASP.NET_FootballManager.Services.Fixture;
-    using ASP.NET_FootballManager.Services.Game;
     using ASP.NET_FootballManager.Services.Inbox;
     using ASP.NET_FootballManager.Services.League;
-    using ASP.NET_FootballManager.Services.Manager;
     using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
     using FootballManager.Core.Models.League;
@@ -17,26 +15,21 @@
     using FootballManager.Core.Models.Team;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
-
     public class MenuController : Controller
     {
         private readonly ICommonService commonService;
-        private readonly IManagerService managerService;
         private readonly ILeagueService leagueService;
         private readonly ICupService cupService;
         private readonly IEuroCupService euroCupService;
-        private readonly IGameService gameService;
         private readonly IPlayerService playerService;
         private readonly IFixtureService fixtureService;
         private readonly ITeamService teamService;
         private readonly IInboxService inboxService;
         private readonly IDayService dayService;
-        public MenuController(ICupService cupService, IEuroCupService euroCupService, IInboxService inboxService, ITeamService teamService, IFixtureService fixtureService, IPlayerService playerService, IGameService gameService, ICommonService commonService, ILeagueService leagueService, IManagerService managerService, IDayService dayService)
+        public MenuController(ICupService cupService, IEuroCupService euroCupService, IInboxService inboxService, ITeamService teamService, IFixtureService fixtureService, IPlayerService playerService, ICommonService commonService, ILeagueService leagueService, IDayService dayService)
         {
             this.commonService = commonService;
             this.leagueService = leagueService;
-            this.managerService = managerService;
-            this.gameService = gameService;
             this.playerService = playerService;
             this.fixtureService = fixtureService;
             this.teamService = teamService;
@@ -47,7 +40,7 @@
         }
         public async Task<IActionResult> Inbox(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentInboxMessage = await inboxService.GetInboxMessages(CurrentGame.Id);
             var currentMessage = await inboxService.GetFullMessage(id, CurrentGame);
 
@@ -61,7 +54,7 @@
         }
         public async Task<IActionResult> OpenNews(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentInboxMessage = await inboxService.GetInboxMessages(CurrentGame.Id);
             var currentMessage = await inboxService.GetFullMessage(id, CurrentGame);
 
@@ -75,10 +68,9 @@
         {
             return View();
         }
-
         public async Task<IActionResult> Fixtures(FixturesViewModel fvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var allLeagues = await leagueService.GetAllLeagues();
             var currentFixtures = await fixtureService.GetFixture(fvm.LeagueId, fvm.CurrentRound, CurrentGame);
             var rounds = await fixtureService.GetAllRounds(fvm.LeagueId);
@@ -95,7 +87,7 @@
         }
         public async Task<IActionResult> CupsFixture(FixturesViewModel fvm, int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var allLeagues = await leagueService.GetAllLeagues();
             var currentFixtures = new List<Fixture>();
             string CupName = "";
@@ -128,7 +120,7 @@
         }
         public async Task<IActionResult> ChooseRound(int id, FixturesViewModel fvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var allLeagues = await leagueService.GetAllLeagues();
             var currentFixtures = await fixtureService.GetFixture(fvm.LeagueId, id, CurrentGame);
             var rounds = await fixtureService.GetAllRounds(fvm.LeagueId);
@@ -145,7 +137,7 @@
         }
         public async Task<IActionResult> Calendar()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var days = await dayService.GetAllDays(CurrentGame);
             var year = CurrentGame.Year;
 
@@ -157,7 +149,7 @@
         }
         public async Task<IActionResult> Standings(StandingsViewModel svm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (svm.LeagueId == 0)
             {
@@ -172,15 +164,15 @@
 
             return View(svm);
         }
-        public async Task<IActionResult> PlayersStats(PlayersViewModel pvm, int id)
+        public IActionResult PlayersStats(PlayersViewModel pvm, int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             pvm = playerService.SortingPlayers(pvm.PlayerSorting, id, CurrentGame);
             return View(pvm);
         }
         public async Task<IActionResult> TeamStats()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var originalTeam = await teamService.GetOriginalTeam(currentTeam, CurrentGame);
 
             return View(new TeamViewModel
@@ -197,7 +189,7 @@
         }
         public async Task<IActionResult> PlayerDetails(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentPlayer = await playerService.GetPlayerById(id);
             var nation = await commonService.GetAllNations();
             var position = await commonService.GetAllPositions();
@@ -219,15 +211,5 @@
 
             });
         }
-
-        private async Task<(string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam)> CurrentGameInfo()
-        {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var currentManager = managerService.GetCurrentManager(userId);
-            var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = await teamService.GetCurrentTeam(currentGame);
-            return (userId, currentManager, currentGame, currentTeam);
-        }
-
     }
 }

@@ -19,11 +19,7 @@ namespace FootballManager.Test
         private DbContextOptions<FootballManagerDbContext> options;
         private ServiceProvider serviceProvider;
         private IEuroCupService service;
-        private EuropeanCup cup;
-        private VirtualTeam team1;
-        private VirtualTeam team2;
-        private Fixture fixture;
-        private Day day;
+        private EuropeanCup cup;      
 
         [SetUp]
         public void Setup()

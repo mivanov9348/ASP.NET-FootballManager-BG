@@ -14,8 +14,6 @@
     using ASP.NET_FootballManager.Services.Fixture;
     using ASP.NET_FootballManager.Services.EuroCup;
     using ASP.NET_FootballManager.Services.Cup;
-    using System.Text;
-
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -30,8 +28,7 @@
         private readonly IDayService dayService;
         private readonly IEuroCupService euroCupService;
         private readonly ICupService cupService;
-        private string UserId;
-        private Stopwatch sw;
+        private string UserId;       
         public HomeController(ILogger<HomeController> logger,
             IGameService gameService,
             IManagerService managerService,
@@ -56,8 +53,7 @@
             this.fixtureService = fixtureService;
             this.dayService = dayService;
             this.euroCupService = euroCupService;
-            this.cupService = cupService;
-            this.sw = new Stopwatch();
+            this.cupService = cupService;           
         }
         public IActionResult Index()
         {
@@ -75,7 +71,6 @@
             }
             return View(new GameViewModel { ExistGame = false });
         }
-
         public async Task<IActionResult> NewGame(int id)
         {
             CurrentUser();
@@ -166,10 +161,6 @@
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-        public IActionResult GameErrors()
-        {
-            return View();
-        }
+        }    
     }
 }

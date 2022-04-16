@@ -46,7 +46,7 @@
             var service = serviceProvider.GetService<ICommonService>();
             var positions = await service.GetAllPositions();
 
-            Assert.AreEqual(1, positions.Count());          
+            Assert.AreEqual(3, positions.Count());          
         }
         [Test]
         public async Task NationsTest()

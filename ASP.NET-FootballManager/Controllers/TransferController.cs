@@ -1,11 +1,8 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Models;
     using ASP.NET_FootballManager.Services.Common;
-    using ASP.NET_FootballManager.Services.Game;
     using ASP.NET_FootballManager.Services.Inbox;
-    using ASP.NET_FootballManager.Services.Manager;
     using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
@@ -16,28 +13,23 @@
     public class TransferController : Controller
     {
         private readonly ITransferService transferService;
-        private readonly IGameService gameService;
         private readonly ICommonService commonService;
-        private readonly IManagerService managerService;
         private readonly IValidationService validatorService;
         private readonly ITeamService teamService;
         private readonly IPlayerService playerService;
         private readonly IInboxService inboxService;
-        public TransferController(IInboxService inboxService, IPlayerService playerService, ITeamService teamService, IValidationService validatorService, ITransferService transferService, IGameService gameService, ICommonService commonService, IManagerService managerService)
+        public TransferController(IInboxService inboxService, IPlayerService playerService, ITeamService teamService, IValidationService validatorService, ITransferService transferService, ICommonService commonService)
         {
             this.transferService = transferService;
-            this.gameService = gameService;
             this.commonService = commonService;
-            this.managerService = managerService;
             this.validatorService = validatorService;
             this.teamService = teamService;
             this.playerService = playerService;
             this.inboxService = inboxService;
-
         }
         public async Task<IActionResult> Market()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return View(new TransferViewModel
             {
                 FreeAgents = await transferService.GetAllFreeAgents(CurrentGame.Id, 0, CurrentGame),
@@ -49,7 +41,7 @@
         }
         public async Task<IActionResult> SortPlayers(string text, int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             return View("Market", new TransferViewModel
             {
@@ -62,7 +54,7 @@
         }
         public async Task<IActionResult> Buy(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             bool isValid = validatorService.BuyValidator(id, currentTeam);
             var currPl = await playerService.GetPlayerById(id);
 
@@ -87,7 +79,7 @@
         }
         public async Task<IActionResult> ConfirmationTransfer(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currPl = await playerService.GetPlayerById(id);
             return View(new TransferViewModel
             {
@@ -99,7 +91,7 @@
         }
         public async Task<IActionResult> Sell(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             bool isValid = validatorService.SellValidator(currentTeam);
             var currPlayers = await playerService.GetPlayersByTeam(currentTeam.Id);
@@ -119,20 +111,13 @@
         }
         public async Task<IActionResult> TeamSquad()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = await CurrentGameInfo();
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currPlayers = await playerService.GetPlayersByTeam(currentTeam.Id);
             var model = teamService.GetTeamViewModel(currPlayers.OrderBy(x => x.PositionId).ToList(), currentTeam);
 
             return View(model);
         }
-        private async Task<(string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam)> CurrentGameInfo()
-        {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var currentManager = managerService.GetCurrentManager(userId);
-            var currentGame = gameService.GetCurrentGame(currentManager.Id);
-            var currentTeam = await teamService.GetCurrentTeam(currentGame);
-            return (userId, currentManager, currentGame, currentTeam);
-        }
+
     }
 
 }

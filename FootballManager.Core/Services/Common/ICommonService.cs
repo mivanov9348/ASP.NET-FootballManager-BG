@@ -7,6 +7,6 @@
         Task<List<Position>> GetAllPositions();
         Task<List<City>> GetAllCities();
         Task<List<Player>> GetAllPlayers();
-
+        (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo(string userId);
     }
 }
