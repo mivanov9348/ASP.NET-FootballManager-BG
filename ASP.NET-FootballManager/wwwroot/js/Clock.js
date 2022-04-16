@@ -1,11 +1,11 @@
 ﻿var connection = new signalR.HubConnectionBuilder().withUrl("/clockHub").build();
 
-connection.on("DisplayTime", function (hours, minutes) {
+connection.on("DisplayTime", function (hours, minutes,seconds) {
 
-    var li = document.createElement("li");
-    li.textContent = `${hours}:${minutes}`;
+    var p = document.createElement("p");
+    p.textContent = `${hours}:${minutes}:${seconds}`;
     document.getElementById("serverDate").innerHTML = "";
-    document.getElementById("serverDate").appendChild(li);
+    document.getElementById("serverDate").appendChild(p);
 });
 
 connection.start().then(function () {
@@ -20,4 +20,4 @@ setInterval(function () {
         return console.error(err.toString());
     });
 
-}, 60000);
+}, 1000);

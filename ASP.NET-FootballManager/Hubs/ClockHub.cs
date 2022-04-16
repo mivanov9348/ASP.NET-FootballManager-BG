@@ -6,10 +6,11 @@
         public ClockHub()
         {
         }
-
         public async Task PrintTime()
         {
-            await Clients.All.SendAsync("DisplayTime", DateTime.Now.Hour.ToString(), DateTime.Now.Minute.ToString());
+            var currentTime = DateTime.Now;
+            await Clients.All.SendAsync("DisplayTime", currentTime.Hour, currentTime.Minute, currentTime.Second);
         }
+
     }
 }
