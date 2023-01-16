@@ -252,8 +252,8 @@
             var currentDirectory = Environment.CurrentDirectory;
             currentDirectory = currentDirectory.Remove(currentDirectory.IndexOf(@"\ASP.NET-FootballManager"));
 
-            var firstNamesPath = File.ReadAllText(@$"{currentDirectory}\ASP.NET-FootballManager\FootballManager.Infrastructure\Seeding\NamesData\FirstNames.json");
-            var lastNamesPath = File.ReadAllText(@$"{currentDirectory}\ASP.NET-FootballManager\FootballManager.Infrastructure\Seeding\NamesData\LastNames.json");
+            var firstNamesPath = File.ReadAllText(@$"{currentDirectory}/ASP.NET-FootballManager-BG\FootballManager.Infrastructure\Seeding\NamesData\FirstNames.json");
+            var lastNamesPath = File.ReadAllText(@$"{currentDirectory}/ASP.NET-FootballManager-BG\FootballManager.Infrastructure\Seeding\NamesData\LastNames.json");
 
             var firstNames = JsonConvert.DeserializeObject<FirstNamesDto[]>(firstNamesPath);
             var lastNames = JsonConvert.DeserializeObject<LastNamesDto[]>(lastNamesPath);
