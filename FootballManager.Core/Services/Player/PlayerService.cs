@@ -6,17 +6,21 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Player;
     using FootballManager.Core.Models.Sorting;
+    using FootballManager.Core.Services.Attribute;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Newtonsoft.Json;
     using System.Collections.Generic;
 
     public class PlayerService : IPlayerService
     {
         private readonly FootballManagerDbContext data;
+        private readonly IPlayerAttributeService attributeService;
         private Random rnd;
-        public PlayerService(FootballManagerDbContext data)
+        public PlayerService(FootballManagerDbContext data, IPlayerAttributeService attributeService)
         {
             this.rnd = new Random();
             this.data = data;
+            this.attributeService = attributeService;
         }
         public void GeneratePlayers(Game game, VirtualTeam team)
         {
@@ -51,7 +55,7 @@
                 var positionType = this.data.Positions.FirstOrDefault(x => x.Name == position);
                 (string FirstName, string LastName) = getPlayerNames(freeAgentsTeam);
                 (City city, int age, Nation nation) = getPlayerInfo(freeAgentsTeam);
-                (int defense, int attack, int speed, int overall) = CalculatePlayerAttributes(position);
+
                 var newPlayer = new Player
                 {
                     FirstName = FirstName,
@@ -61,10 +65,6 @@
                     Age = age,
                     Nation = nation,
                     NationId = nation.Id,
-                    Speed = speed,
-                    Attack = attack,
-                    Defense = defense,
-                    Overall = overall,
                     Position = positionType,
                     PositionId = positionType.Id,
                     Team = freeAgentsTeam,
@@ -77,50 +77,17 @@
                     IsStarting11 = true,
                     FreeAgent = true
                 };
+
+                var playerAttributes = attributeService.CalculatePlayerAttributes(newPlayer);
+                playerAttributes.PlayerId = newPlayer.Id;
+                attributeService.CalculateOverall(newPlayer);
+
                 GetProfileImage(newPlayer);
+
                 this.data.Players.Add(newPlayer);
                 this.data.SaveChanges();
             }
 
-        }
-        private void FillPlayersByPosition(int count, Game game, VirtualTeam team, string position)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                var positionType = this.data.Positions.FirstOrDefault(x => x.Name == position);
-                (string firstName, string lastName) = getPlayerNames(team);
-                (City city, int age, Nation nation) = getPlayerInfo(team);
-                (int defense, int attack, int speed, int overall) = CalculatePlayerAttributes(position);
-                var newPlayer = new Player
-                {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    City = city,
-                    CityId = city.Id,
-                    Age = age,
-                    Nation = nation,
-                    NationId = nation.Id,
-                    Speed = speed,
-                    Attack = attack,
-                    Defense = defense,
-                    Overall = overall,
-                    LeagueId = team.LeagueId,
-                    Position = positionType,
-                    PositionId = positionType.Id,
-                    Team = team,
-                    TeamId = team.Id,
-                    Matches = 0,
-                    Goals = 0,
-                    Passes = 0,
-                    Game = game,
-                    GameId = game.Id,
-                    IsStarting11 = true,
-                    FreeAgent = false
-                };
-                GetProfileImage(newPlayer);
-                this.data.Players.Add(newPlayer);
-                this.data.SaveChanges();
-            }
         }
         public async Task<Player> GetRandomPlayer(VirtualTeam team)
         {
@@ -194,12 +161,6 @@
                 case PlayerSorting.Passes:
                     newModel.Players = allPlayers.OrderByDescending(x => x.Passes).ThenByDescending(x => x.FirstName).ToList();
                     break;
-                case PlayerSorting.Attack:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Attack).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Defense:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Defense).ThenByDescending(x => x.FirstName).ToList();
-                    break;
                 case PlayerSorting.Overall:
                     newModel.Players = allPlayers.OrderByDescending(x => x.Overall).ThenByDescending(x => x.FirstName).ToList();
                     break;
@@ -233,6 +194,54 @@
         {
             var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
             allPlayers.ForEach(x => x.Price = x.Overall * 4);
+            this.data.SaveChanges();
+        }
+        public void ResetPlayerStats(Game CurrentGame)
+        {
+            var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
+
+            foreach (var player in allPlayers)
+            {
+                player.Goals = 0;
+                player.Passes = 0;
+            }
+
+            this.data.SaveChanges();
+        }
+
+        private (City city, int age, Nation nation) getPlayerInfo(VirtualTeam team)
+        {
+            var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == team.TeamId);
+            var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == currentTeam.NationId);
+
+            if (currentNation == null)
+            {
+                var allNations = this.data.Nations.ToList();
+                currentNation = allNations[rnd.Next(0, allNations.Count())];
+            }
+
+            var age = rnd.Next(17, 33);
+            var nation = this.data.Nations.FirstOrDefault(x => x.Id == currentNation.Id);
+
+            var allCities = this.data.Cities.Where(x => x.NationId == nation.Id).ToList();
+
+            if (allCities.Count < 1)
+            {
+                allCities = this.data.Cities.Where(x => x.Nation.Name == "Bulgaria").ToList();
+            }
+
+            var city = allCities[rnd.Next(0, allCities.Count())];
+
+            return (city, age, nation);
+
+        }
+        private void GetProfileImage(Player player)
+        {
+            var path = "wwwroot/Images/Faces";
+            int filesCount = Directory.GetFiles(path, "*", SearchOption.AllDirectories).Length;
+
+            var randomFileNum = rnd.Next(1, filesCount);
+            player.ProfileImage = $"{randomFileNum}.png";
             this.data.SaveChanges();
         }
         private (string firstName, string lastName) getPlayerNames(VirtualTeam team)
@@ -274,106 +283,50 @@
 
             return (firstName, lastName);
         }
-        private (int defense, int attack, int speed, int overall) CalculatePlayerAttributes(string position)
+        private void FillPlayersByPosition(int count, Game game, VirtualTeam team, string position)
         {
-            if (position == "Goalkeeper" || position == "Defender")
+            for (int i = 0; i < count; i++)
             {
-                var defense = rnd.Next(50, 100);
-                var attack = rnd.Next(20, 70);
-                var speed = rnd.Next(20, 65);
-                var overall = (defense * 2 + attack / 2 + speed) / 3;
+                var positionType = this.data.Positions.FirstOrDefault(x => x.Name == position);
+                (string firstName, string lastName) = getPlayerNames(team);
+                (City city, int age, Nation nation) = getPlayerInfo(team);
 
-                return (defense, attack, speed, overall);
-            }
-            if (position == "Midlefielder" || position == "Striker")
-            {
-                var defense = rnd.Next(20, 70);
-                var attack = rnd.Next(40, 100);
-                var speed = rnd.Next(30, 65);
-                var overall = (defense / 2 + attack * 2 + speed) / 3;
-
-                return (defense, attack, speed, overall);
-            }
-            return (20, 20, 20, 20);
-        }
-        private (City city, int age, Nation nation) getPlayerInfo(VirtualTeam team)
-        {
-            var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == team.TeamId);
-            var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == currentTeam.NationId);
-
-            if (currentNation == null)
-            {
-                var allNations = this.data.Nations.ToList();
-                currentNation = allNations[rnd.Next(0, allNations.Count())];
-            }
-
-            var age = rnd.Next(17, 33);
-            var nation = this.data.Nations.FirstOrDefault(x => x.Id == currentNation.Id);
-
-            var allCities = this.data.Cities.Where(x => x.NationId == nation.Id).ToList();
-
-            if (allCities.Count < 1)
-            {
-                allCities = this.data.Cities.Where(x => x.Nation.Name == "Bulgaria").ToList();
-            }
-
-            var city = allCities[rnd.Next(0, allCities.Count())];
-
-            return (city, age, nation);
-
-        }
-        private void GetProfileImage(Player player)
-        {
-            var path = "wwwroot/Images/Faces";
-            int filesCount = Directory.GetFiles(path, "*", SearchOption.AllDirectories).Length;
-
-            var randomFileNum = rnd.Next(1, filesCount);
-            player.ProfileImage = $"{randomFileNum}.png";
-            this.data.SaveChanges();
-        }
-        public void ResetPlayerStats(Game CurrentGame)
-        {
-            var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
-
-            foreach (var player in allPlayers)
-            {
-                player.Goals = 0;
-                player.Passes = 0;
-            }
-
-            this.data.SaveChanges();
-        }
-        public void UpdateAttributes(Game CurrentGame)
-        {
-            var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
-
-            foreach (var player in allPlayers)
-            {
-                player.Attack += player.Goals / 2;
-                player.Defense += player.Passes / 2;
-                player.Age += 1;
-
-                if (player.Position.Name == "Striker" || player.Position.Name == "Midlefielder" && player.Goals <= 5)
+                var newPlayer = new Player
                 {
-                    player.Attack -= 3;
-                }
+                    FirstName = firstName,
+                    LastName = lastName,
+                    City = city,
+                    CityId = city.Id,
+                    Age = age,
+                    Nation = nation,
+                    NationId = nation.Id,
+                    LeagueId = team.LeagueId,
+                    Position = positionType,
+                    PositionId = positionType.Id,
+                    Team = team,
+                    TeamId = team.Id,
+                    Matches = 0,
+                    Goals = 0,
+                    Passes = 0,
+                    Game = game,
+                    GameId = game.Id,
+                    IsStarting11 = true,
+                    FreeAgent = false
+                };
 
-                if (player.Position.Name == "Defender" || player.Position.Name == "Goalkeeper" && player.Passes <= 5)
-                {
-                    player.Defense -= 3;
-                }
+                GetProfileImage(newPlayer);
 
-                if (player.Attack > 100)
-                {
-                    player.Attack = 100;
-                }
+                var playerAttributes = attributeService.CalculatePlayerAttributes(newPlayer);
+                newPlayer.AttributesId = playerAttributes.Id;
+                attributeService.CalculateOverall(newPlayer);
 
-                if (player.Defense > 100)
-                {
-                    player.Defense = 100;
-                }
+                this.data.Players.Add(newPlayer);
+                this.data.SaveChanges();
             }
-            this.data.SaveChanges();
         }
+
+
+
+
     }
 }

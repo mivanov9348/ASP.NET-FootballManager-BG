@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Data
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@
         public DbSet<City> Cities { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Player> Players { get; set; }
+        public DbSet<PlayerAttribute> PlayerAttributes { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Game> Games { get; set; }

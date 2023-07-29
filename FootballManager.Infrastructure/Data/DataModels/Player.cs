@@ -1,5 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
 {
+    using FootballManager.Infrastructure.Data.DataModels;
     using System.ComponentModel.DataAnnotations;
     public class Player
     {
@@ -13,12 +14,9 @@
         public int Age { get; set; }
         public int Matches { get; set; }
         public int Goals { get; set; }
-        public int Attack { get; set; }
-        public int Defense { get; set; }
-        public int Speed { get; set; }
-        public int Overall { get; set; }
         public int Passes { get; set; }
-        public int Price { get; set; }
+        public double Overall { get; set; }
+        public double Price { get; set; }
         public bool IsStarting11 { get; set; }
         public string ProfileImage { get; set; }
         public bool FreeAgent { get; set; }
@@ -34,6 +32,7 @@
         public League League { get; set; }
         public int GameId { get; set; }
         public Game Game { get; set; }
-
+        public int AttributesId { get; set; }
+        public PlayerAttribute PlayerAttributes { get; set; }
     }
 }

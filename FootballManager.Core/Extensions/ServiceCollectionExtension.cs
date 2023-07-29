@@ -14,6 +14,7 @@
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services.Chat;
+    using FootballManager.Core.Services.PlayerAttribute;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtension
@@ -36,6 +37,7 @@
             services.AddScoped<IDayService, DayService>();
             services.AddScoped<ICupService, CupService>();
             services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IPlayerAttributeService, PlayerAttributeService>();
             return services;
         }
 

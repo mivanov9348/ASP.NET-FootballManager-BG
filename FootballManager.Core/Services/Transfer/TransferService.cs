@@ -38,10 +38,6 @@
                     return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Midlefielder" && x.GameId == Game.Id).ToList());
                 case 4:
                     return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Name == "Striker" && x.GameId == Game.Id).ToList());
-                case 5:
-                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Attack).ToList());
-                case 6:
-                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Defense).ToList());
                 case 7:
                     return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Overall).ToList());
                 case 8:

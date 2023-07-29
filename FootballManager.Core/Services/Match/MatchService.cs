@@ -94,6 +94,7 @@
         {
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
             bool isTurn = false;
+
             int attackNum = rnd.Next(1, player.Attack);
             int defNum = rnd.Next(1, player.Defense);
 

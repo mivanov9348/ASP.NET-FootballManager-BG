@@ -20,6 +20,6 @@
         void RemovePlayers(VirtualTeam freeAgentsTeam);
         void ResetPlayerStats(Game CurrentGame);
 
-        void UpdateAttributes(Game CurrentGame);
+       
     }
 }
