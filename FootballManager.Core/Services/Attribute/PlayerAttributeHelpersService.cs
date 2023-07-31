@@ -11,55 +11,55 @@
             this.rnd = new Random();
         }
 
-        public PlayerAttribute AddWeights(PlayerAttribute attributes, string position)
+        public PlayerAttribute AddWeights(PlayerAttribute attributes, int positionOrder)
         {
-            switch (position)
+            switch (positionOrder)
             {
-                case "Goalkeeper":
-                    attributes.OneOnOneWeight = (40*20)/100;
-                    attributes.OneOnOneWeight = (60*20)/100;                    
+                case 1:
+                    attributes.OneOnOneWeight = (40 * 20) / 100.0;
+                    attributes.ReflexesWeight = (60 * 20) / 100.0;
                     break;
-                case "Defender":
-                    attributes.Finishing = (6*20)/100;
-                    attributes.Passing = (6 * 20) / 100;
-                    attributes.Heading = (16 * 20) / 100;
-                    attributes.Tackling = (16 * 20) / 100;
-                    attributes.Positioning = (16 * 20) / 100;
-                    attributes.Pace = (6 * 20) / 100;
-                    attributes.Stamina = (6 * 20) / 100;
-                    attributes.Strength = (16 * 20) / 100;
-                    attributes.Dribbling = (6 * 20) / 100;
-                    attributes.BallControll = (6 * 20) / 100;
+                case 2:
+                    attributes.FinishingWeight = (6 * 20) / 100.0;
+                    attributes.PassingWeight = (6 * 20) / 100.0;
+                    attributes.HeadingWeight = (16 * 20) / 100.0;
+                    attributes.TacklingWeight = (16 * 20) / 100.0;
+                    attributes.PositioningWeight = (16 * 20) / 100.0;
+                    attributes.PaceWeight = (6 * 20) / 100.0;
+                    attributes.StaminaWeight = (6 * 20) / 100.0;
+                    attributes.StrengthWeight = (16 * 20) / 100.0;
+                    attributes.DribblingWeight = (6 * 20) / 100.0;
+                    attributes.BallControllWeight = (6 * 20) / 100.0;
                     break;
-                case "Midlefielder":
-                    attributes.Finishing = (4 * 20) / 100;
-                    attributes.Passing = (14 * 20) / 100;
-                    attributes.Heading = (4 * 20) / 100;
-                    attributes.Tackling = (4 * 20) / 100;
-                    attributes.Positioning = (14 * 20) / 100;
-                    attributes.Pace = (4 * 20) / 100;
-                    attributes.Stamina = (14 * 20) / 100;
-                    attributes.Strength = (14 * 20) / 100;
-                    attributes.Dribbling = (14 * 20) / 100;
-                    attributes.BallControll = (14 * 20) / 100;
+                case 3:
+                    attributes.FinishingWeight = (4 * 20) / 100.0;
+                    attributes.PassingWeight = (14 * 20) / 100.0;
+                    attributes.HeadingWeight = (4 * 20) / 100.0;
+                    attributes.TacklingWeight = (4 * 20) / 100.0;
+                    attributes.PositioningWeight = (14 * 20) / 100.0;
+                    attributes.PaceWeight = (4 * 20) / 100.0;
+                    attributes.StaminaWeight = (14 * 20) / 100.0;
+                    attributes.StrengthWeight = (14 * 20) / 100.0;
+                    attributes.DribblingWeight = (14 * 20) / 100.0;
+                    attributes.BallControllWeight = (14 * 20) / 100.0;
                     break;
-                case "Forward":
-                    attributes.Finishing = (14 * 20) / 100;
-                    attributes.Passing = (4 * 20) / 100;
-                    attributes.Heading = (14 * 20) / 100;
-                    attributes.Tackling = (4 * 20) / 100;
-                    attributes.Positioning = (4 * 20) / 100;
-                    attributes.Pace = (4 * 20) / 100;
-                    attributes.Stamina = (14 * 20) / 100;
-                    attributes.Strength = (14 * 20) / 100;
-                    attributes.Dribbling = (14 * 20) / 100;
-                    attributes.BallControll = (14 * 20) / 100;
+                case 4:
+                    attributes.FinishingWeight = (14 * 20) / 100.0;
+                    attributes.PassingWeight = (4 * 20) / 100.0;
+                    attributes.HeadingWeight = (14 * 20) / 100.0;
+                    attributes.TacklingWeight = (4 * 20) / 100.0;
+                    attributes.PositioningWeight = (4 * 20) / 100.0;
+                    attributes.PaceWeight = (4 * 20) / 100.0;
+                    attributes.StaminaWeight = (14 * 20) / 100.0;
+                    attributes.StrengthWeight = (14 * 20) / 100.0;
+                    attributes.DribblingWeight = (14 * 20) / 100.0;
+                    attributes.BallControllWeight = (14 * 20) / 100.0;
                     break;
                 default:
                     break;
             }
 
-            return null;
+            return attributes;
         }
     }
 }

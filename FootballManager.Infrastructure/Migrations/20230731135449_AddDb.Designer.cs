@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20230730185422_AddDb")]
+    [Migration("20230731135449_AddDb")]
     partial class AddDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -538,6 +538,9 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Positions");
@@ -700,8 +703,11 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerAttribute", b =>
                 {
-                    b.Property<int>("PlayerId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("BallControll")
                         .HasColumnType("int");
@@ -745,6 +751,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<double>("PassingWeight")
                         .HasColumnType("float");
 
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Positioning")
                         .HasColumnType("int");
 
@@ -775,7 +784,10 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<double>("TacklingWeight")
                         .HasColumnType("float");
 
-                    b.HasKey("PlayerId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
 
                     b.ToTable("PlayerAttributes");
                 });

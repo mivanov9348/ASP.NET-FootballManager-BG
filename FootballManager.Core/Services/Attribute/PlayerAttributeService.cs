@@ -20,9 +20,9 @@
         {
             var newPlayerAttribute = new PlayerAttribute();
 
-            switch (player.Position.Name)
+            switch (player.Position.Order)
             {
-                case "Goalkeeper":
+                case 1:
                     newPlayerAttribute.OneOnOne = rnd.Next(1, 20);
                     newPlayerAttribute.Reflexes = rnd.Next(1, 20);
                     newPlayerAttribute.Finishing = rnd.Next(1, 3);
@@ -36,7 +36,7 @@
                     newPlayerAttribute.Dribbling = rnd.Next(1, 3);
                     newPlayerAttribute.BallControll = rnd.Next(1, 3);
                     break;
-                case "Defender":
+                case 2:
                     newPlayerAttribute.OneOnOne = 0;
                     newPlayerAttribute.Reflexes = 0;
                     newPlayerAttribute.Finishing = rnd.Next(1, 20);
@@ -50,7 +50,7 @@
                     newPlayerAttribute.Dribbling = rnd.Next(1, 20);
                     newPlayerAttribute.BallControll = rnd.Next(1, 20);
                     break;
-                case "Midlefielder":
+                case 3:
                     newPlayerAttribute.OneOnOne = 0;
                     newPlayerAttribute.Reflexes = 0;
                     newPlayerAttribute.Finishing = rnd.Next(1, 20);
@@ -64,7 +64,7 @@
                     newPlayerAttribute.Dribbling = rnd.Next(8, 20);
                     newPlayerAttribute.BallControll = rnd.Next(8, 20);
                     break;
-                case "Forward":
+                case 4:
                     newPlayerAttribute.OneOnOne = 0;
                     newPlayerAttribute.Reflexes = 0;
                     newPlayerAttribute.Finishing = rnd.Next(8, 20);
@@ -81,10 +81,10 @@
                 default:
                     break;
             }
-
-            newPlayerAttribute.PlayerId = player.Id;
-            helpers.AddWeights(newPlayerAttribute, player.Position.Name);
-
+            this.data.PlayerAttributes.Add(newPlayerAttribute);
+           
+            newPlayerAttribute.PlayerId = player.Id;         
+            helpers.AddWeights(newPlayerAttribute, player.Position.Order);
             this.data.SaveChanges();
             return newPlayerAttribute;
         }

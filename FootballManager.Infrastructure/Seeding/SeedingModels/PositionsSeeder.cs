@@ -14,10 +14,10 @@
             {
                 Position[] positions = new Position[]
                 {
-                   new Position() { Name = "Goalkeeper", Abbr="GK" },
-                   new Position() { Name = "Defender", Abbr="DF" },
-                   new Position() { Name = "Midlefielder", Abbr="MF" },
-                   new Position() { Name = "Striker", Abbr="ST" }
+                   new Position() { Name = "Goalkeeper", Abbr="GK", Order = 1},
+                   new Position() { Name = "Defender", Abbr="DF" , Order = 2},
+                   new Position() { Name = "Midlefielder", Abbr="MF", Order = 3},
+                   new Position() { Name = "Forward", Abbr="ST", Order = 4 }
                 };
 
                 await dbContext.Positions.AddRangeAsync(positions);

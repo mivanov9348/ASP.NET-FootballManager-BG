@@ -24,10 +24,10 @@
         }
         public void GeneratePlayers(Game game, VirtualTeam team)
         {
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.gk, game, team, "Goalkeeper");
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.df, game, team, "Defender");
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.mf, game, team, "Midlefielder");
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.st, game, team, "Striker");
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.gk, game, team, 1);
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.df, game, team, 2);
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.mf, game, team, 3);
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.st, game, team, 4);
         }
         public void CreateFreeAgents(Game game, int gk, int df, int mf, int st)
         {
@@ -35,24 +35,24 @@
             RemovePlayers(freeAgentsTeam);
             for (int i = 0; i < gk; i++)
             {
-                FillFreeAgents("Goalkeeper");
+                FillFreeAgents(1);
             }
             for (int i = 0; i < df; i++)
             {
-                FillFreeAgents("Defender");
+                FillFreeAgents(2);
             }
             for (int i = 0; i < mf; i++)
             {
-                FillFreeAgents("Midlefielder");
+                FillFreeAgents(3);
             }
             for (int i = 0; i < st; i++)
             {
-                FillFreeAgents("Striker");
+                FillFreeAgents(4);
             }
 
-            void FillFreeAgents(string position)
+            void FillFreeAgents(int positionOrder)
             {
-                var positionType = this.data.Positions.FirstOrDefault(x => x.Name == position);
+                var positionType = this.data.Positions.FirstOrDefault(x => x.Order == positionOrder);
                 (string FirstName, string LastName) = getPlayerNames(freeAgentsTeam);
                 (City city, int age, Nation nation) = getPlayerInfo(freeAgentsTeam);
 
@@ -66,7 +66,7 @@
                     Nation = nation,
                     NationId = nation.Id,
                     Position = positionType,
-                    PositionId = positionType.Id,
+                    PositionId = positionType.Id,                    
                     Team = freeAgentsTeam,
                     TeamId = freeAgentsTeam.Id,
                     Matches = 0,
@@ -77,6 +77,8 @@
                     IsStarting11 = true,
                     FreeAgent = true
                 };
+                this.data.Players.Add(newPlayer);
+                this.data.SaveChanges();
 
                 var playerAttributes = attributeService.CalculatePlayerAttributes(newPlayer);
                 playerAttributes.PlayerId = newPlayer.Id;
@@ -84,7 +86,6 @@
 
                 GetProfileImage(newPlayer);
 
-                this.data.Players.Add(newPlayer);
                 this.data.SaveChanges();
             }
 
@@ -208,7 +209,6 @@
 
             this.data.SaveChanges();
         }
-
         private (City city, int age, Nation nation) getPlayerInfo(VirtualTeam team)
         {
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == team.TeamId);
@@ -283,11 +283,11 @@
 
             return (firstName, lastName);
         }
-        private void FillPlayersByPosition(int count, Game game, VirtualTeam team, string position)
+        private void FillPlayersByPosition(int count, Game game, VirtualTeam team, int positionOrder)
         {
             for (int i = 0; i < count; i++)
             {
-                var positionType = this.data.Positions.FirstOrDefault(x => x.Name == position);
+                var positionType = this.data.Positions.FirstOrDefault(x => x.Order == positionOrder);
                 (string firstName, string lastName) = getPlayerNames(team);
                 (City city, int age, Nation nation) = getPlayerInfo(team);
 
@@ -313,14 +313,15 @@
                     IsStarting11 = true,
                     FreeAgent = false
                 };
-
+                this.data.Players.Add(newPlayer);
                 GetProfileImage(newPlayer);
-
+             
                 var playerAttributes = attributeService.CalculatePlayerAttributes(newPlayer);
-                playerAttributes.PlayerId = newPlayer.Id;
+                
+                newPlayer.AttributesId = playerAttributes.Id;
                 attributeService.CalculateOverall(newPlayer);
 
-                this.data.Players.Add(newPlayer);
+               
                 this.data.SaveChanges();
             }
         }

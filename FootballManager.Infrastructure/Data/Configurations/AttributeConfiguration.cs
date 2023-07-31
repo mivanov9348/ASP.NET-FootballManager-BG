@@ -9,7 +9,7 @@
     {
         public void Configure(EntityTypeBuilder<PlayerAttribute> builder)
         {
-            builder.HasKey(x => x.PlayerId);
+            builder.HasKey(x => x.Id);
 
             builder.HasOne(a => a.Player)
                    .WithOne(p => p.PlayerAttributes)

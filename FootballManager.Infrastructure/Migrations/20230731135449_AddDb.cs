@@ -100,7 +100,8 @@ namespace FootballManager.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Abbr = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false)
+                    Abbr = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -687,6 +688,8 @@ namespace FootballManager.Infrastructure.Migrations
                 name: "PlayerAttributes",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     Finishing = table.Column<int>(type: "int", nullable: false),
                     FinishingWeight = table.Column<double>(type: "float", nullable: false),
@@ -715,7 +718,7 @@ namespace FootballManager.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlayerAttributes", x => x.PlayerId);
+                    table.PrimaryKey("PK_PlayerAttributes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PlayerAttributes_Players_PlayerId",
                         column: x => x.PlayerId,
@@ -858,6 +861,12 @@ namespace FootballManager.Infrastructure.Migrations
                 name: "IX_Matches_GameId",
                 table: "Matches",
                 column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerAttributes_PlayerId",
+                table: "PlayerAttributes",
+                column: "PlayerId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Players_CityId",

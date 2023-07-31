@@ -11,6 +11,7 @@
         [Required]
         [StringLength(2)]
         public string Abbr { get; set; }
+        public int Order { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
 
     }
