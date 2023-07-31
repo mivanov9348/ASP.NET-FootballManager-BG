@@ -61,7 +61,7 @@
         private int GetTeamGoal(int teamId)
         {
             var currTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
-            var goals = rnd.Next(0, currTeam.Overall / 10);
+            var goals = rnd.Next(0, Convert.ToInt32(currTeam.Overall) / 10);
             return goals;
         }
         public void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)

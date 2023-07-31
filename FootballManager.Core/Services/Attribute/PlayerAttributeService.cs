@@ -7,12 +7,12 @@
     public class PlayerAttributeService : IPlayerAttributeService
     {
         private readonly FootballManagerDbContext data;
-        private PlayerAttributeHelpersService helpers;
+        private readonly PlayerAttributeHelpersService helpers;
         private Random rnd;
-        public PlayerAttributeService(FootballManagerDbContext data, Random rnd, PlayerAttributeHelpersService helpers)
+        public PlayerAttributeService(FootballManagerDbContext data, PlayerAttributeHelpersService helpers)
         {
             this.data = data;
-            this.rnd = rnd;
+            this.rnd = new Random();
             this.helpers = helpers;
         }
 

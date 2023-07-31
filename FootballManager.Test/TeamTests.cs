@@ -81,10 +81,7 @@
                 {
                     FirstName = "Hulk",
                     LastName = "Hogan",
-                    TeamId = team.Id,
-                    Attack = 50,
-                    Defense = 60,
-                    Speed = 100,
+                    TeamId = team.Id,                   
                     Overall = 70
                 };
                 context.Players.Add(player);

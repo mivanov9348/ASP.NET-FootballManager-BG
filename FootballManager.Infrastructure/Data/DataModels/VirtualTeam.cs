@@ -27,7 +27,7 @@
         public int Cups { get; set; }
         public int ChampionsCup { get; set; }
         public int EuroCups { get; set; }
-        public int Budget { get; set; }
+        public double Budget { get; set; }
         public int Overall { get; set; }
         public bool IsEuroParticipant { get; set; }
         public bool IsCupParticipant { get; set; }

@@ -108,8 +108,8 @@
                             <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-controller="Menu" asp-route-id="@item.Id">@item.FirstName @item.LastName</a></td>
                             <td>@item.Nation.Abbr</td>
                             <td>@item.Age</td>
-                            <td>@item.Attack</td>
-                            <td>@item.Defense</td>
+                            <td></td>
+                            <td></td>
                             <td>@item.Overall</td>
                             <td>@item.Price</td>
                             <td><input type="submit" value="Buy" asp-route-id="@item.Id" asp-action="ConfirmationTransfer" /></td>

@@ -198,9 +198,7 @@
             return View(new PlayersViewModel
             {
                 FullName = currentPlayer.FirstName + " " + currentPlayer.LastName,
-                Age = currentPlayer.Age,
-                Attack = currentPlayer.Attack,
-                Defense = currentPlayer.Defense,
+                Age = currentPlayer.Age,           
                 City = currentPlayer.Team.Name,
                 Position = position.FirstOrDefault(x => x.Id == currentPlayer.PositionId).Name,
                 ImageUrl = currentPlayer.ProfileImage,

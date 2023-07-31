@@ -32,7 +32,7 @@ namespace FootballManager.Infrastructure.Data.Configurations
               .WithMany(x => x.Players)
               .HasForeignKey(x => x.LeagueId);
 
-            builder.HasOne(p => p.Attributes)
+            builder.HasOne(p => p.PlayerAttributes)
                    .WithOne(a => a.Player)
                    .HasForeignKey<PlayerAttribute>(a => a.PlayerId);
         }

@@ -46,7 +46,7 @@
             team.Overall = 0;
             var teamPlayers = this.data.Players.Where(x => x.TeamId == team.Id).ToList();
             var overallSum = teamPlayers.Sum(x => x.Overall);
-            team.Overall = overallSum / teamPlayers.Count;
+            team.Overall = Convert.ToInt32(overallSum) / teamPlayers.Count;
 
             this.data.SaveChanges();
         }

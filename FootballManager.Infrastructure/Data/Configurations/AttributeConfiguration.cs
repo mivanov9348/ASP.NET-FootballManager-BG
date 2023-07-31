@@ -12,7 +12,7 @@
             builder.HasKey(x => x.PlayerId);
 
             builder.HasOne(a => a.Player)
-                   .WithOne(p => p.Attributes)
+                   .WithOne(p => p.PlayerAttributes)
                    .HasForeignKey<PlayerAttribute>(a => a.PlayerId);
         }
     }

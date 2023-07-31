@@ -13,8 +13,9 @@
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
+    using FootballManager.Core.Services.Attribute;
     using FootballManager.Core.Services.Chat;
-    using FootballManager.Core.Services.PlayerAttribute;
+    using FootballManager.Core.Services.PlayerProbability;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtension
@@ -38,6 +39,9 @@
             services.AddScoped<ICupService, CupService>();
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IPlayerAttributeService, PlayerAttributeService>();
+            services.AddScoped<PlayerAttributeHelpersService>();
+            services.AddScoped<IPlayerProbability, PlayerProbability>();
+            
             return services;
         }
 

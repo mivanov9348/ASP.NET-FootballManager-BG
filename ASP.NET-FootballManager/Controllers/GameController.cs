@@ -86,7 +86,7 @@
             fixtureService.GenerateEuroFixtures(CurrentGame);
             playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgents.gk, DataConstants.FreeAgents.df, DataConstants.FreeAgents.mf, DataConstants.FreeAgents.st);
             playerService.CalculatingPlayersPrice(CurrentGame);
-            playerService.UpdateAttributes(CurrentGame);
+           // playerService.UpdateAttributes(CurrentGame);
             playerService.ResetPlayerStats(CurrentGame);
             teamService.ResetTeams(CurrentGame);
             inboxService.NewSeasonNews(CurrentGame);

@@ -4,16 +4,23 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System;
     using System.Collections.Generic;
-    using System.Text; 
+    using System.Text;
     using FootballManager.Core.Models.Match;
+    using FootballManager.Infrastructure.Data.Constant;
+    using FootballManager.Core.Services.PlayerProbability;
+
     public class MatchService : IMatchService
     {
         private readonly FootballManagerDbContext data;
+        private readonly MatchMessages.Messages messages;
+        private readonly IPlayerProbability playerProbability;
         private Random rnd;
-        public MatchService(FootballManagerDbContext data)
+        public MatchService(FootballManagerDbContext data, IPlayerProbability playerProbability)
         {
             rnd = new Random();
             this.data = data;
+            this.messages = new MatchMessages.Messages();
+            this.playerProbability = playerProbability;
         }
         public async Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
         {
@@ -93,86 +100,45 @@
         public void PlayerAction(VirtualTeam team, Player player, Match match)
         {
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
+            var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
             bool isTurn = false;
 
-            int attackNum = rnd.Next(1, player.Attack);
-            int defNum = rnd.Next(1, player.Defense);
+            var maxProbability = playerProbability.CompareProbabilities(playerAttributes);
 
-            if (position.Name == "Goalkeeper")
+            var randomSaveMessage = messages.GoalkeeperSaveMessages[1];
+
+            switch (maxProbability)
             {
-                if (defNum >= attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) save the ball!";
-                }
 
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) Pass the ball!";
-                    player.Passes += 1;
-                }
-            }
-
-            if (position.Name == "Defender")
-            {
-                if (defNum > attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball!";
-                    player.Passes += 1;
-                }
-
-                if (defNum == attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) lose the ball!";
-                    isTurn = true;
-                }
-
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) SCORE!!!";
+                case "Tackling":
+                    (string message, bool retainsPossession) randomTacklingMessage = messages.TacklingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    match.SituationText = string.Format(randomTacklingMessage.message, $"{player.FirstName} {player.LastName}");
+                    isTurn = randomTacklingMessage.retainsPossession;
+                    break;
+                case "Dribbling":
+                    (string message, bool retainsPossession) randomDribblingMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    match.SituationText = string.Format(randomDribblingMessage.message, $"{player.FirstName} {player.LastName}");
+                    isTurn = randomDribblingMessage.retainsPossession;
+                    break;
+                case "Goal":
+                    (string message, bool retainsPossession) randomGoalMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    match.SituationText = string.Format(randomGoalMessage.message, $"{player.FirstName} {player.LastName}");
+                    isTurn = randomGoalMessage.retainsPossession;
                     Goal(player, match, team);
-                    isTurn = true;
-                }
-            }
-
-            if (position.Name == "Midlefielder")
-            {
-                if (defNum > attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball";
+                    break;
+                case "Heading":
+                    (string message, bool retainsPossession) randomHeadingMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    match.SituationText = string.Format(randomHeadingMessage.message, $"{player.FirstName} {player.LastName}");
+                    isTurn = randomHeadingMessage.retainsPossession;
+                    break;
+                case "Passing":
+                    (string message, bool retainsPossession) randomPassingMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    match.SituationText = string.Format(randomPassingMessage.message, $"{player.FirstName} {player.LastName}");
+                    isTurn = randomPassingMessage.retainsPossession;
                     player.Passes += 1;
-                }
-                if (attackNum == defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) lose the ball!";
-                    isTurn = true;
-                }
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) SCORE!!!";
-                    Goal(player, match, team);
-                    isTurn = true;
-                }
-            }
-
-            if (position.Name == "Striker")
-            {
-
-                if (attackNum < defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) lose the ball!";
-                    isTurn = true;
-                }
-                if (attackNum == defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball!";
-                    player.Passes += 1;
-                }
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) SCORE!!!";
-                    Goal(player, match, team);
-                    isTurn = true;
-                }
+                    break;
+                default:
+                    break;
             }
             if (isTurn)
             {
@@ -180,6 +146,7 @@
             }
             this.data.SaveChanges();
         }
+
         private void Goal(Player player, Match match, VirtualTeam team)
         {
             player.Goals++;
@@ -246,6 +213,6 @@
             }
             this.data.SaveChanges();
         }
-               
+
     }
 }

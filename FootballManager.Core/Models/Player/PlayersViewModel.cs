@@ -12,10 +12,8 @@
         public string Position { get; set; }
         public string ImageUrl { get; set; }
         public string Team { get; set; }
-        public int Age { get; set; }
-        public int Attack { get; set; }
-        public int Defense { get; set; }
-        public int Overall { get; set; }
+        public int Age { get; set; }       
+        public double Overall { get; set; }
         public int Price { get; set; }
         public int Goals { get; set; }
         public int CleanSheets { get; set; }

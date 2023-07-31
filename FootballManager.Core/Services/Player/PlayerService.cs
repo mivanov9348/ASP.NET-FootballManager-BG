@@ -7,7 +7,6 @@
     using FootballManager.Core.Models.Player;
     using FootballManager.Core.Models.Sorting;
     using FootballManager.Core.Services.Attribute;
-    using FootballManager.Infrastructure.Data.DataModels;
     using Newtonsoft.Json;
     using System.Collections.Generic;
 
@@ -16,11 +15,12 @@
         private readonly FootballManagerDbContext data;
         private readonly IPlayerAttributeService attributeService;
         private Random rnd;
-        public PlayerService(FootballManagerDbContext data, IPlayerAttributeService attributeService)
+        public PlayerService(IPlayerAttributeService attributeService, FootballManagerDbContext data)
         {
             this.rnd = new Random();
             this.data = data;
             this.attributeService = attributeService;
+
         }
         public void GeneratePlayers(Game game, VirtualTeam team)
         {
@@ -91,7 +91,7 @@
         }
         public async Task<Player> GetRandomPlayer(VirtualTeam team)
         {
-            var players = await Task.Run(() => this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id).ToList());
+            var players = await Task.Run(() => this.data.Players.Where(x => x.GameId == team.GameId && x.IsStarting11 == true && x.TeamId == team.Id && x.Position.Name != "Goalkeeper").ToList());
             return players[rnd.Next(0, players.Count)];
         }
         public async Task<List<Player>> GetPlayersByTeam(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId).ToList());
@@ -317,7 +317,7 @@
                 GetProfileImage(newPlayer);
 
                 var playerAttributes = attributeService.CalculatePlayerAttributes(newPlayer);
-                newPlayer.AttributesId = playerAttributes.Id;
+                playerAttributes.PlayerId = newPlayer.Id;
                 attributeService.CalculateOverall(newPlayer);
 
                 this.data.Players.Add(newPlayer);

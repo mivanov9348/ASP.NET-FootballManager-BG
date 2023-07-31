@@ -3,7 +3,7 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System.ComponentModel.DataAnnotations;
 
-    public class PlayerAttribute : Player
+    public class PlayerAttribute 
     {
         [Required]
         public int PlayerId { get; set; }
