@@ -2,6 +2,8 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.AspNetCore.Internal;
 
     public class CommonService : ICommonService
     {
@@ -23,6 +25,7 @@
         public async Task<List<Nation>> GetAllNations() => await Task.Run(() => this.data.Nations.ToList());
         public async Task<List<Player>> GetAllPlayers() => await Task.Run(() => this.data.Players.ToList());
         public async Task<List<Position>> GetAllPositions() => await Task.Run(() => this.data.Positions.ToList());
+        public async Task<List<PlayerAttribute>> GetAllPlayersAttribute() => await Task.Run(() => this.data.PlayerAttributes.ToList());
 
     }
 }

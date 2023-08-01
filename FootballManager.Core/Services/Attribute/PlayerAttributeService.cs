@@ -82,8 +82,8 @@
                     break;
             }
             this.data.PlayerAttributes.Add(newPlayerAttribute);
-           
-            newPlayerAttribute.PlayerId = player.Id;         
+
+            newPlayerAttribute.PlayerId = player.Id;
             helpers.AddWeights(newPlayerAttribute, player.Position.Order);
             this.data.SaveChanges();
             return newPlayerAttribute;
@@ -106,7 +106,7 @@
                         + (playerAttributes.BallControll * playerAttributes.BallControllWeight);
             result = result / 20;
 
-            player.Overall = result;
+            player.Overall = Math.Round(result, 2, MidpointRounding.ToEven);
         }
         public void UpdateAttributes(Game CurrentGame)
         {

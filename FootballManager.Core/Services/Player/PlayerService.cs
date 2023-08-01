@@ -4,10 +4,13 @@
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Data.Database.ImportDto;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using ASP.NET_FootballManager.Services.Common;
+    using ASP.NET_FootballManager.Services.Team;
     using FootballManager.Core.Models.Player;
     using FootballManager.Core.Models.Sorting;
     using FootballManager.Core.Services.Attribute;
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
 
     public class PlayerService : IPlayerService
@@ -66,7 +69,7 @@
                     Nation = nation,
                     NationId = nation.Id,
                     Position = positionType,
-                    PositionId = positionType.Id,                    
+                    PositionId = positionType.Id,
                     Team = freeAgentsTeam,
                     TeamId = freeAgentsTeam.Id,
                     Matches = 0,
@@ -143,6 +146,7 @@
                 Players = allPlayers,
                 Positions = this.data.Positions.ToList(),
                 Teams = this.data.VirtualTeams.ToList(),
+                AllPlayerAttributes = this.data.PlayerAttributes.ToList()
             };
 
             switch (sortBy)
@@ -315,19 +319,49 @@
                 };
                 this.data.Players.Add(newPlayer);
                 GetProfileImage(newPlayer);
-             
+
                 var playerAttributes = attributeService.CalculatePlayerAttributes(newPlayer);
-                
+
                 newPlayer.AttributesId = playerAttributes.Id;
                 attributeService.CalculateOverall(newPlayer);
 
-               
+
                 this.data.SaveChanges();
             }
         }
+        public PlayerDetailsViewModel PlayerDetailsViewModel(Player currentPlayer, Game currentGame)
+        {
+            var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == currentPlayer.Id);
+            var nations = this.data.Nations.ToList();
+            var positions = this.data.Positions.ToList();
+            var teams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id).ToList();
 
-
-
-
+            var playerDetailsViewModel = new PlayerDetailsViewModel
+            {
+                FullName = currentPlayer.FirstName + " " + currentPlayer.LastName,
+                Age = currentPlayer.Age,
+                City = currentPlayer.Team.Name,
+                Position = positions.FirstOrDefault(x => x.Id == currentPlayer.PositionId).Name,
+                ImageUrl = currentPlayer.ProfileImage,
+                Goals = currentPlayer.Goals,
+                Overall = currentPlayer.Overall,
+                Nation = nations.FirstOrDefault(x => x.Id == currentPlayer.NationId).Name,
+                Team = teams.FirstOrDefault(x => x.Id == currentPlayer.TeamId).Name,
+                PlayerAttributes = this.data.PlayerAttributes.ToList(),
+                OneOnOne = playerAttributes.OneOnOne,
+                Reflexes = playerAttributes.Reflexes,
+                Finishing = playerAttributes.Finishing,
+                Passing = playerAttributes.Passing,
+                Heading = playerAttributes.Heading,
+                Tackling = playerAttributes.Tackling,
+                Stamina = playerAttributes.Stamina,
+                Strength = playerAttributes.Strength,
+                Dribbling = playerAttributes.Dribbling,
+                Positioning = playerAttributes.Positioning,
+                BallControll = playerAttributes.BallControll,
+                Pace = playerAttributes.Pace
+            };
+            return playerDetailsViewModel;
+        }
     }
 }

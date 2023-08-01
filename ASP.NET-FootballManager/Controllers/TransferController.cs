@@ -36,7 +36,8 @@
                 CurrentTeamPlayers = await transferService.GetCurrentTeamPlayers(currentTeam.Id),
                 Nations = await commonService.GetAllNations(),
                 Positions = await commonService.GetAllPositions(),
-                CurrentTeam = currentTeam
+                CurrentTeam = currentTeam,
+                PlayerAttributes = await commonService.GetAllPlayersAttribute()
             });
         }
         public async Task<IActionResult> SortPlayers(string text, int id)

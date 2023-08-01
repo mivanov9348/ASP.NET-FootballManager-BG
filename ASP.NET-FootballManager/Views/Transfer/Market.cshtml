@@ -30,7 +30,7 @@
         width: 1300px;
     }
 
-      table, th, td {
+    table, th, td {
         border: 1px solid;
     }
 
@@ -51,7 +51,7 @@
             box-shadow: 0px 0px 20px white;
         }
 
-        
+
     .playerStatsLink {
         text-decoration: none;
         color: white;
@@ -93,26 +93,47 @@
                         <th scope="col">Name</th>
                         <th scope="col">Nat</th>
                         <th scope="col">Age</th>
-                        <th scope="col">Att</th>
-                        <th scope="col">Def</th>
+                        <th scope="col">Ono</th>
+                        <th scope="col">Ref</th>
+                        <th scope="col">Fin</th>
+                        <th scope="col">Pas</th>
+                        <th scope="col">Hea</th>
+                        <th scope="col">Tck</th>
+                        <th scope="col">Pos</th>
+                        <th scope="col">Pac</th>
+                        <th scope="col">Sta</th>
+                        <th scope="col">Str</th>
+                        <th scope="col">Drb</th>
+                        <th scope="col">Bcl</th>
                         <th scope="col">Ovr</th>
                         <th scope="col">Price</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in @Model.FreeAgents)
+                    @foreach (var player in @Model.FreeAgents)
                     {
+                        var currentAttr = Model.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
                         <tr>
-                            <td>@item.Position.Abbr</td>
-                            <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-controller="Menu" asp-route-id="@item.Id">@item.FirstName @item.LastName</a></td>
-                            <td>@item.Nation.Abbr</td>
-                            <td>@item.Age</td>
-                            <td></td>
-                            <td></td>
-                            <td>@item.Overall</td>
-                            <td>@item.Price</td>
-                            <td><input type="submit" value="Buy" asp-route-id="@item.Id" asp-action="ConfirmationTransfer" /></td>
+                            <td>@player.Position.Abbr</td>
+                            <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-controller="Menu" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
+                            <td>@player.Nation.Abbr</td>
+                            <td>@player.Age</td>
+                            <td>@currentAttr.OneOnOne</td>
+                            <td>@currentAttr.Reflexes</td>
+                            <td>@currentAttr.Finishing</td>
+                            <td>@currentAttr.Passing</td>
+                            <td>@currentAttr.Heading</td>
+                            <td>@currentAttr.Tackling</td>
+                            <td>@currentAttr.Positioning</td>
+                            <td>@currentAttr.Pace</td>
+                            <td>@currentAttr.Stamina</td>
+                            <td>@currentAttr.Strength</td>
+                            <td>@currentAttr.Dribbling</td>
+                            <td>@currentAttr.BallControll</td>
+                            <td>@player.Overall</td>
+                            <td>@player.Price</td>
+                            <td><input type="submit" value="Buy" asp-route-id="@player.Id" asp-action="ConfirmationTransfer" /></td>
                         </tr>
                     }
                 </tbody>

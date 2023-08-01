@@ -51,6 +51,10 @@
             color: blue;
         }
 
+    .attributes {
+        color: red;
+    }
+
 </style>
 
 @{
@@ -85,29 +89,51 @@
                 <th>Age</th>
                 <th>Nat</th>
                 <th>City</th>
-                <th>Att</th>
-                <th>Def</th>
-                <th>Speed</th>
+                <th>Ono</th>
+                <th>Ref</th>
+                <th>Fin</th>
+                <th>Pas</th>
+                <th>Hea</th>
+                <th>Tck</th>
+                <th>Pos</th>
+                <th>Pac</th>
+                <th>Sta</th>
+                <th>Str</th>
+                <th>Drb</th>
+                <th>Bcl</th>
                 <th>OVR</th>
                 <th>Goals</th>
+                <th>Passes</th>
                 <th>Clean Sheets</th>
             </tr>
-            @foreach (var item in @Model.Players)
+            @foreach (var player in @Model.Players)
             {
                 num++;
+                var currentAttr = Model.Attributes.FirstOrDefault(x => x.PlayerId == player.Id);
+
                 <tr>
                     <th scope="row">@num</th>
-                    <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@item.Id">@item.FirstName @item.LastName</a></td>
-                    <td>@item.Position.Abbr</td>
-                    <td>@item.Age</td>
-                    <td>@item.Nation.Abbr</td>
-                    <td>@item.City.Name</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>@item.Overall</td>
-                    <td>@item.Goals</td>
-                    <td>@item.Passes</td>
+                    <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
+                    <td>@player.Position.Abbr</td>
+                    <td>@player.Age</td>
+                    <td>@player.Nation.Abbr</td>
+                    <td>@player.City.Name</td>
+                    <td>@currentAttr.OneOnOne</td>
+                    <td>@currentAttr.Reflexes</td>
+                    <td>@currentAttr.Finishing</td>
+                    <td>@currentAttr.Passing</td>
+                    <td>@currentAttr.Heading</td>
+                    <td>@currentAttr.Tackling</td>
+                    <td>@currentAttr.Positioning</td>
+                    <td>@currentAttr.Pace</td>
+                    <td>@currentAttr.Stamina</td>
+                    <td>@currentAttr.Strength</td>
+                    <td>@currentAttr.Dribbling</td>
+                    <td>@currentAttr.BallControll</td>
+                    <td style="color:indianred">@player.Overall</td>
+                    <td>@player.Goals</td>
+                    <td>@player.Passes</td>
+                    <td>@player.Passes</td>
                 </tr>
             }
         </table>

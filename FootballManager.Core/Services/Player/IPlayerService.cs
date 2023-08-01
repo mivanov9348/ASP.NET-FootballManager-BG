@@ -7,6 +7,7 @@
     public interface IPlayerService
     {
         PlayersViewModel SortingPlayers(PlayerSorting s, int id, Game currentGame);
+        PlayerDetailsViewModel PlayerDetailsViewModel(Player currentPlayer,Game currentGame);
         Task<List<Player>> GetPlayersByTeam(int teamId);
         void GeneratePlayers(Game game, VirtualTeam team);
         void CreateFreeAgents(Game game, int gk, int df, int mf, int st);

@@ -1,6 +1,9 @@
 ﻿namespace FootballManager.Core.Models.Team
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Services.Attribute;
+    using FootballManager.Infrastructure.Data.DataModels;
+
     public class TeamViewModel
     {
 
@@ -12,6 +15,7 @@
         public List<Position> Positions { get; set; } = new List<Position>();
         public List<City> Cities { get; set; } = new List<City>();
         public List<League> Leagues { get; set; } = new List<League>();
+        public List<PlayerAttribute> Attributes { get; set; } = new List<PlayerAttribute>();
 
 
     }

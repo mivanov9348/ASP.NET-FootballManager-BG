@@ -184,30 +184,18 @@
                 Teams = await teamService.GetAllVirtualTeams(CurrentGame),
                 Cities = await commonService.GetAllCities(),
                 Positions = await commonService.GetAllPositions(),
-                Leagues = await leagueService.GetAllLeagues()
+                Leagues = await leagueService.GetAllLeagues(),
+                Attributes = await commonService.GetAllPlayersAttribute()
             });
         }
         public async Task<IActionResult> PlayerDetails(int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentPlayer = await playerService.GetPlayerById(id);
-            var nation = await commonService.GetAllNations();
-            var position = await commonService.GetAllPositions();
-            var team = await teamService.GetAllVirtualTeams(CurrentGame);
 
-            return View(new PlayersViewModel
-            {
-                FullName = currentPlayer.FirstName + " " + currentPlayer.LastName,
-                Age = currentPlayer.Age,           
-                City = currentPlayer.Team.Name,
-                Position = position.FirstOrDefault(x => x.Id == currentPlayer.PositionId).Name,
-                ImageUrl = currentPlayer.ProfileImage,
-                Goals = currentPlayer.Goals,
-                Overall = currentPlayer.Overall,
-                Nation = nation.FirstOrDefault(x => x.Id == currentPlayer.NationId).Name,
-                Team = team.FirstOrDefault(x => x.Id == currentPlayer.TeamId).Name
+            var model = this.playerService.PlayerDetailsViewModel(currentPlayer, CurrentGame);
 
-            });
+            return View(model);
         }
     }
 }

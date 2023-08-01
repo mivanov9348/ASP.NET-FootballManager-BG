@@ -1,4 +1,5 @@
 ﻿@using FootballManager.Core.Models.Player
+@using FootballManager.Infrastructure.Data.DataModels;
 @model PlayersViewModel
 
 <style>
@@ -58,10 +59,16 @@
         margin-left: 520px;
     }
 
+    .attributes {
+        color:lightskyblue;
+    }
+
 </style>
 
 @{
     var num = 0;
+    var allAttr = Model.AllPlayerAttributes;
+
 }
 
 <body>
@@ -88,10 +95,8 @@
             <option value="2">City</option>
             <option value="3">Goals</option>
             <option value="4">Passes</option>
-            <option value="5">Attack</option>
-            <option value="6">Defense</option>
-            <option value="7">Overall</option>
-            <option value="8">Price</option>
+            <option value="5">Overall</option>
+            <option value="6">Price</option>
         </select>
 
         <input type="submit" value="Sort" asp-action="PlayersStats" />
@@ -106,30 +111,49 @@
                     <th scope="col">Nat</th>
                     <th scope="col">Team</th>
                     <th scope="col">City</th>
-                    <th scope="col">Att</th>
-                    <th scope="col">Def</th>
-                    <th scope="col">Speed</th>
+                    <th scope="col">Ono</th>
+                    <th scope="col">Ref</th>
+                    <th scope="col">Fin</th>
+                    <th scope="col">Pas</th>
+                    <th scope="col">Hdn</th>
+                    <th scope="col">Tck</th>
+                    <th scope="col">Pos</th>
+                    <th scope="col">Pac</th>
+                    <th scope="col">Sta</th>
+                    <th scope="col">Str</th>
+                    <th scope="col">Drb</th>
+                    <th scope="col">Bcr</th>
                     <th scope="col">OVR</th>
                     <th scope="col">Goals</th>
                     <th scope="col">Passes</th>
                 </tr>
-                @foreach (var item in @Model.Players)
+                @foreach (var player in @Model.Players)
                 {
                     num++;
+                    var currAttr = allAttr.FirstOrDefault(x => x.PlayerId == player.Id);
                     <tr>
                         <th scope="row">@num</th>
-                        <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@item.Id">@item.FirstName @item.LastName</a></td>
-                        <td>@item.Position.Abbr</td>
-                        <td>@item.Age</td>
-                        <td>@item.Nation.Abbr</td>
-                        <td>@item.Team.Name</td>
-                        <td>@item.City.Name</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>@item.Overall</td>
-                        <td>@item.Goals</td>
-                        <td>@item.Passes</td>
+                        <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
+                        <td>@player.Position.Abbr</td>
+                        <td>@player.Age</td>
+                        <td>@player.Nation.Abbr</td>
+                        <td>@player.Team.Name</td>
+                        <td>@player.City.Name</td>
+                        <td class="attributes">@currAttr.OneOnOne</td>
+                        <td class="attributes">@currAttr.Reflexes</td>
+                        <td class="attributes">@currAttr.Finishing</td>
+                        <td class="attributes">@currAttr.Passing</td>
+                        <td class="attributes">@currAttr.Heading</td>
+                        <td class="attributes">@currAttr.Tackling</td>
+                        <td class="attributes">@currAttr.Positioning</td>
+                        <td class="attributes">@currAttr.Pace</td>
+                        <td class="attributes">@currAttr.Stamina</td>
+                        <td class="attributes">@currAttr.Strength</td>
+                        <td class="attributes">@currAttr.Dribbling</td>
+                        <td class="attributes">@currAttr.BallControll</td>
+                        <td>@player.Overall</td>
+                        <td>@player.Goals</td>
+                        <td>@player.Passes</td>
                     </tr>
                 }
             </table>
