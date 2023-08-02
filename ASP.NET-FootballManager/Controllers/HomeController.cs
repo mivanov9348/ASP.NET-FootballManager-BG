@@ -130,7 +130,7 @@
                 teams.ForEach(x => playerService.GeneratePlayers(currentGame, x));
                 playerService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
                 playerService.CalculatingPlayersPrice(currentGame);
-                teams.ForEach(x => teamService.CalculateTeamOverall(x));
+                 teams.ForEach(x => teamService.CalculateTeamOverall(x));
                 //GenerateLeagueFixtures
                 fixtureService.GenerateLeagueFixtures(currentGame);
                 return RedirectToAction("Inbox", "Menu");

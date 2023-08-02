@@ -2,22 +2,20 @@
 {
     public class DataConstants
     {
-
         public class Match
         {
             public const int Timespan = 20;
         }
-
         public class Prize
         {
-            public const int WinCoins = 50;
-            public const int DrawCoins = 20;
-            public const int FirstPlaceCoins = 300;
-            public const int SecondPlaceCoins = 200;
-            public const int ThirdPlaceCoins = 100;
-            public const int PromotionCoins = 200;
+            public const int StartingCoins = 10;
+            public const int WinCoins = 3;
+            public const int DrawCoins = 1;
+            public const int FirstPlaceCoins = 30;
+            public const int SecondPlaceCoins = 20;
+            public const int ThirdPlaceCoins = 10;
+            public const int PromotionCoins = 20;
         }
-
         public class StartingPlayersCount
         {
             public const int gk = 1;
@@ -26,7 +24,7 @@
             public const int st = 2;
         }
 
-        public class FreeAgents
+        public class FreeAgentsEachClub
         {
             public const int gk = 20;
             public const int df = 40;
@@ -64,7 +62,25 @@
             }
         }
 
-
+        public class Age
+        {
+            public const int minAge = 16;
+            public const int maxAge = 35;
+        }
+        public class PositionOrder
+        {
+            public const int Goalkeeper = 1;
+            public const int Defender = 2;
+            public const int Midlefielder = 3;
+            public const int Forward = 4;
+        }
+        public class LeagueLevels
+        {
+            public const int FirstLevel = 1;
+            public const int SecondLevel = 2;
+            public const int ThirdLevel = 3;
+            public const int FourthLevel = 4;
+        }
 
 
     }

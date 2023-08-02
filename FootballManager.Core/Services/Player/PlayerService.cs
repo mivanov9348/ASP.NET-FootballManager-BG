@@ -4,14 +4,14 @@
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Data.Database.ImportDto;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Services.Common;
-    using ASP.NET_FootballManager.Services.Team;
     using FootballManager.Core.Models.Player;
     using FootballManager.Core.Models.Sorting;
     using FootballManager.Core.Services.Attribute;
+    using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Reflection.Metadata;
 
     public class PlayerService : IPlayerService
     {
@@ -23,14 +23,13 @@
             this.rnd = new Random();
             this.data = data;
             this.attributeService = attributeService;
-
         }
         public void GeneratePlayers(Game game, VirtualTeam team)
         {
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.gk, game, team, 1);
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.df, game, team, 2);
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.mf, game, team, 3);
-            FillPlayersByPosition(DataConstants.StartingPlayersCount.st, game, team, 4);
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.gk, game, team, DataConstants.PositionOrder.Goalkeeper);
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.df, game, team, DataConstants.PositionOrder.Defender);
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.mf, game, team, DataConstants.PositionOrder.Midlefielder);
+            FillPlayersByPosition(DataConstants.StartingPlayersCount.st, game, team, DataConstants.PositionOrder.Forward);
         }
         public void CreateFreeAgents(Game game, int gk, int df, int mf, int st)
         {
@@ -104,7 +103,7 @@
         {
             if (leagueId == 0)
             {
-                leagueId = await Task.Run(() => this.data.Leagues.FirstOrDefault(x => x.Level == 1).Id);
+                leagueId = await Task.Run(() => this.data.Leagues.FirstOrDefault(x => x.Level == DataConstants.LeagueLevels.FirstLevel).Id);
             }
 
             var currentComp = this.data.Leagues.FirstOrDefault(x => x.Id == leagueId);
@@ -197,8 +196,17 @@
         }
         public void CalculatingPlayersPrice(Game CurrentGame)
         {
+
             var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
-            allPlayers.ForEach(x => x.Price = x.Overall * 4);
+
+            foreach (var player in allPlayers)
+            {
+
+                double currAgeFactor = ((Convert.ToDouble(DataConstants.Age.maxAge) - Convert.ToDouble(player.Age)) / (Convert.ToDouble(DataConstants.Age.maxAge) - Convert.ToDouble(DataConstants.Age.minAge)));
+                var result = currAgeFactor * player.Overall;
+                player.Price = Math.Round(result, 2, MidpointRounding.ToEven);
+            }
+
             this.data.SaveChanges();
         }
         public void ResetPlayerStats(Game CurrentGame)
@@ -224,7 +232,7 @@
                 currentNation = allNations[rnd.Next(0, allNations.Count())];
             }
 
-            var age = rnd.Next(17, 33);
+            var age = rnd.Next(DataConstants.Age.minAge, DataConstants.Age.maxAge);
             var nation = this.data.Nations.FirstOrDefault(x => x.Id == currentNation.Id);
 
             var allCities = this.data.Cities.Where(x => x.NationId == nation.Id).ToList();

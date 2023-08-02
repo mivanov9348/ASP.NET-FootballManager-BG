@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Team
 {
     using ASP.NET_FootballManager.Data;
+    using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Team;
     public class TeamService : ITeamService
@@ -29,7 +30,8 @@
                 Cup = x.Cup,
                 EuropeanCup = x.EuropeanCup,
                 IsEuroParticipant = x.IsEuroParticipant,
-                IsCupParticipant = x.IsCupParticipant
+                IsCupParticipant = x.IsCupParticipant,
+                Budget = DataConstants.Prize.StartingCoins
 
             }).ToList();
 
@@ -81,7 +83,7 @@
         public async Task<List<VirtualTeam>> GetAllVirtualTeams(Game currentGame) => await Task.Run(() => this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id).ToList());
         public async Task<List<Team>> GetAllTeams() => await Task.Run(() => this.data.Teams.ToList());
         public async Task<VirtualTeam> GetCurrentTeam(Game currentGame) => await Task.Run(() => this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId));
-        public async Task<Team> GetOriginalTeam(VirtualTeam currentVirtual,Game CurrentGame) => await Task.Run(() => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId));
+        public async Task<Team> GetOriginalTeam(VirtualTeam currentVirtual, Game CurrentGame) => await Task.Run(() => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId));
         public async Task<VirtualTeam> GetTeamById(int teamId) => await Task.Run(() => this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId));
         public async Task<List<Team>> GetAllPlayableTeams() => await Task.Run(() => this.data.Teams.Where(x => x.IsPlayable == true).ToList());
     }

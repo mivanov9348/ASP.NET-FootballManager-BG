@@ -84,7 +84,7 @@
             fixtureService.GenerateCupFixtures(CurrentGame);
             euroCupService.DistributionEuroParticipant(CurrentGame);
             fixtureService.GenerateEuroFixtures(CurrentGame);
-            playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgents.gk, DataConstants.FreeAgents.df, DataConstants.FreeAgents.mf, DataConstants.FreeAgents.st);
+            playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgentsEachClub.gk, DataConstants.FreeAgentsEachClub.df, DataConstants.FreeAgentsEachClub.mf, DataConstants.FreeAgentsEachClub.st);
             playerService.CalculatingPlayersPrice(CurrentGame);
            // playerService.UpdateAttributes(CurrentGame);
             playerService.ResetPlayerStats(CurrentGame);
