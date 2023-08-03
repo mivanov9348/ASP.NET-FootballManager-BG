@@ -14,7 +14,6 @@
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services.Attribute;
-    using FootballManager.Core.Services.Chat;
     using FootballManager.Core.Services.PlayerProbability;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -37,7 +36,6 @@
             services.AddScoped<IEuroCupService, EuroCupService>();
             services.AddScoped<IDayService, DayService>();
             services.AddScoped<ICupService, CupService>();
-            services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IPlayerAttributeService, PlayerAttributeService>();
             services.AddScoped<PlayerAttributeHelpersService>();
             services.AddScoped<IPlayerProbability, PlayerProbability>();

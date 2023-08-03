@@ -30,27 +30,33 @@
         public async Task<IActionResult> Market()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+           
+            var allFreeAgents = await transferService.GetAllFreeAgents(CurrentGame.Id, 0, CurrentGame, 0);
             return View(new TransferViewModel
             {
-                FreeAgents = await transferService.GetAllFreeAgents(CurrentGame.Id, 0, CurrentGame),
+                FreeAgents = allFreeAgents,
                 CurrentTeamPlayers = await transferService.GetCurrentTeamPlayers(currentTeam.Id),
                 Nations = await commonService.GetAllNations(),
                 Positions = await commonService.GetAllPositions(),
                 CurrentTeam = currentTeam,
-                PlayerAttributes = await commonService.GetAllPlayersAttribute()
+                PlayerAttributes = await commonService.GetAllPlayersAttribute(),
+                PositionOrder = allFreeAgents.First().Position.Order
             });
         }
-        public async Task<IActionResult> SortPlayers(string text, int id)
+        public async Task<IActionResult> SortPlayers(string text, int id, int positionOrder)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var allFreeAgents = await transferService.GetAllFreeAgents(CurrentGame.Id, id, CurrentGame, positionOrder);
 
             return View("Market", new TransferViewModel
             {
-                FreeAgents = await transferService.GetAllFreeAgents(CurrentGame.Id, id, CurrentGame),
+                FreeAgents = allFreeAgents,
                 CurrentTeamPlayers = await transferService.GetCurrentTeamPlayers(currentTeam.Id),
                 Nations = await commonService.GetAllNations(),
                 Positions = await commonService.GetAllPositions(),
-                CurrentTeam = currentTeam
+                PlayerAttributes = await commonService.GetAllPlayersAttribute(),
+                CurrentTeam = currentTeam,
+                PositionOrder = allFreeAgents.First().Position.Order
             });
         }
         public async Task<IActionResult> Buy(int id)

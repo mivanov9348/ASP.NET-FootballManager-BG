@@ -1,5 +1,4 @@
 using ASP.NET_FootballManager.Data;
-using ASP.NET_FootballManager.Hubs;
 using FootballManager.Core.Extensions;
 using FootballManager.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Identity;
@@ -70,12 +69,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(
-routes =>
-{
-    routes.MapHub<ChatHub>("/chatHub");
-    routes.MapHub<ClockHub>("/clockHub");
-});
 
 app.MapControllerRoute(
     name: "default",

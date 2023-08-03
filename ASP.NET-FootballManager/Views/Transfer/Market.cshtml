@@ -61,6 +61,15 @@
             color: blue;
         }
 
+    .columnTitles {
+        text-decoration: none;
+        color: white;
+    }
+
+        .columnTitles:hover {
+            color: blue;
+        }
+
 </style>
 
 <form method="get">
@@ -72,15 +81,11 @@
             <input type="submit" class="squadBtn" asp-action="TeamSquad" value="Squad" />
             <p style="margin-top:5px;font-weight:bolder">Budget: @Model.CurrentTeam.Budget coins</p>
             <hr style="font-weight:bolder;margin-top:-12px" />
-            <input type="submit" asp-action="SortPlayers" asp-route-id="0" value="All" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="1" value="GK" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="2" value="DF" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="3" value="MF" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="4" value="ST" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="5" value="Att" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="6" value="Def" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="7" value="OVR" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="8" value="Price" />
+            <input type="submit" asp-action="SortPlayers" asp-route-id="0" asp-route-positionOrder="@Model.PositionOrder" value="All" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="1" asp-route-positionOrder="@Model.PositionOrder" value="GK" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="2" asp-route-positionOrder="@Model.PositionOrder" value="DF" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="3" asp-route-positionOrder="@Model.PositionOrder" value="MF" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="4" asp-route-positionOrder="@Model.PositionOrder" value="ST" />
         </div>
 
         <div class="FreeAgents">
@@ -90,23 +95,24 @@
 
                     <tr>
                         <th scope="col">Pos</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Nat</th>
-                        <th scope="col">Age</th>
-                        <th scope="col">Ono</th>
-                        <th scope="col">Ref</th>
-                        <th scope="col">Fin</th>
-                        <th scope="col">Pas</th>
-                        <th scope="col">Hea</th>
-                        <th scope="col">Tck</th>
-                        <th scope="col">Pos</th>
-                        <th scope="col">Pac</th>
-                        <th scope="col">Sta</th>
-                        <th scope="col">Str</th>
-                        <th scope="col">Drb</th>
-                        <th scope="col">Bcl</th>
-                        <th scope="col">Ovr</th>
-                        <th scope="col">Price</th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="5" asp-route-positionOrder="@Model.PositionOrder" value="Name">Name</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="6" asp-route-positionOrder="@Model.PositionOrder" value="Nat">Nat</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="7" asp-route-positionOrder="@Model.PositionOrder" value="Age">Age</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="8" asp-route-positionOrder="@Model.PositionOrder" value="Ono">Ono</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="9" asp-route-positionOrder="@Model.PositionOrder" value="Ref">Ref</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="10" asp-route-positionOrder="@Model.PositionOrder" value="Fin">Fin</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="11" asp-route-positionOrder="@Model.PositionOrder" value="Pas">Pas</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="12" asp-route-positionOrder="@Model.PositionOrder" value="Hea">Hea</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="13" asp-route-positionOrder="@Model.PositionOrder" value="Tck">Tck</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="14" asp-route-positionOrder="@Model.PositionOrder" value="Pos">Pos</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="15" asp-route-positionOrder="@Model.PositionOrder" value="Pac">Pac</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="16" asp-route-positionOrder="@Model.PositionOrder" value="Sta">Sta</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="17" asp-route-positionOrder="@Model.PositionOrder" value="Str">Str</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="18" asp-route-positionOrder="@Model.PositionOrder" value="Drb">Drb</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="19" asp-route-positionOrder="@Model.PositionOrder" value="Bcl">Bcl</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="20" asp-route-positionOrder="@Model.PositionOrder" value="OVR">OVR</a></th>
+                        <th scope="col"><a class="columnTitles" asp-route-action="SortPlayers" asp-route-id="21" asp-route-positionOrder="@Model.PositionOrder" value="Price">Price</a></th>
+
                         <th></th>
                     </tr>
                 </thead>
