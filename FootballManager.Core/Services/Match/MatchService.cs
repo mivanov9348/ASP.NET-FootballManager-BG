@@ -101,46 +101,52 @@
         {
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
             var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
-            bool isTurn = false;
+            bool changePossesion = false;
 
             var maxProbability = playerProbability.CompareProbabilities(playerAttributes);
-
-            var randomSaveMessage = messages.GoalkeeperSaveMessages[1];
+            var isAGoal = false;     
 
             switch (maxProbability)
             {
 
                 case "Tackling":
-                    (string message, bool retainsPossession) randomTacklingMessage = messages.TacklingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    (string message, bool retainsPossession, bool isGoal) randomTacklingMessage = messages.TacklingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
                     match.SituationText = string.Format(randomTacklingMessage.message, $"{player.FirstName} {player.LastName}");
-                    isTurn = randomTacklingMessage.retainsPossession;
+                    changePossesion = randomTacklingMessage.retainsPossession;                    
                     break;
                 case "Dribbling":
-                    (string message, bool retainsPossession) randomDribblingMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    (string message, bool retainsPossession, bool isGoal) randomDribblingMessage = messages.DribblingMessages[rnd.Next(0, messages.DribblingMessages.Count)];
                     match.SituationText = string.Format(randomDribblingMessage.message, $"{player.FirstName} {player.LastName}");
-                    isTurn = randomDribblingMessage.retainsPossession;
+                    changePossesion = randomDribblingMessage.retainsPossession;
                     break;
-                case "Goal":
-                    (string message, bool retainsPossession) randomGoalMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
-                    match.SituationText = string.Format(randomGoalMessage.message, $"{player.FirstName} {player.LastName}");
-                    isTurn = randomGoalMessage.retainsPossession;
-                    Goal(player, match, team);
+                case "Shooting":
+                    (string message, bool retainsPossession, bool isGoal) randomShootingMessage = messages.HeadingMessages[rnd.Next(0, messages.HeadingMessages.Count)];
+                    match.SituationText = string.Format(randomShootingMessage.message, $"{player.FirstName} {player.LastName}");
+                    changePossesion = randomShootingMessage.retainsPossession;
+                    isAGoal = randomShootingMessage.isGoal;
                     break;
                 case "Heading":
-                    (string message, bool retainsPossession) randomHeadingMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    (string message, bool retainsPossession, bool isGoal) randomHeadingMessage = messages.HeadingMessages[rnd.Next(0, messages.HeadingMessages.Count)];
                     match.SituationText = string.Format(randomHeadingMessage.message, $"{player.FirstName} {player.LastName}");
-                    isTurn = randomHeadingMessage.retainsPossession;
+                    changePossesion = randomHeadingMessage.retainsPossession;
+                    isAGoal = randomHeadingMessage.isGoal;
                     break;
                 case "Passing":
-                    (string message, bool retainsPossession) randomPassingMessage = messages.DribblingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    (string message, bool retainsPossession, bool isGoal) randomPassingMessage = messages.PassingMessages[rnd.Next(0, messages.PassingMessages.Count)];
                     match.SituationText = string.Format(randomPassingMessage.message, $"{player.FirstName} {player.LastName}");
-                    isTurn = randomPassingMessage.retainsPossession;
+                    changePossesion = randomPassingMessage.retainsPossession;
                     player.Passes += 1;
                     break;
                 default:
                     break;
             }
-            if (isTurn)
+
+            if (isAGoal)
+            {
+                Goal(player, match, team);
+            }
+        
+            if (!changePossesion)
             {
                 ChangeTurn(match);
             }

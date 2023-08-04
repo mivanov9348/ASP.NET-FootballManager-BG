@@ -15,24 +15,16 @@
             var output = "";
 
             var dribblingProbability = (attributes.Dribbling + attributes.BallControll + attributes.Pace + attributes.Stamina) / 4;
-
-            var goalProbability = (attributes.Finishing + attributes.BallControll + attributes.Positioning + attributes.Pace) / 4;
-
             var headingProbability = (attributes.Strength + attributes.Heading) / 2;
-
             var passingProbability = (attributes.Positioning + attributes.BallControll + attributes.Passing) / 3;
-
             var tacklingProbability = (attributes.Tackling + attributes.Strength + attributes.Positioning) / 3;
+            var shootingProbability = (attributes.BallControll + attributes.Finishing) / 2;
 
-            double maxProbability = Math.Max(dribblingProbability, Math.Max(goalProbability, Math.Max(headingProbability, Math.Max(passingProbability, tacklingProbability))));
+            double maxProbability = Math.Max(shootingProbability, Math.Max(dribblingProbability, Math.Max(headingProbability, Math.Max(passingProbability, tacklingProbability))));
 
             if (maxProbability == dribblingProbability)
             {
                 output = "Dribbling";
-            }
-            else if (maxProbability == goalProbability)
-            {
-                output = "Goal";
             }
             else if (maxProbability == headingProbability)
             {
