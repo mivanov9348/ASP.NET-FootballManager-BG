@@ -4,6 +4,8 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System.Collections.Generic;
     using Data.Constant;
+    using FootballManager.Infrastructure.Data.DataModels;
+
     public class LeagueService : ILeagueService
     {
         private readonly FootballManagerDbContext data;
@@ -61,8 +63,19 @@
         private int GetTeamGoal(int teamId)
         {
             var currTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
-            var goals = rnd.Next(0, Convert.ToInt32(currTeam.Overall) / 10);
-            return goals;
+            var currTeamPlayers = this.data.Players.Where(x => x.TeamId == teamId).ToList();
+            double averageAttacking = 0;
+
+            foreach (var player in currTeamPlayers)
+            {
+                var currentPlAttr = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
+                double currentAttStats = currentPlAttr.Finishing + currentPlAttr.BallControll + currentPlAttr.Dribbling;
+                averageAttacking += currentAttStats;
+            }
+
+            var goals = ((averageAttacking / 11) + currTeam.Overall) / 2;
+            var randomgoal = rnd.Next(0, (int)Math.Ceiling(goals));
+            return randomgoal;
         }
         public void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)
         {

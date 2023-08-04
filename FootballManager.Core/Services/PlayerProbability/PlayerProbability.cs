@@ -22,7 +22,11 @@
 
             double maxProbability = Math.Max(shootingProbability, Math.Max(dribblingProbability, Math.Max(headingProbability, Math.Max(passingProbability, tacklingProbability))));
 
-            if (maxProbability == dribblingProbability)
+            if (maxProbability == shootingProbability)
+            {
+                output = "Shooting";
+            }
+            else if (maxProbability == dribblingProbability)
             {
                 output = "Dribbling";
             }
