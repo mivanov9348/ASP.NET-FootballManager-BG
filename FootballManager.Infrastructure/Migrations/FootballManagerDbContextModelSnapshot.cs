@@ -225,6 +225,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("EuroCupRound")
                         .HasColumnType("int");
 
+                    b.Property<int>("GameOptionId")
+                        .HasColumnType("int");
+
                     b.Property<int>("LeagueRound")
                         .HasColumnType("int");
 
@@ -697,6 +700,52 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("VirtualTeams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DrawCoins")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FirstPlaceCoins")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerMaximumAge")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerMinimumAge")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SecondPlaceCoins")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StartingCoins")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThirdPlaceCoins")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimeInterval")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WinCoins")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId")
+                        .IsUnique();
+
+                    b.ToTable("GameOptions");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerAttribute", b =>
@@ -1293,6 +1342,17 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Team");
                 });
 
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
+                {
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithOne("GameOption")
+                        .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.GameOption", "GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerAttribute", b =>
                 {
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", "Player")
@@ -1393,6 +1453,8 @@ namespace FootballManager.Infrastructure.Migrations
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
                 {
                     b.Navigation("Days");
+
+                    b.Navigation("GameOption");
 
                     b.Navigation("Inboxes");
 

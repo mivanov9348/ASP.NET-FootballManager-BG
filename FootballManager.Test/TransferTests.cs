@@ -47,7 +47,7 @@
         [Test]
         public async Task GetAllFreeAgents()
         {
-            var freeAgents = await transferService.GetAllFreeAgents(game.Id, 1, game);
+            var freeAgents = await transferService.GetAllFreeAgents(game.Id, 1, game,0);
             Assert.AreEqual(1, freeAgents.Count);
         }
 

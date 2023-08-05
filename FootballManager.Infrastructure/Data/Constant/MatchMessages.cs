@@ -76,6 +76,15 @@
                 ("{0} shoots straight at the goalkeeper, an easy save.", false, false),
                 ("{0} tries an acrobatic effort, but it goes wide of the goal.", false, false),
                 ("{0} shoots from distance, but the ball sails harmlessly over the bar.", false, false),
+                ("{0} curls a beautiful shot into the top corner, unstoppable!", true, true),
+                ("{0} takes advantage of a defensive error and scores with ease.", true, true),
+                ("{0} rounds the goalkeeper and calmly taps it into an empty net.", true, true),
+                ("{0} fires a rocket from distance, leaving the goalkeeper with no chance.", true, true),
+                ("{0} beats the offside trap and coolly finishes one-on-one with the keeper.", true, true),
+                               ("{0} scores with a perfectly placed free-kick, bending it around the wall.", true, true),
+                ("{0} finishes off a swift team move with a clinical strike.", true, true),
+                ("{0} volleys the ball into the net, showcasing incredible technique.", true, true),
+                ("{0} slots the ball into the bottom corner, scoring with finesse.", true, true),
             };
 
             public readonly List<(string message, bool retainPossession, bool isGoal)> PassingMessages = new List<(string, bool, bool)>
@@ -144,6 +153,17 @@
                 ("{0} jumps for a header but is unable to make a clean contact, and the ball goes out of play.", false, false),
                 ("{0} attempts a powerful header but misses the target, conceding possession.", false, false),
                 ("{0} goes for a diving header but fails to connect, losing the ball in the process.", false, false),
+                ("{0} heads the ball powerfully into the net from a well-placed cross.", true, true),
+                ("{0} rises above the defenders and heads the ball into the top corner!", true, true),
+                ("{0} meets the cross with a powerful header, leaving the keeper with no chance.", true, true),
+                ("{0} directs a glancing header into the net, perfectly placed.", true, true),
+                ("{0} heads the ball downwards, and it bounces into the back of the net.", true, true),
+                ("{0} scores with a diving header, meeting the cross in mid-air.", true, true),
+                ("{0} leaps high and nods the ball into the goal with precision.", true, true),
+                ("{0} times the jump perfectly and heads the ball into the bottom corner.", true, true),
+                ("{0} gets above the defenders and powers the header into the net.", true, true),
+                ("{0} connects with the corner kick, scoring with a powerful header.", true, true),
+                ("{0} scores with a thumping header from a long throw-in.", true, true),
             };
 
             public readonly List<(string message, bool retainsPossession)> GoalkeeperSaveMessages = new List<(string, bool)>
@@ -175,7 +195,7 @@
                 ("{0} keeps their eye on the ball and saves a tricky bouncing shot.", true),
                 ("{0} stretches to the far corner and tips the ball over the bar.", true),
             };
-                   
+
         }
 
     }

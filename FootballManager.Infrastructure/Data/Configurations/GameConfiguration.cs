@@ -1,6 +1,7 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     public class GameConfiguration : IEntityTypeConfiguration<Game>
@@ -16,6 +17,10 @@
             builder.HasOne(x => x.Manager)
               .WithMany(x => x.Games)
               .HasForeignKey(x => x.ManagerId);
+
+            builder.HasOne(a => a.GameOption)
+                   .WithOne(p => p.Game)
+                   .HasForeignKey<Game>(a => a.GameOptionId);
 
             builder.HasMany(x => x.Inboxes)
                 .WithOne(x => x.Game)

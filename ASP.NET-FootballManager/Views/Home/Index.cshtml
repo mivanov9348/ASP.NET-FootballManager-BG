@@ -70,6 +70,12 @@
                     </span>
                 </a>
                 <hr>
+                <a asp-action="Index" asp-controller="GameOptions">
+                    <span class="nav-text">
+                        Options
+                    </span>
+                </a>
+                <hr>
                 <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <span class="nav-text">
                         Logout

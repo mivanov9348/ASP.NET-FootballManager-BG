@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FootballManager.Infrastructure.Migrations
 {
-    public partial class AddDb : Migration
+    public partial class AddDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -379,6 +379,7 @@ namespace FootballManager.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ManagerId = table.Column<int>(type: "int", nullable: false),
                     TeamId = table.Column<int>(type: "int", nullable: false),
+                    GameOptionId = table.Column<int>(type: "int", nullable: false),
                     Season = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
@@ -427,6 +428,34 @@ namespace FootballManager.Infrastructure.Migrations
                         principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GameOptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    TimeInterval = table.Column<int>(type: "int", nullable: false),
+                    StartingCoins = table.Column<int>(type: "int", nullable: false),
+                    WinCoins = table.Column<int>(type: "int", nullable: false),
+                    DrawCoins = table.Column<int>(type: "int", nullable: false),
+                    FirstPlaceCoins = table.Column<int>(type: "int", nullable: false),
+                    SecondPlaceCoins = table.Column<int>(type: "int", nullable: false),
+                    ThirdPlaceCoins = table.Column<int>(type: "int", nullable: false),
+                    PlayerMinimumAge = table.Column<int>(type: "int", nullable: false),
+                    PlayerMaximumAge = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GameOptions_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -812,6 +841,12 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "LeagueId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GameOptions_GameId",
+                table: "GameOptions",
+                column: "GameId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Games_ManagerId",
                 table: "Games",
                 column: "ManagerId");
@@ -970,6 +1005,9 @@ namespace FootballManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "GameOptions");
 
             migrationBuilder.DropTable(
                 name: "Inboxes");

@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color:darkgray;
+    }
+
+    h1 {
+        text-align: center;
+        font-weight:bolder;
+    }
+
+    .options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-weight: bolder;
+    }
+
+    .option {
+        margin: 10px;
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100px;
+    }
+
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+            text-align: center;
+        }
+
+    .Confirm {
+        text-align: center;
+        margin-left: 300px;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"]:focus {
+        outline: none;
+    }
+
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Options</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<form method="get">
+<body>
+    <div class="container">
+        <h1>Game Options</h1>
+        <hr />
+        <div class="options">
+            <div class="option">
+                <label for="timeInterval">Time Interval (in seconds):</label>
+                <input type="number" id="timeInterval" min="1" max="60" step="1" value="10">
+                <hr />
+                <label for="timeInterval">Starting Coins:</label>
+                <input type="number" value="10">
+                <hr />
+                <label for="timeInterval">Win Coins:</label>
+                <input type="number" value="10">
+                <hr />
+                <label for="timeInterval">Draw Coins:</label>
+                <input type="number" value="10">
+                <hr />
+                <label for="timeInterval">First Place Coins:</label>
+                <input type="number" value="10">
+                <hr />
+                <label for="timeInterval">Second Place Coins:</label>
+                <input type="number" value="10">
+                <hr />
+                <label for="timeInterval">Third Place Coins:</label>
+                <input type="number" value="10">
+                <hr />
+                <label for="timeInterval">Player Minimum Age:</label>
+                <input type="number" value="10" min="16" max="20">
+                <hr />
+                <label for="timeInterval">Player Maximum Age:</label>
+                <input type="number" value="10" min="28" max="35">
+                <hr />              
+            </div>
+        </div>
+        <hr />
+        <input class="Confirm" type="submit" value="Confirm" asp-action="Index" />
+    </div>
+</body>
+</form>
+</html>

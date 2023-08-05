@@ -69,13 +69,13 @@
             foreach (var player in currTeamPlayers)
             {
                 var currentPlAttr = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
-                double currentAttStats = currentPlAttr.Finishing + currentPlAttr.BallControll + currentPlAttr.Dribbling;
+                double currentAttStats = currentPlAttr.Finishing + currentPlAttr.BallControll + currentPlAttr.Dribbling + currentPlAttr.Stamina + currentPlAttr.Strength;
                 averageAttacking += currentAttStats;
             }
-
-            var goals = ((averageAttacking / 11) + currTeam.Overall) / 2;
-            var randomgoal = rnd.Next(0, (int)Math.Ceiling(goals));
-            return randomgoal;
+            averageAttacking /= 11;
+            var goals = (averageAttacking + currTeam.Overall) / 10;
+            var randomGoal = rnd.Next(0, Math.Min(10, (int)Math.Ceiling(goals))); 
+            return randomGoal;
         }
         public void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)
         {

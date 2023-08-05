@@ -156,7 +156,7 @@
                 UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
         }
-
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

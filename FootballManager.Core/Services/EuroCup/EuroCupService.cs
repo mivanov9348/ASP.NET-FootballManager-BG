@@ -67,8 +67,11 @@
                 var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == fixture.HomeTeamId);
                 var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == fixture.AwayTeamId);
 
-                fixture.HomeTeamGoal = rnd.Next(0, homeTeam.Overall / 10);
-                fixture.AwayTeamGoal = rnd.Next(0, awayTeam.Overall / 10);
+                var homeTeamOverall = (int)Math.Ceiling(homeTeam.Overall / 10.0+2);
+                var awayTeamOverall = (int)Math.Ceiling(homeTeam.Overall / 10.0+2);
+
+                fixture.HomeTeamGoal = rnd.Next(0, homeTeamOverall);
+                fixture.AwayTeamGoal = rnd.Next(0, awayTeamOverall);
                 GetGoalScorers(fixture.HomeTeam, fixture.HomeTeamGoal, fixture);
                 WinnerCalculate(fixture);
             }
