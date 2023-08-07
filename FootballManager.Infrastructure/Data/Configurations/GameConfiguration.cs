@@ -18,9 +18,9 @@
               .WithMany(x => x.Games)
               .HasForeignKey(x => x.ManagerId);
 
-            builder.HasOne(a => a.GameOption)
-                   .WithOne(p => p.Game)
-                   .HasForeignKey<Game>(a => a.GameOptionId);
+            builder.HasOne(x => x.GameOption)
+                   .WithMany(x => x.Games)
+                   .HasForeignKey(x => x.GameOptionId);
 
             builder.HasMany(x => x.Inboxes)
                 .WithOne(x => x.Game)

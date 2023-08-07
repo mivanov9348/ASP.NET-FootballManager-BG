@@ -245,6 +245,8 @@ namespace FootballManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GameOptionId");
+
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("TeamId");
@@ -716,9 +718,6 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("FirstPlaceCoins")
                         .HasColumnType("int");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PlayerMaximumAge")
                         .HasColumnType("int");
 
@@ -737,13 +736,22 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("TimeInterval")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("WinCoins")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId")
+                    b.HasIndex("UserId")
                         .IsUnique();
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("GameOptions");
                 });
@@ -1123,6 +1131,12 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
                 {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.GameOption", "GameOption")
+                        .WithMany("Games")
+                        .HasForeignKey("GameOptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", "Manager")
                         .WithMany("Games")
                         .HasForeignKey("ManagerId")
@@ -1134,6 +1148,8 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("GameOption");
 
                     b.Navigation("Manager");
 
@@ -1344,13 +1360,17 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
-                        .WithOne("GameOption")
-                        .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.GameOption", "GameId")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.GameOption", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Game");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerAttribute", b =>
@@ -1454,8 +1474,6 @@ namespace FootballManager.Infrastructure.Migrations
                 {
                     b.Navigation("Days");
 
-                    b.Navigation("GameOption");
-
                     b.Navigation("Inboxes");
 
                     b.Navigation("Matches");
@@ -1524,6 +1542,11 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("HomeMatches");
 
                     b.Navigation("Players");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
+                {
+                    b.Navigation("Games");
                 });
 #pragma warning restore 612, 618
         }

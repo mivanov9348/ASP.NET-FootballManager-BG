@@ -1,20 +1,25 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
+    using FootballManager.Core.Models.GameOptions;
+    using FootballManager.Core.Services.GameOption;
     using Microsoft.AspNetCore.Mvc;
     public class GameOptionsController : Controller
     {
-        public GameOptionsController()
+        private IGameOptionService gameOptionService;
+        public GameOptionsController(IGameOptionService gameOptionService)
         {
+            this.gameOptionService = gameOptionService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(new GameOptionsViewModel());
         }
 
-        public IActionResult CreateOptions()
+        public IActionResult SaveOptions(GameOptionsViewModel model)
         {
-            return View();
+            gameOptionService.SaveOptions(this.User, model);
+            return View("Index");
         }
     }
 }

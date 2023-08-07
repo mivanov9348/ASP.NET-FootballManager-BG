@@ -8,12 +8,14 @@
     using FootballManager.Core.Models.Match;
     using FootballManager.Infrastructure.Data.Constant;
     using FootballManager.Core.Services.PlayerProbability;
+    using FootballManager.Infrastructure.Data.DataModels;
 
     public class MatchService : IMatchService
     {
         private readonly FootballManagerDbContext data;
         private readonly MatchMessages.Messages messages;
         private readonly IPlayerProbability playerProbability;
+        private readonly GameOption currentOption;
         private Random rnd;
         public MatchService(FootballManagerDbContext data, IPlayerProbability playerProbability)
         {
@@ -22,6 +24,7 @@
             this.messages = new MatchMessages.Messages();
             this.playerProbability = playerProbability;
         }
+
         public async Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
         {
             var currentTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId && x.GameId == currentGame.Id);
@@ -104,7 +107,7 @@
             bool changePossesion = false;
 
             var maxProbability = playerProbability.CompareProbabilities(playerAttributes);
-            var isAGoal = false;     
+            var isAGoal = false;
 
             switch (maxProbability)
             {
@@ -112,7 +115,7 @@
                 case "Tackling":
                     (string message, bool retainsPossession, bool isGoal) randomTacklingMessage = messages.TacklingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
                     match.SituationText = string.Format(randomTacklingMessage.message, $"{player.FirstName} {player.LastName}");
-                    changePossesion = randomTacklingMessage.retainsPossession;                    
+                    changePossesion = randomTacklingMessage.retainsPossession;
                     break;
                 case "Dribbling":
                     (string message, bool retainsPossession, bool isGoal) randomDribblingMessage = messages.DribblingMessages[rnd.Next(0, messages.DribblingMessages.Count)];
@@ -145,14 +148,13 @@
             {
                 Goal(player, match, team);
             }
-        
+
             if (!changePossesion)
             {
                 ChangeTurn(match);
             }
             this.data.SaveChanges();
         }
-
         private void Goal(Player player, Match match, VirtualTeam team)
         {
             player.Goals++;
@@ -180,7 +182,10 @@
         }
         public void Time(Match match)
         {
-            match.Minute += rnd.Next(1, Data.Constant.DataConstants.Match.Timespan);
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == match.GameId);
+            var currentOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == currentGame.GameOptionId);
+
+            match.Minute += rnd.Next(1, currentOptions.TimeInterval);
             this.data.SaveChanges();
         }
         public async Task<MatchViewModel> GetMatchModel(Match match, Fixture fixture, Player player)

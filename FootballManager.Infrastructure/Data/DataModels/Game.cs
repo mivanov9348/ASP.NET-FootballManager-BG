@@ -4,7 +4,6 @@ namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
 {
     public class Game
     {
-
         public int Id { get; set; }
         public int ManagerId { get; set; }
         public Manager Manager { get; set; }
@@ -21,8 +20,7 @@ namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
         public List<Inbox> Inboxes { get; set; } = new List<Inbox>();
         public List<VirtualTeam> VirtualTeams { get; set; } = new List<VirtualTeam>();
         public List<Player> Players { get; set; } = new List<Player>();
-        public List<Day> Days { get; set; } = new List<Day>();
-   
+        public List<Day> Days { get; set; } = new List<Day>();   
         public ICollection<Match> Matches { get; set; } = new HashSet<Match>();
     }
 }

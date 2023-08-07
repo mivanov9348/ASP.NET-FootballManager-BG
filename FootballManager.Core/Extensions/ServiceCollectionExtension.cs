@@ -14,13 +14,14 @@
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services.Attribute;
+    using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.PlayerProbability;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtension
     {
 
-        public static IServiceCollection AddApplicationServices (this IServiceCollection services)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<IManagerService, ManagerService>();
@@ -39,7 +40,8 @@
             services.AddScoped<IPlayerAttributeService, PlayerAttributeService>();
             services.AddScoped<PlayerAttributeHelpersService>();
             services.AddScoped<IPlayerProbability, PlayerProbability>();
-            
+            services.AddScoped<IGameOptionService, GameOptionService>();
+
             return services;
         }
 

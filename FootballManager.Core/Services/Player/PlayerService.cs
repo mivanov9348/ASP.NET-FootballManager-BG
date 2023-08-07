@@ -7,6 +7,7 @@
     using FootballManager.Core.Models.Player;
     using FootballManager.Core.Models.Sorting;
     using FootballManager.Core.Services.Attribute;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json;
     using System;
@@ -225,6 +226,8 @@
         {
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == team.TeamId);
             var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == currentTeam.NationId);
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == team.GameId);
+            var currentOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == currentGame.GameOptionId);
 
             if (currentNation == null)
             {
@@ -232,7 +235,7 @@
                 currentNation = allNations[rnd.Next(0, allNations.Count())];
             }
 
-            var age = rnd.Next(DataConstants.Age.minAge, DataConstants.Age.maxAge);
+            var age = rnd.Next(currentOptions.PlayerMinimumAge, currentOptions.PlayerMaximumAge);
             var nation = this.data.Nations.FirstOrDefault(x => x.Id == currentNation.Id);
 
             var allCities = this.data.Cities.Where(x => x.NationId == nation.Id).ToList();
@@ -332,7 +335,6 @@
 
                 newPlayer.AttributesId = playerAttributes.Id;
                 attributeService.CalculateOverall(newPlayer);
-
 
                 this.data.SaveChanges();
             }

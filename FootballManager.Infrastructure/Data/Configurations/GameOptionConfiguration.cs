@@ -1,6 +1,8 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     public class GameOptionConfiguration : IEntityTypeConfiguration<GameOption>
@@ -9,9 +11,13 @@
         {
             builder.HasKey(x => x.Id);
 
-            builder.HasOne(a => a.Game)
-                   .WithOne(p => p.GameOption)
-                   .HasForeignKey<GameOption>(a => a.GameId);
+            builder.HasOne<IdentityUser>()
+                   .WithOne()
+                   .HasForeignKey<GameOption>(x => x.UserId);
+
+            builder.HasMany(x => x.Games)
+                   .WithOne(x => x.GameOption)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -15,6 +15,8 @@
         {
             var allTeam = this.data.Teams.ToList();
 
+            var curentGameOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == game.GameOptionId);
+
             var virtualTeams = allTeam.Select(x => new VirtualTeam
             {
                 Team = x,
@@ -31,7 +33,7 @@
                 EuropeanCup = x.EuropeanCup,
                 IsEuroParticipant = x.IsEuroParticipant,
                 IsCupParticipant = x.IsCupParticipant,
-                Budget = DataConstants.Prize.StartingCoins
+                Budget = curentGameOptions.StartingCoins
 
             }).ToList();
 

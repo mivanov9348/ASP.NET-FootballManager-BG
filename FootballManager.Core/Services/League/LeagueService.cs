@@ -3,12 +3,10 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System.Collections.Generic;
-    using Data.Constant;
-    using FootballManager.Infrastructure.Data.DataModels;
 
     public class LeagueService : ILeagueService
     {
-        private readonly FootballManagerDbContext data;
+        private readonly FootballManagerDbContext data;    
         private Random rnd;
         public LeagueService(FootballManagerDbContext data)
         {
@@ -74,7 +72,7 @@
             }
             averageAttacking /= 11;
             var goals = (averageAttacking + currTeam.Overall) / 10;
-            var randomGoal = rnd.Next(0, Math.Min(10, (int)Math.Ceiling(goals))); 
+            var randomGoal = rnd.Next(0, Math.Min(10, (int)Math.Ceiling(goals)));
             return randomGoal;
         }
         public void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)
@@ -82,6 +80,8 @@
             var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
             var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
             var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentFixt.Day.CurrentDay && x.Year == currentFixt.Day.Year);
+            var currentGame = this.data.Games.FirstOrDefault(x=>x.Id== currentFixt.GameId);
+            var currentOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == currentGame.GameOptionId);
 
             currentFixt.IsPlayed = true;
             currentDay.IsPlayed = true;
@@ -100,7 +100,7 @@
             {
                 homeTeam.Wins += 1;
                 homeTeam.Points += 3;
-                homeTeam.Budget += DataConstants.Prize.WinCoins;
+                homeTeam.Budget += currentOptions.WinCoins;
                 awayTeam.Loses += 1;
             }
 
@@ -108,17 +108,17 @@
             {
                 homeTeam.Draws += 1;
                 homeTeam.Points += 1;
-                homeTeam.Budget += DataConstants.Prize.DrawCoins;
+                homeTeam.Budget += currentOptions.DrawCoins;
                 awayTeam.Draws += 1;
                 awayTeam.Points += 1;
-                awayTeam.Budget += DataConstants.Prize.DrawCoins;
+                awayTeam.Budget += currentOptions.DrawCoins;
             }
 
             if (homeGoals < awayGoals)
             {
                 awayTeam.Wins += 1;
                 awayTeam.Points += 3;
-                awayTeam.Budget += DataConstants.Prize.WinCoins;
+                awayTeam.Budget += currentOptions.WinCoins;
                 homeTeam.Loses += 1;
             }
 
