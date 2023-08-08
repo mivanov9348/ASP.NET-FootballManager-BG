@@ -1,14 +1,14 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
     using FootballManager.Core.Models.GameOptions;
-    using FootballManager.Core.Services.GameOption;
+    using FootballManager.Core.Services;
     using Microsoft.AspNetCore.Mvc;
     public class GameOptionsController : Controller
     {
-        private IGameOptionService gameOptionService;
-        public GameOptionsController(IGameOptionService gameOptionService)
+        private ServiceAggregator serviceAggregator;
+        public GameOptionsController(ServiceAggregator serviceAggregator)
         {
-            this.gameOptionService = gameOptionService;
+            this.serviceAggregator = serviceAggregator;
         }
 
         public IActionResult Index()
@@ -18,7 +18,7 @@
 
         public IActionResult SaveOptions(GameOptionsViewModel model)
         {
-            gameOptionService.SaveOptions(this.User, model);
+            serviceAggregator.gameOptionsService.SaveOptions(this.User, model);
             return View("Index");
         }
     }

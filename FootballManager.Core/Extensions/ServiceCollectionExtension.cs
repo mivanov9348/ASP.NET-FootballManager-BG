@@ -13,6 +13,7 @@
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
+    using FootballManager.Core.Services;
     using FootballManager.Core.Services.Attribute;
     using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.PlayerProbability;
@@ -41,6 +42,7 @@
             services.AddScoped<PlayerAttributeHelpersService>();
             services.AddScoped<IPlayerProbability, PlayerProbability>();
             services.AddScoped<IGameOptionService, GameOptionService>();
+            services.AddScoped<ServiceAggregator>();
 
             return services;
         }
