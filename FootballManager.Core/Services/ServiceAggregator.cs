@@ -16,6 +16,11 @@ namespace FootballManager.Core.Services
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services.GameOption;
+    using FootballManager.Core.Services.Player.PlayerData;
+    using FootballManager.Core.Services.Player.PlayerGenerator;
+    using FootballManager.Core.Services.Player.PlayerModel;
+    using FootballManager.Core.Services.Player.PlayerSorter;
+    using FootballManager.Core.Services.Player.PlayerStats;
     using Microsoft.AspNetCore.Routing.Tree;
 
     public class ServiceAggregator
@@ -25,7 +30,6 @@ namespace FootballManager.Core.Services
         public readonly IManagerService managerService;
         public readonly IGameService gameService;
         public readonly ITeamService teamService;
-        public readonly IPlayerService playerService;
         public readonly IInboxService inboxService;
         public readonly IFixtureService fixtureService;
         public readonly IDayService dayService;
@@ -35,13 +39,18 @@ namespace FootballManager.Core.Services
         public readonly IMatchService matchService;
         public readonly ITransferService transferService;
         public readonly IGameOptionService gameOptionsService;
+        public readonly IPlayerDataService playerDataService;
+        public readonly IPlayerGeneratorService playerGeneratorService;
+        public readonly IPlayerModelService playerModelService;
+        public readonly IPlayerSorterService playerSorterService;
+        public readonly IPlayerStatsService playerStatsService;
+
         public ServiceAggregator(
             IGameService gameService,
             IManagerService managerService,
             ICommonService commonService,
             IValidationService validationService,
             ITeamService teamService,
-            IPlayerService playerService,
             IInboxService inboxService,
             IFixtureService fixtureService,
             IDayService dayService,
@@ -50,7 +59,12 @@ namespace FootballManager.Core.Services
             ILeagueService leagueService,
             IMatchService matchService,
             ITransferService transferService,
-            IGameOptionService gameOptionsService
+            IGameOptionService gameOptionsService,
+            IPlayerDataService playerDataService,
+            IPlayerGeneratorService playerGeneratorService,
+            IPlayerModelService playerModelService,
+            IPlayerSorterService playerSorterService,
+            IPlayerStatsService playerStatsService
             )
         {
             this.managerService = managerService;
@@ -58,7 +72,6 @@ namespace FootballManager.Core.Services
             this.validationService = validationService;
             this.gameService = gameService;
             this.teamService = teamService;
-            this.playerService = playerService;
             this.inboxService = inboxService;
             this.fixtureService = fixtureService;
             this.dayService = dayService;
@@ -67,7 +80,13 @@ namespace FootballManager.Core.Services
             this.leagueService = leagueService;
             this.matchService = matchService;
             this.transferService = transferService;
-            this.gameOptionsService= gameOptionsService;
+            this.gameOptionsService = gameOptionsService;
+            this.playerStatsService= playerStatsService;
+            this.playerGeneratorService = playerGeneratorService;
+            this.playerSorterService = playerSorterService;
+            this.playerStatsService= playerStatsService;
+            this.playerSorterService= playerSorterService;
+            
         }
     }
 }

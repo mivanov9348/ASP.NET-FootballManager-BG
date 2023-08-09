@@ -48,7 +48,7 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             bool isValid = serviceAggregator.validationService.BuyValidator(id, currentTeam);
-            var currPl = await serviceAggregator.playerService.GetPlayerById(id);
+            var currPl = await serviceAggregator.playerDataService.GetPlayerById(id);
 
             if (isValid)
             {
@@ -72,7 +72,7 @@
         public async Task<IActionResult> ConfirmationTransfer(int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var currPl = await serviceAggregator.playerService.GetPlayerById(id);
+            var currPl = await serviceAggregator.playerDataService.GetPlayerById(id);
             return View(new TransferViewModel
             {
                 CurrentTeam = currentTeam,
@@ -86,7 +86,7 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             bool isValid = serviceAggregator.validationService.SellValidator(currentTeam);
-            var currPlayers = await serviceAggregator.playerService.GetPlayersByTeam(currentTeam.Id);
+            var currPlayers = await serviceAggregator.playerDataService.GetPlayersByTeam(currentTeam.Id);
 
             if (isValid)
             {
@@ -104,7 +104,7 @@
         public async Task<IActionResult> TeamSquad()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var currPlayers = await serviceAggregator.playerService.GetPlayersByTeam(currentTeam.Id);
+            var currPlayers = await serviceAggregator.playerDataService.GetPlayersByTeam(currentTeam.Id);
             var model = serviceAggregator.teamService.GetTeamViewModel(currPlayers.OrderBy(x => x.PositionId).ToList(), currentTeam);
 
             return View(model);

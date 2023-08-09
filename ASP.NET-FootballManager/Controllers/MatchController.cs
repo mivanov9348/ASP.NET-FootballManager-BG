@@ -56,8 +56,8 @@
         public async Task<IActionResult> Tactics()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var clubStartingEleven = await serviceAggregator.playerService.GetStartingEleven(currentTeam.Id);
-            var clubSubstitutes = await serviceAggregator.playerService.GetSubstitutes(currentTeam.Id);
+            var clubStartingEleven = await serviceAggregator.playerDataService.GetStartingEleven(currentTeam.Id);
+            var clubSubstitutes = await serviceAggregator.playerDataService.GetSubstitutes(currentTeam.Id);
             var positions = await serviceAggregator.commonService.GetAllPositions();
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
@@ -136,13 +136,13 @@
             if (currentMatch.Turn == 1)
             {
                 var homeTeam = await serviceAggregator.teamService.GetTeamById(currentFixture.HomeTeamId);
-                player = await serviceAggregator.playerService.GetRandomPlayer(homeTeam);
+                player = await serviceAggregator.playerDataService.GetRandomPlayer(homeTeam);
                 serviceAggregator.matchService.PlayerAction(homeTeam, player, currentMatch);
             }
             else
             {
                 var awayTeam = await serviceAggregator.teamService.GetTeamById(currentFixture.AwayTeamId);
-                player = await serviceAggregator.playerService.GetRandomPlayer(awayTeam);
+                player = await serviceAggregator.playerDataService.GetRandomPlayer(awayTeam);
                 serviceAggregator.matchService.PlayerAction(awayTeam, player, currentMatch);
             }
 
@@ -181,12 +181,12 @@
         }
         public IActionResult AddToStartingEleven(int id)
         {
-            serviceAggregator.playerService.Substitution(id, "Add");
+            serviceAggregator.playerStatsService.Substitution(id, "Add");
             return RedirectToAction("Tactics");
         }
         public IActionResult RemoveFromStartingEleven(int id)
         {
-            serviceAggregator.playerService.Substitution(id, "Remove");
+            serviceAggregator.playerStatsService.Substitution(id, "Remove");
             return RedirectToAction("Tactics");
         }
 

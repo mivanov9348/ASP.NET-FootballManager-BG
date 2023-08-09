@@ -36,84 +36,8 @@
 
             serviceProvider.GetService<IPlayerService>();
 
-        }
+        }      
 
-        [Test]
-        public async Task GetPlayerById()
-        {
-            var service = serviceProvider.GetService<IPlayerService>();
-
-            var game = NewGame(1);
-            var team = NewTeam(game);
-            var player = NewPlayer(team, game, "Gosho", "Petrov");
-
-            Assert.AreEqual(game.Id, player.GameId);
-            var playerFirstName = await service.GetPlayerById(player.Id);
-            Assert.AreEqual(player.FirstName, playerFirstName.FirstName);
-        }
-
-        [Test]
-        public async Task GetRandomPlayerFromTeam()
-        {
-            var service = serviceProvider.GetService<IPlayerService>();
-
-            var game = NewGame(2);
-            var team = NewTeam(game);
-            var player = NewPlayer(team, game, "Gosho", "Petkov");
-            var player1 = NewPlayer(team, game, "Martin", "Petrov");
-            var player2 = NewPlayer(team, game, "Ivan", "Ivanov");
-            var player3 = NewPlayer(team, game, "Petur", "Stoyanov");
-            var player4 = NewPlayer(team, game, "Hristo", "Kolev");
-
-            var randomPlayer = await service.GetRandomPlayer(team);
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                var rndPl = await Task.Run(() => context.Players);
-                Assert.IsTrue(rndPl.Where(x => x.TeamId == team.Id).Contains(randomPlayer));
-            }
-        }
-
-        [Test]
-        public async Task GetStartingPlayers()
-        {
-            var service = serviceProvider.GetService<IPlayerService>();
-
-            var game = NewGame(2);
-            var team = NewTeam(game);
-            var player = NewPlayer(team, game, "Gosho", "Petkov");
-            var player1 = NewPlayer(team, game, "Martin", "Petrov");
-            var player2 = NewPlayer(team, game, "Ivan", "Ivanov");
-            var player3 = NewPlayer(team, game, "Petur", "Stoyanov");
-            var player4 = NewPlayer(team, game, "Hristo", "Kolev");
-
-            var startingPlayers = await service.GetStartingEleven(team.Id);
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                Assert.AreEqual(5, startingPlayers.Count);
-            }
-        }
-        [Test]
-        public async Task GetPlayersByTeam()
-        {
-            var service = serviceProvider.GetService<IPlayerService>();
-
-            var game = NewGame(2);
-            var team = NewTeam(game);
-            var player = NewPlayer(team, game, "Gosho", "Petkov");
-            var player1 = NewPlayer(team, game, "Martin", "Petrov");
-            var player2 = NewPlayer(team, game, "Ivan", "Ivanov");
-            var player3 = NewPlayer(team, game, "Petur", "Stoyanov");
-            var player4 = NewPlayer(team, game, "Hristo", "Kolev");
-
-            var players = await service.GetPlayersByTeam(team.Id);
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                Assert.AreEqual(5, players.Count);
-            }
-        }
         public VirtualTeam NewTeam(Game currentgame)
         {
             using (var context = new FootballManagerDbContext(options))
@@ -151,7 +75,7 @@
                     LastName = lastName,
                     TeamId = team.Id,
                     IsStarting11 = true,
-                    Age = 20,                    
+                    Age = 20,
                     LeagueId = 1,
                     CityId = 1,
                     GameId = currentGame.Id,

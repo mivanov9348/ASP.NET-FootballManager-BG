@@ -90,9 +90,9 @@
                 serviceAggregator.euroCupService.DistributionEuroParticipant(currentGame);
                 serviceAggregator.fixtureService.GenerateEuroFixtures(currentGame);
                 //GeneratePlayersAndTeamOverall
-                teams.ForEach(x => serviceAggregator.playerService.GeneratePlayers(currentGame, x));
-                serviceAggregator.playerService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
-                serviceAggregator.playerService.CalculatingPlayersPrice(currentGame);
+                teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
+                serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
+                serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
                 teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
                 //GenerateLeagueFixtures
                 serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);

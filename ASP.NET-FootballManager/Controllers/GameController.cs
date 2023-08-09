@@ -17,7 +17,7 @@
         public async Task<IActionResult> SeasonStats(EndSeasonViewModel esvm)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var goalScorer = await serviceAggregator.playerService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
+            var goalScorer = await serviceAggregator.playerDataService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
             var teams = await serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
             var league = await serviceAggregator.leagueService.GetLeague(esvm.LeagueId);
             var euroCup = await serviceAggregator.euroCupService.GetEuropeanCup(esvm.EuroCupId);
@@ -55,10 +55,10 @@
             serviceAggregator.fixtureService.GenerateCupFixtures(CurrentGame);
             serviceAggregator.euroCupService.DistributionEuroParticipant(CurrentGame);
             serviceAggregator.fixtureService.GenerateEuroFixtures(CurrentGame);
-            serviceAggregator.playerService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgentsEachClub.gk, DataConstants.FreeAgentsEachClub.df, DataConstants.FreeAgentsEachClub.mf, DataConstants.FreeAgentsEachClub.st);
-            serviceAggregator.playerService.CalculatingPlayersPrice(CurrentGame);
+            serviceAggregator.playerGeneratorService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgentsEachClub.gk, DataConstants.FreeAgentsEachClub.df, DataConstants.FreeAgentsEachClub.mf, DataConstants.FreeAgentsEachClub.st);
+            serviceAggregator.playerStatsService.CalculatingPlayersPrice(CurrentGame);
            // playerService.UpdateAttributes(CurrentGame);
-            serviceAggregator.playerService.ResetPlayerStats(CurrentGame);
+            serviceAggregator.playerStatsService.ResetPlayerStats(CurrentGame);
             serviceAggregator.teamService.ResetTeams(CurrentGame);
             serviceAggregator.inboxService.NewSeasonNews(CurrentGame);
 

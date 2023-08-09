@@ -144,7 +144,7 @@
         public IActionResult PlayersStats(PlayersViewModel pvm, int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            pvm = serviceAggregator.playerService.SortingPlayers(pvm.PlayerSorting, id, CurrentGame);
+            pvm = serviceAggregator.playerSorterService.SortingPlayers(pvm.PlayerSorting, id, CurrentGame);
             return View(pvm);
         }
         public async Task<IActionResult> TeamStats()
@@ -156,7 +156,7 @@
             {
                 Team = originalTeam,
                 CurrentTeam = currentTeam,
-                Players = await serviceAggregator.playerService.GetPlayersByTeam(currentTeam.Id),
+                Players = await serviceAggregator.playerDataService.GetPlayersByTeam(currentTeam.Id),
                 Nations = await serviceAggregator.commonService.GetAllNations(),
                 Teams = await serviceAggregator.teamService.GetAllVirtualTeams(CurrentGame),
                 Cities = await serviceAggregator.commonService.GetAllCities(),
@@ -168,9 +168,9 @@
         public async Task<IActionResult> PlayerDetails(int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var currentPlayer = await serviceAggregator.playerService.GetPlayerById(id);
+            var currentPlayer = await serviceAggregator.playerDataService.GetPlayerById(id);
 
-            var model = this.serviceAggregator.playerService.PlayerDetailsViewModel(currentPlayer, CurrentGame);
+            var model = this.serviceAggregator.playerModelService.PlayerDetailsViewModel(currentPlayer, CurrentGame);
 
             return View(model);
         }
