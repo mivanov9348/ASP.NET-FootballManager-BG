@@ -7,13 +7,11 @@
     public class PlayerAttributeService : IPlayerAttributeService
     {
         private readonly FootballManagerDbContext data;
-        private readonly PlayerAttributeHelpersService helpers;
         private Random rnd;
-        public PlayerAttributeService(FootballManagerDbContext data, PlayerAttributeHelpersService helpers)
+        public PlayerAttributeService(FootballManagerDbContext data)
         {
             this.data = data;
             this.rnd = new Random();
-            this.helpers = helpers;
         }
 
         public PlayerAttribute CalculatePlayerAttributes(Player player)
@@ -84,7 +82,7 @@
             this.data.PlayerAttributes.Add(newPlayerAttribute);
 
             newPlayerAttribute.PlayerId = player.Id;
-            helpers.AddWeights(newPlayerAttribute, player.Position.Order);
+            AddWeights(newPlayerAttribute, player.Position.Order);
             this.data.SaveChanges();
             return newPlayerAttribute;
         }
@@ -108,37 +106,86 @@
 
             player.Overall = Math.Round(result, 2, MidpointRounding.ToEven);
         }
+        public PlayerAttribute AddWeights(PlayerAttribute attributes, int positionOrder)
+        {
+            switch (positionOrder)
+            {
+                case 1:
+                    attributes.OneOnOneWeight = (40 * 20) / 100.0;
+                    attributes.ReflexesWeight = (60 * 20) / 100.0;
+                    break;
+                case 2:
+                    attributes.FinishingWeight = (6 * 20) / 100.0;
+                    attributes.PassingWeight = (6 * 20) / 100.0;
+                    attributes.HeadingWeight = (16 * 20) / 100.0;
+                    attributes.TacklingWeight = (16 * 20) / 100.0;
+                    attributes.PositioningWeight = (16 * 20) / 100.0;
+                    attributes.PaceWeight = (6 * 20) / 100.0;
+                    attributes.StaminaWeight = (6 * 20) / 100.0;
+                    attributes.StrengthWeight = (16 * 20) / 100.0;
+                    attributes.DribblingWeight = (6 * 20) / 100.0;
+                    attributes.BallControllWeight = (6 * 20) / 100.0;
+                    break;
+                case 3:
+                    attributes.FinishingWeight = (4 * 20) / 100.0;
+                    attributes.PassingWeight = (14 * 20) / 100.0;
+                    attributes.HeadingWeight = (4 * 20) / 100.0;
+                    attributes.TacklingWeight = (4 * 20) / 100.0;
+                    attributes.PositioningWeight = (14 * 20) / 100.0;
+                    attributes.PaceWeight = (4 * 20) / 100.0;
+                    attributes.StaminaWeight = (14 * 20) / 100.0;
+                    attributes.StrengthWeight = (14 * 20) / 100.0;
+                    attributes.DribblingWeight = (14 * 20) / 100.0;
+                    attributes.BallControllWeight = (14 * 20) / 100.0;
+                    break;
+                case 4:
+                    attributes.FinishingWeight = (14 * 20) / 100.0;
+                    attributes.PassingWeight = (4 * 20) / 100.0;
+                    attributes.HeadingWeight = (14 * 20) / 100.0;
+                    attributes.TacklingWeight = (4 * 20) / 100.0;
+                    attributes.PositioningWeight = (4 * 20) / 100.0;
+                    attributes.PaceWeight = (4 * 20) / 100.0;
+                    attributes.StaminaWeight = (14 * 20) / 100.0;
+                    attributes.StrengthWeight = (14 * 20) / 100.0;
+                    attributes.DribblingWeight = (14 * 20) / 100.0;
+                    attributes.BallControllWeight = (14 * 20) / 100.0;
+                    break;
+                default:
+                    break;
+            }
+
+            return attributes;
+        }
         public void UpdateAttributes(Game CurrentGame)
         {
-            // var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
-            //
-            // foreach (var player in allPlayers)
-            // {
-            //     player.Attack += player.Goals / 2;
-            //     player.Defense += player.Passes / 2;
-            //     player.Age += 1;
-            //
-            //     if (player.Position.Name == "Striker" || player.Position.Name == "Midlefielder" && player.Goals <= 5)
-            //     {
-            //         player.Attack -= 3;
-            //     }
-            //
-            //     if (player.Position.Name == "Defender" || player.Position.Name == "Goalkeeper" && player.Passes <= 5)
-            //     {
-            //         player.Defense -= 3;
-            //     }
-            //
-            //     if (player.Attack > 100)
-            //     {
-            //         player.Attack = 100;
-            //     }
-            //
-            //     if (player.Defense > 100)
-            //     {
-            //         player.Defense = 100;
-            //     }
-            // }
-            // this.data.SaveChanges();
+            var allPlayers = this.data.Players.Where(x => x.GameId == CurrentGame.Id).ToList();
+            var maxAttrStat = 20;
+
+            foreach (var player in allPlayers)
+            {
+                player.Age += 1;
+
+                var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
+
+                switch (player.Position.Order)
+                {
+                    case 1:
+
+                    case 2:
+
+                    case 3:
+
+                    case 4:
+
+                    default:
+                        break;
+                }
+
+
+
+
+            }
+            this.data.SaveChanges();
         }
     }
 }

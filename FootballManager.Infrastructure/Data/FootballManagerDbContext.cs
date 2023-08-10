@@ -14,6 +14,7 @@
         public DbSet<Team> Teams { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerAttribute> PlayerAttributes { get; set; }
+        public DbSet<PlayerStats> PlayerStats { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Game> Games { get; set; }

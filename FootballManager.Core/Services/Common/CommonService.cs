@@ -26,6 +26,7 @@
         public async Task<List<Player>> GetAllPlayers() => await Task.Run(() => this.data.Players.ToList());
         public async Task<List<Position>> GetAllPositions() => await Task.Run(() => this.data.Positions.ToList());
         public async Task<List<PlayerAttribute>> GetAllPlayersAttribute() => await Task.Run(() => this.data.PlayerAttributes.ToList());
+        public async Task<List<PlayerStats>> GetAllPlayersStats() => await Task.Run(() => this.data.PlayerStats.ToList());
 
     }
 }

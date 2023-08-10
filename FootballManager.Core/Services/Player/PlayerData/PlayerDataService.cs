@@ -3,6 +3,8 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.EntityFrameworkCore;
+
     public class PlayerDataService : IPlayerDataService
     {
         private Random rnd;
@@ -28,7 +30,8 @@
             }
 
             var currentComp = this.data.Leagues.FirstOrDefault(x => x.Id == leagueId);
-            return await Task.Run(() => this.data.Players.OrderByDescending(x => x.Goals).ThenByDescending(x => x.Matches).FirstOrDefault(x => x.GameId == CurrentGame.Id && x.LeagueId == leagueId));
+            var sortedPlayersByGoal = this.data.Players.Include(x => x.PlayerStats).OrderByDescending(x => x.PlayerStats.Goals).ThenByDescending(x => x.PlayerStats.Appearance);
+            return await Task.Run(() => sortedPlayersByGoal.FirstOrDefault(x => x.GameId == CurrentGame.Id && x.LeagueId == leagueId));
         }
         public async Task<List<Player>> GetStartingEleven(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.IsStarting11 == true && x.TeamId == teamId).ToList());
         public async Task<List<Player>> GetSubstitutes(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.IsStarting11 == false && x.TeamId == teamId).ToList());

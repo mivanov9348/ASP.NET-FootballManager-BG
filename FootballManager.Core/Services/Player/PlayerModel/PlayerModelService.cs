@@ -14,6 +14,7 @@
         public PlayerDetailsViewModel PlayerDetailsViewModel(Player currentPlayer, Game currentGame)
         {
             var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == currentPlayer.Id);
+            var playerStats = this.data.PlayerStats.FirstOrDefault(x=>x.PlayerId==currentPlayer.Id);
             var nations = this.data.Nations.ToList();
             var positions = this.data.Positions.ToList();
             var teams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id).ToList();
@@ -25,7 +26,7 @@
                 City = currentPlayer.Team.Name,
                 Position = positions.FirstOrDefault(x => x.Id == currentPlayer.PositionId).Name,
                 ImageUrl = currentPlayer.ProfileImage,
-                Goals = currentPlayer.Goals,
+                Goals = playerStats.Goals,
                 Overall = currentPlayer.Overall,
                 Nation = nations.FirstOrDefault(x => x.Id == currentPlayer.NationId).Name,
                 Team = teams.FirstOrDefault(x => x.Id == currentPlayer.TeamId).Name,

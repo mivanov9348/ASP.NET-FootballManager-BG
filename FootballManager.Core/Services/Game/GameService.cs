@@ -67,14 +67,17 @@
             var userManager = this.data.Managers.FirstOrDefault(x => x.UserId == UserId);
             var userGame = this.data.Games.FirstOrDefault(x => x.ManagerId == userManager.Id);
 
-            this.data.Matches.RemoveRange(this.data.Matches.Where(c => c.GameId == userGame.Id));
-            this.data.Players.RemoveRange(this.data.Players.Where(c => c.GameId == userGame.Id));
-            this.data.Fixtures.RemoveRange(this.data.Fixtures.Where(c => c.GameId == userGame.Id));
-            this.data.Inboxes.RemoveRange(this.data.Inboxes.Where(c => c.GameId == userGame.Id));
-            this.data.VirtualTeams.RemoveRange(this.data.VirtualTeams.Where(c => c.GameId == userGame.Id));
-            this.data.Days.RemoveRange(this.data.Days.Where(c => c.GameId == userGame.Id));
-            this.data.Games.RemoveRange(this.data.Games.Where(x => x.Id == userGame.Id));
-            this.data.Managers.RemoveRange(this.data.Managers.Where(x => x.Id == userManager.Id));
+            if (userGame != null)
+            {
+                this.data.Matches.RemoveRange(this.data.Matches.Where(c => c.GameId == userGame.Id));
+                this.data.Players.RemoveRange(this.data.Players.Where(c => c.GameId == userGame.Id));
+                this.data.Fixtures.RemoveRange(this.data.Fixtures.Where(c => c.GameId == userGame.Id));
+                this.data.Inboxes.RemoveRange(this.data.Inboxes.Where(c => c.GameId == userGame.Id));
+                this.data.VirtualTeams.RemoveRange(this.data.VirtualTeams.Where(c => c.GameId == userGame.Id));
+                this.data.Days.RemoveRange(this.data.Days.Where(c => c.GameId == userGame.Id));
+                this.data.Games.RemoveRange(this.data.Games.Where(x => x.Id == userGame.Id));
+                this.data.Managers.RemoveRange(this.data.Managers.Where(x => x.Id == userManager.Id));
+            }
             this.data.SaveChanges();
         }
     }

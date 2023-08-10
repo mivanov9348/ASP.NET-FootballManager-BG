@@ -11,7 +11,6 @@ namespace FootballManager.Core.Services
     using ASP.NET_FootballManager.Services.League;
     using ASP.NET_FootballManager.Services.Manager;
     using ASP.NET_FootballManager.Services.Match;
-    using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
@@ -21,8 +20,6 @@ namespace FootballManager.Core.Services
     using FootballManager.Core.Services.Player.PlayerModel;
     using FootballManager.Core.Services.Player.PlayerSorter;
     using FootballManager.Core.Services.Player.PlayerStats;
-    using Microsoft.AspNetCore.Routing.Tree;
-
     public class ServiceAggregator
     {
         public readonly ICommonService commonService;

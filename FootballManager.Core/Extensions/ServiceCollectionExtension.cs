@@ -9,13 +9,17 @@
     using ASP.NET_FootballManager.Services.League;
     using ASP.NET_FootballManager.Services.Manager;
     using ASP.NET_FootballManager.Services.Match;
-    using ASP.NET_FootballManager.Services.Player;
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services;
     using FootballManager.Core.Services.Attribute;
     using FootballManager.Core.Services.GameOption;
+    using FootballManager.Core.Services.Player.PlayerData;
+    using FootballManager.Core.Services.Player.PlayerGenerator;
+    using FootballManager.Core.Services.Player.PlayerModel;
+    using FootballManager.Core.Services.Player.PlayerSorter;
+    using FootballManager.Core.Services.Player.PlayerStats;
     using FootballManager.Core.Services.PlayerProbability;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -29,7 +33,6 @@
             services.AddScoped<IValidationService, ValidationService>();
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<ILeagueService, LeagueService>();
-            services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IMatchService, MatchService>();
             services.AddScoped<ITransferService, TransferService>();
@@ -38,11 +41,15 @@
             services.AddScoped<IEuroCupService, EuroCupService>();
             services.AddScoped<IDayService, DayService>();
             services.AddScoped<ICupService, CupService>();
-            services.AddScoped<IPlayerAttributeService, PlayerAttributeService>();
-            services.AddScoped<PlayerAttributeHelpersService>();
+            services.AddScoped<IPlayerAttributeService, PlayerAttributeService>();        
             services.AddScoped<IPlayerProbability, PlayerProbability>();
-            services.AddScoped<IGameOptionService, GameOptionService>();
-            services.AddScoped<ServiceAggregator>();
+            services.AddScoped<IGameOptionService, GameOptionService>();           
+            services.AddScoped<IPlayerDataService,PlayerDataService>();
+            services.AddScoped<IPlayerGeneratorService, PlayerGeneratorService>();
+            services.AddScoped<IPlayerModelService, PlayerModelService>();
+            services.AddScoped<IPlayerSorterService, PlayerSorterService>();
+            services.AddScoped<IPlayerStatsService, PlayerStatsService>();
+            services.AddScoped<ServiceAggregator>();        
 
             return services;
         }

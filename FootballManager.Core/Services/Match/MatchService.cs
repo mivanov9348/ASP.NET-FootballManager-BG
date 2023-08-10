@@ -9,20 +9,24 @@
     using FootballManager.Infrastructure.Data.Constant;
     using FootballManager.Core.Services.PlayerProbability;
     using FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Services.Player.PlayerStats;
+    using Microsoft.EntityFrameworkCore;
 
     public class MatchService : IMatchService
     {
         private readonly FootballManagerDbContext data;
         private readonly MatchMessages.Messages messages;
         private readonly IPlayerProbability playerProbability;
+        private readonly IPlayerStatsService playerStats;
         private readonly GameOption currentOption;
         private Random rnd;
-        public MatchService(FootballManagerDbContext data, IPlayerProbability playerProbability)
+        public MatchService(FootballManagerDbContext data, IPlayerProbability playerProbability, IPlayerStatsService playerStats)
         {
             rnd = new Random();
             this.data = data;
             this.messages = new MatchMessages.Messages();
             this.playerProbability = playerProbability;
+            this.playerStats = playerStats;
         }
 
         public async Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
@@ -104,6 +108,10 @@
         {
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
             var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
+            var playerStats = this.playerStats.GetPlayerStatsByPlayer(player);
+
+            var otherTeam = match.CurrentFixture.HomeTeam != team ? match.CurrentFixture.HomeTeam : match.CurrentFixture.AwayTeam;
+
             bool changePossesion = false;
 
             var maxProbability = playerProbability.CompareProbabilities(playerAttributes);
@@ -116,6 +124,7 @@
                     (string message, bool retainsPossession, bool isGoal) randomTacklingMessage = messages.TacklingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
                     match.SituationText = string.Format(randomTacklingMessage.message, $"{player.FirstName} {player.LastName}");
                     changePossesion = randomTacklingMessage.retainsPossession;
+                    playerStats.Tacklings += 1;
                     break;
                 case "Dribbling":
                     (string message, bool retainsPossession, bool isGoal) randomDribblingMessage = messages.DribblingMessages[rnd.Next(0, messages.DribblingMessages.Count)];
@@ -138,7 +147,7 @@
                     (string message, bool retainsPossession, bool isGoal) randomPassingMessage = messages.PassingMessages[rnd.Next(0, messages.PassingMessages.Count)];
                     match.SituationText = string.Format(randomPassingMessage.message, $"{player.FirstName} {player.LastName}");
                     changePossesion = randomPassingMessage.retainsPossession;
-                    player.Passes += 1;
+                    playerStats.Passes += 1;
                     break;
                 default:
                     break;
@@ -147,6 +156,7 @@
             if (isAGoal)
             {
                 Goal(player, match, team);
+                Conceded(otherTeam);
             }
 
             if (!changePossesion)
@@ -157,7 +167,9 @@
         }
         private void Goal(Player player, Match match, VirtualTeam team)
         {
-            player.Goals++;
+            var currentPlayerStats = this.playerStats.GetPlayerStatsByPlayer(player);
+            currentPlayerStats.Goals++;
+
             var isHomeTeam = match.CurrentFixture.HomeTeamId == team.Id;
             if (isHomeTeam)
             {
@@ -167,6 +179,13 @@
             {
                 match.CurrentFixture.AwayTeamGoal += 1;
             }
+            this.data.SaveChanges();
+        }
+        private void Conceded(VirtualTeam team)
+        {
+            var goalKeeper = this.data.Players.FirstOrDefault(x => x.TeamId == team.Id && x.Position.Order == 1 && x.IsStarting11 == true);
+            var goalkeeperStats = this.data.PlayerStats.FirstOrDefault(x => x.PlayerId == goalKeeper.Id);
+            goalkeeperStats.GoalsConceded += 1;
             this.data.SaveChanges();
         }
         private void ChangeTurn(Match match)

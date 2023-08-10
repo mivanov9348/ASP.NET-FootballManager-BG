@@ -65,7 +65,8 @@
             for (int i = 0; i < teamGoals; i++)
             {
                 var player = playersWithoutGk[rnd.Next(0, playersWithoutGk.Count)];
-                player.Goals += 1;
+                var currentPlayerStats = this.data.PlayerStats.FirstOrDefault(x => x.PlayerId == player.Id);
+                currentPlayerStats.Goals += 1;
             }
 
             this.data.SaveChanges();

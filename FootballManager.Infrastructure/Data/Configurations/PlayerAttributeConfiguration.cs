@@ -5,15 +5,15 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using System.Reflection.Emit;
 
-    public class AttributeConfiguration : IEntityTypeConfiguration<PlayerAttribute>
+    public class PlayerAttributeConfiguration : IEntityTypeConfiguration<PlayerStats>
     {
-        public void Configure(EntityTypeBuilder<PlayerAttribute> builder)
+        public void Configure(EntityTypeBuilder<PlayerStats> builder)
         {
             builder.HasKey(x => x.Id);
 
             builder.HasOne(a => a.Player)
-                   .WithOne(p => p.PlayerAttributes)
-                   .HasForeignKey<PlayerAttribute>(a => a.PlayerId);
+                   .WithOne(p => p.PlayerStats)
+                   .HasForeignKey<PlayerStats>(a => a.PlayerId);
         }
     }
 }

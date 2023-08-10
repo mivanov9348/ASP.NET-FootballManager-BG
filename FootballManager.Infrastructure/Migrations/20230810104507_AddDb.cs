@@ -638,9 +638,6 @@ namespace FootballManager.Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    Matches = table.Column<int>(type: "int", nullable: false),
-                    Goals = table.Column<int>(type: "int", nullable: false),
-                    Passes = table.Column<int>(type: "int", nullable: false),
                     Overall = table.Column<double>(type: "float", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     IsStarting11 = table.Column<bool>(type: "bit", nullable: false),
@@ -652,7 +649,8 @@ namespace FootballManager.Infrastructure.Migrations
                     TeamId = table.Column<int>(type: "int", nullable: false),
                     LeagueId = table.Column<int>(type: "int", nullable: true),
                     GameId = table.Column<int>(type: "int", nullable: false),
-                    AttributesId = table.Column<int>(type: "int", nullable: false)
+                    PlayerAttributesId = table.Column<int>(type: "int", nullable: false),
+                    PlayerStatsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -762,6 +760,30 @@ namespace FootballManager.Infrastructure.Migrations
                     table.PrimaryKey("PK_PlayerAttributes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PlayerAttributes_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlayerStats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    Appearance = table.Column<int>(type: "int", nullable: false),
+                    Goals = table.Column<int>(type: "int", nullable: false),
+                    Passes = table.Column<int>(type: "int", nullable: false),
+                    GoalsConceded = table.Column<int>(type: "int", nullable: false),
+                    Tacklings = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayerStats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlayerStats_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
@@ -956,6 +978,12 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlayerStats_PlayerId",
+                table: "PlayerStats",
+                column: "PlayerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Teams_CityId",
                 table: "Teams",
                 column: "CityId");
@@ -1039,6 +1067,9 @@ namespace FootballManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PlayerAttributes");
+
+            migrationBuilder.DropTable(
+                name: "PlayerStats");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

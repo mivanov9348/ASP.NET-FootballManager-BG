@@ -2,15 +2,19 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Services;
+    using FootballManager.Core.Services.Player.PlayerStats;
     using System.Collections.Generic;
 
     public class LeagueService : ILeagueService
     {
         private readonly FootballManagerDbContext data;    
+        private readonly IPlayerStatsService playerStatsService;
         private Random rnd;
-        public LeagueService(FootballManagerDbContext data)
+        public LeagueService(FootballManagerDbContext data, IPlayerStatsService playerStatsService)
         {
             this.rnd = new Random();
+            this.playerStatsService = playerStatsService;
             this.data = data;
         }
         public async Task<List<League>> GetAllLeagues() => await Task.Run(() => this.data.Leagues.ToList());
@@ -131,7 +135,8 @@
             for (int i = 0; i < Goals; i++)
             {
                 var player = playersWithoutGk[rnd.Next(0, playersWithoutGk.Count)];
-                player.Goals += 1;
+                var currentPlayerStats = this.playerStatsService.GetPlayerStatsByPlayer(player);
+                currentPlayerStats.Goals += 1;
             }
 
             this.data.SaveChanges();

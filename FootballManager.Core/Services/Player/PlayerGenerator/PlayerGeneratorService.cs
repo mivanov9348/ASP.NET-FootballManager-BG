@@ -10,14 +10,14 @@
     public class PlayerGeneratorService : IPlayerGeneratorService
     {
         private readonly FootballManagerDbContext data;
-        private readonly IPlayerStatsService playerStats;
+        private readonly IPlayerStatsService playerStatsService;
         private readonly IPlayerDataService playerDataService;
-        private readonly IPlayerAttributeService playerAttribute;
-        public PlayerGeneratorService(FootballManagerDbContext data, IPlayerStatsService playerStats, IPlayerAttributeService playerAttribute, IPlayerDataService playerDataService)
+        private readonly IPlayerAttributeService playerAttributeService;
+        public PlayerGeneratorService(FootballManagerDbContext data, IPlayerStatsService playerStatsService, IPlayerAttributeService playerAttributeService, IPlayerDataService playerDataService)
         {
             this.data = data;
-            this.playerStats = playerStats;
-            this.playerAttribute = playerAttribute;
+            this.playerStatsService = playerStatsService;
+            this.playerAttributeService = playerAttributeService;
             this.playerDataService = playerDataService;
         }
         public void GeneratePlayers(Game game, VirtualTeam team)
@@ -32,8 +32,8 @@
             for (int i = 0; i < count; i++)
             {
                 var positionType = this.data.Positions.FirstOrDefault(x => x.Order == positionOrder);
-                (string firstName, string lastName) = playerStats.getPlayerNames(team);
-                (City city, int age, Nation nation) = playerStats.getPlayerInfo(team);
+                (string firstName, string lastName) = this.playerStatsService.getPlayerNames(team);
+                (City city, int age, Nation nation) = this.playerStatsService.getPlayerInfo(team);
 
                 var newPlayer = new Player
                 {
@@ -49,26 +49,25 @@
                     PositionId = positionType.Id,
                     Team = team,
                     TeamId = team.Id,
-                    Matches = 0,
-                    Goals = 0,
-                    Passes = 0,
                     Game = game,
                     GameId = game.Id,
                     IsStarting11 = true,
                     FreeAgent = false
                 };
                 this.data.Players.Add(newPlayer);
-                playerStats.GetProfileImage(newPlayer);
+                this.playerStatsService.GetProfileImage(newPlayer);
 
-                var playerAttributes = playerAttribute.CalculatePlayerAttributes(newPlayer);
+                var playerAttributes = playerAttributeService.CalculatePlayerAttributes(newPlayer);
+                var playerStats = this.playerStatsService.CreatePlayerStats(newPlayer);
 
-                newPlayer.AttributesId = playerAttributes.Id;
-                playerAttribute.CalculateOverall(newPlayer);
+                newPlayer.PlayerAttributesId = playerAttributes.Id;
+                newPlayer.PlayerStatsId = playerStats.Id;
+
+                playerAttributeService.CalculateOverall(newPlayer);
 
                 this.data.SaveChanges();
-            }
+            }   
         }
-
         public void CreateFreeAgents(Game game, int gk, int df, int mf, int st)
         {
             var freeAgentsTeam = this.data.VirtualTeams.FirstOrDefault(x => x.IsPlayable == false && x.Name == "FreeAgents");
@@ -91,12 +90,11 @@
                 FillFreeAgents(4, freeAgentsTeam);
             }
         }
-
         public void FillFreeAgents(int positionOrder, VirtualTeam team)
         {
             var positionType = this.data.Positions.FirstOrDefault(x => x.Order == positionOrder);
-            (string FirstName, string LastName) = playerStats.getPlayerNames(team);
-            (City city, int age, Nation nation) = playerStats.getPlayerInfo(team);
+            (string FirstName, string LastName) = this.playerStatsService.getPlayerNames(team);
+            (City city, int age, Nation nation) = this.playerStatsService.getPlayerInfo(team);
             var currentGame = this.data.Games.FirstOrDefault(x => x.Id == team.GameId);
 
             var newPlayer = new Player
@@ -112,9 +110,6 @@
                 PositionId = positionType.Id,
                 Team = team,
                 TeamId = team.Id,
-                Matches = 0,
-                Goals = 0,
-                Passes = 0,
                 Game = currentGame,
                 GameId = currentGame.Id,
                 IsStarting11 = true,
@@ -123,11 +118,14 @@
             this.data.Players.Add(newPlayer);
             this.data.SaveChanges();
 
-            var playerAttributes = playerAttribute.CalculatePlayerAttributes(newPlayer);
-            playerAttributes.PlayerId = newPlayer.Id;
-            playerAttribute.CalculateOverall(newPlayer);
+            var playerAttributes = this.playerAttributeService.CalculatePlayerAttributes(newPlayer);
+            var playerStats = this.playerStatsService.CreatePlayerStats(newPlayer);
 
-            playerStats.GetProfileImage(newPlayer);
+            newPlayer.PlayerAttributesId = playerAttributes.Id;
+            newPlayer.PlayerStatsId = playerStats.Id;
+
+            this.playerAttributeService.CalculateOverall(newPlayer);
+            this.playerStatsService.GetProfileImage(newPlayer);
 
             this.data.SaveChanges();
         }

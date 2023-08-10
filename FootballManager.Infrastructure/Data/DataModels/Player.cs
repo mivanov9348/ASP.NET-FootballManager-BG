@@ -11,10 +11,7 @@
         [Required]
         public string LastName { get; set; }
         [Range(16, 35)]
-        public int Age { get; set; }
-        public int Matches { get; set; }
-        public int Goals { get; set; }
-        public int Passes { get; set; }
+        public int Age { get; set; }      
         public double Overall { get; set; }
         public double Price { get; set; }
         public bool IsStarting11 { get; set; }
@@ -32,7 +29,9 @@
         public League League { get; set; }
         public int GameId { get; set; }
         public Game Game { get; set; }
-        public int AttributesId { get; set; }
+        public int PlayerAttributesId { get; set; }
         public PlayerAttribute PlayerAttributes { get; set; }
+        public int PlayerStatsId { get; set; }
+        public PlayerStats PlayerStats { get; set; }
     }
 }

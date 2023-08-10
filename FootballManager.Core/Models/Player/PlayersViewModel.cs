@@ -18,7 +18,9 @@
         public double Overall { get; set; }
         public int Price { get; set; }
         public int Goals { get; set; }
-        public int CleanSheets { get; set; }
+        public int Passes { get; set; }
+        public int GoalConceded { get; set; }      
+        public int Tacklings { get; set; }      
         public PlayerAttribute currentPlAttr { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Nation> Nations { get; set; } = new List<Nation>();
@@ -26,6 +28,7 @@
         public List<Position> Positions { get; set; } = new List<Position>();
         public List<City> Cities { get; set; } = new List<City>();
         public List<PlayerAttribute> AllPlayerAttributes { get; set; } = new List<PlayerAttribute>();
+        public List<PlayerStats> AllPlayerStats { get; set; } = new List<PlayerStats>();
 
 
 

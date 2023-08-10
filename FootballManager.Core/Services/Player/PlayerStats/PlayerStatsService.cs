@@ -4,6 +4,7 @@
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Data.Database.ImportDto;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Newtonsoft.Json;
     public class PlayerStatsService : IPlayerStatsService
     {
@@ -96,8 +97,12 @@
 
             foreach (var player in allPlayers)
             {
-                player.Goals = 0;
-                player.Passes = 0;
+                var currentPlayerStats = this.data.PlayerStats.FirstOrDefault(x => x.PlayerId == player.Id);
+                currentPlayerStats.Appearance = 0;
+                currentPlayerStats.Goals = 0;
+                currentPlayerStats.Passes = 0;
+                currentPlayerStats.GoalsConceded = 0;
+                currentPlayerStats.Tacklings = 0;
             }
 
             this.data.SaveChanges();
@@ -131,6 +136,22 @@
             }
 
             this.data.SaveChanges();
+        }
+        public PlayerStats GetPlayerStatsByPlayer(Player player) => this.data.PlayerStats.FirstOrDefault(x => x.PlayerId == player.Id);
+        public PlayerStats CreatePlayerStats(Player player)
+        {
+            var newPlayerStats = new PlayerStats
+            {
+                PlayerId = player.Id,
+                Appearance = 0,
+                Goals = 0,
+                Passes = 0,
+                GoalsConceded = 0,
+                Tacklings = 0
+            };
+            this.data.PlayerStats.Add(newPlayerStats);
+            this.data.SaveChanges();
+            return newPlayerStats;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace FootballManager.Core.Services.GameOption
 {
     using ASP.NET_FootballManager.Data;
+    using ASP.NET_FootballManager.Data.Constant;
     using FootballManager.Core.Models.GameOptions;
     using Infrastructure.Data.DataModels;
     using System.Security.Claims;
@@ -11,6 +12,17 @@
         public GameOptionService(FootballManagerDbContext data)
         {
             this.data = data;
+        }
+
+        public bool IsOptionsSet(string UserId)
+        {
+            var currentGameOptions = this.data.GameOptions.FirstOrDefault(x => x.UserId == UserId);
+
+            if (currentGameOptions != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void SaveOptions(ClaimsPrincipal user, GameOptionsViewModel model)
@@ -54,6 +66,24 @@
                 this.data.GameOptions.Add(newGameOptions);
             }
             this.data.SaveChanges();
+        }
+
+        public void SaveSampleOptions(string userId)
+        {
+            var newGameOptions = new GameOption
+            {
+                UserId = userId,
+                TimeInterval = DataConstants.Match.Timespan,
+                WinCoins = DataConstants.Prize.WinCoins,
+                DrawCoins = DataConstants.Prize.DrawCoins,
+                FirstPlaceCoins = DataConstants.Prize.FirstPlaceCoins,
+                SecondPlaceCoins = DataConstants.Prize.SecondPlaceCoins,
+                ThirdPlaceCoins = DataConstants.Prize.ThirdPlaceCoins,
+                StartingCoins = DataConstants.Prize.StartingCoins,
+                PlayerMaximumAge = DataConstants.Age.maxAge,
+                PlayerMinimumAge = DataConstants.Age.minAge
+            };
+            this.data.GameOptions.Add(newGameOptions);
         }
     }
 }

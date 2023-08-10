@@ -1,4 +1,4 @@
-﻿namespace FootballManager.Core.Services.Player.PlayerSorter
+﻿    namespace FootballManager.Core.Services.Player.PlayerSorter
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
@@ -36,7 +36,8 @@
                 Players = allPlayers,
                 Positions = this.data.Positions.ToList(),
                 Teams = this.data.VirtualTeams.ToList(),
-                AllPlayerAttributes = this.data.PlayerAttributes.ToList()
+                AllPlayerAttributes = this.data.PlayerAttributes.ToList(),
+                AllPlayerStats = this.data.PlayerStats.ToList(),
             };
 
             switch (sortBy)
@@ -49,12 +50,12 @@
                     break;
                 case PlayerSorting.CityName:
                     newModel.Players = allPlayers.OrderBy(x => x.City.Name).ThenByDescending(x => x.FirstName).ToList();
-                    break;
+                    break;            
                 case PlayerSorting.Goals:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Goals).ThenByDescending(x => x.FirstName).ToList();
+                    newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.Goals).ThenByDescending(x => x.FirstName).ToList();
                     break;
                 case PlayerSorting.Passes:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Passes).ThenByDescending(x => x.FirstName).ToList();
+                    newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.Passes).ThenByDescending(x => x.FirstName).ToList();
                     break;
                 case PlayerSorting.Overall:
                     newModel.Players = allPlayers.OrderByDescending(x => x.Overall).ThenByDescending(x => x.FirstName).ToList();

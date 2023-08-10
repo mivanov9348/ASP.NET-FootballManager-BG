@@ -110,7 +110,7 @@
             {
                 num++;
                 var currentAttr = Model.Attributes.FirstOrDefault(x => x.PlayerId == player.Id);
-
+                
                 <tr>
                     <th scope="row">@num</th>
                     <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
@@ -130,10 +130,7 @@
                     <td>@currentAttr.Strength</td>
                     <td>@currentAttr.Dribbling</td>
                     <td>@currentAttr.BallControll</td>
-                    <td style="color:indianred">@player.Overall</td>
-                    <td>@player.Goals</td>
-                    <td>@player.Passes</td>
-                    <td>@player.Passes</td>
+                    <td style="color:indianred">@player.Overall</td>                   
                 </tr>
             }
         </table>

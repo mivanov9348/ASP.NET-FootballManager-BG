@@ -3,14 +3,14 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
     using System.Security.Claims;
-    using ASP.NET_FootballManager.Models;  
+    using ASP.NET_FootballManager.Models;
     using FootballManager.Core.Services;
 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ServiceAggregator serviceAggregator;
-        private string UserId;
+        private string userId;
         public HomeController(ILogger<HomeController> logger,
             ServiceAggregator serviceAggregator)
         {
@@ -21,12 +21,12 @@
         {
             CurrentUser();
 
-            if (UserId == null)
+            if (userId == null)
             {
                 return View();
             }
 
-            bool isExistGame = serviceAggregator.gameService.isExistGame(UserId);
+            bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
             if (isExistGame)
             {
                 return View(new GameViewModel { ExistGame = true });
@@ -36,14 +36,14 @@
         public async Task<IActionResult> NewGame(int id)
         {
             CurrentUser();
-            serviceAggregator.gameService.isExistGame(UserId);
-            bool isExistGame = serviceAggregator.gameService.isExistGame(UserId);
+            serviceAggregator.gameService.isExistGame(userId);
+            bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
 
             if (isExistGame)
             {
                 if (id == 1)
                 {
-                    serviceAggregator.gameService.ResetSave(UserId);
+                    serviceAggregator.gameService.ResetSave(userId);
                     return View(new NewManagerViewModel
                     {
                         Nations = await serviceAggregator.commonService.GetAllNations(),
@@ -62,19 +62,25 @@
         public async Task<IActionResult> StartGame(NewManagerViewModel ngvm)
         {
             CurrentUser();
-            bool isExistGame = serviceAggregator.gameService.isExistGame(UserId);
+            bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
 
             if (isExistGame)
             {
-                serviceAggregator.managerService.DeleteCurrentManager(UserId);
+                serviceAggregator.managerService.DeleteCurrentManager(userId);
             }
 
             (bool isValid, string ErrorMessage) = serviceAggregator.validationService.NewManagerValidator(ngvm);
 
             if (isValid)
             {
+                //CreateOptions
+                var optionsExist = serviceAggregator.gameOptionsService.IsOptionsSet(userId);
+                if (!optionsExist)
+                {
+                    serviceAggregator.gameOptionsService.SaveSampleOptions(userId);
+                }
                 //CreateManager               
-                var currentManager = serviceAggregator.managerService.CreateNewManager(ngvm, UserId);
+                var currentManager = serviceAggregator.managerService.CreateNewManager(ngvm, userId);
                 var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager);
                 //CalculateDaysForSeason              
                 serviceAggregator.dayService.CalculateDays(currentGame);
@@ -116,7 +122,7 @@
         {
             if (this.User.Identity.IsAuthenticated != false)
             {
-                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
         }
 

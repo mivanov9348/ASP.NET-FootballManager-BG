@@ -453,9 +453,6 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<int>("AttributesId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
@@ -469,9 +466,6 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Goals")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsStarting11")
                         .HasColumnType("bit");
 
@@ -482,16 +476,16 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int?>("LeagueId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Matches")
-                        .HasColumnType("int");
-
                     b.Property<int>("NationId")
                         .HasColumnType("int");
 
                     b.Property<double>("Overall")
                         .HasColumnType("float");
 
-                    b.Property<int>("Passes")
+                    b.Property<int>("PlayerAttributesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerStatsId")
                         .HasColumnType("int");
 
                     b.Property<int>("PositionId")
@@ -845,6 +839,40 @@ namespace FootballManager.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("PlayerAttributes");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerStats", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Appearance")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Goals")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalsConceded")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Passes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tacklings")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
+
+                    b.ToTable("PlayerStats");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1384,6 +1412,17 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Player");
                 });
 
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerStats", b =>
+                {
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", "Player")
+                        .WithOne("PlayerStats")
+                        .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.PlayerStats", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1519,6 +1558,8 @@ namespace FootballManager.Infrastructure.Migrations
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", b =>
                 {
                     b.Navigation("PlayerAttributes");
+
+                    b.Navigation("PlayerStats");
                 });
 
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Position", b =>

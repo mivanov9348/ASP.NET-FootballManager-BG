@@ -8,5 +8,6 @@
         PlayerAttribute CalculatePlayerAttributes(Player Player);
         void CalculateOverall(Player player);
         void UpdateAttributes(Game CurrentGame);
+        PlayerAttribute AddWeights(PlayerAttribute attributes, int positionOrder);
     }
 }
