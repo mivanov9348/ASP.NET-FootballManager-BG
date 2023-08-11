@@ -91,12 +91,16 @@
         <select asp-for="PlayerSorting">
             <option style="color:red">Sort By</option>
             <option value="0">Name</option>
-            <option value="1">Team</option>
-            <option value="2">City</option>
-            <option value="3">Goals</option>
-            <option value="4">Passes</option>
-            <option value="5">Overall</option>
-            <option value="6">Price</option>
+            <option value="1">Position</option>
+            <option value="2">Age</option>
+            <option value="3">Team</option>
+            <option value="4">City</option>
+            <option value="5">Appearance</option>
+            <option value="6">Goal</option>
+            <option value="7">Passes</option>
+            <option value="8">Tacklings</option>
+            <option value="9">Goal Conceded</option>
+            <option value="10">Overall</option>
         </select>
 
         <input type="submit" value="Sort" asp-action="PlayersStats" />
@@ -127,6 +131,8 @@
                     <th scope="col">App</th>
                     <th scope="col">Gls</th>
                     <th scope="col">Pass</th>
+                    <th scope="col">Tck</th>
+                    <th scope="col">Gcd</th>
                 </tr>
                 @foreach (var player in @Model.Players)
                 {
@@ -157,6 +163,8 @@
                         <td>@currStats.Appearance</td>
                         <td>@currStats.Goals</td>
                         <td>@currStats.Passes</td>
+                        <td>@currStats.Tacklings</td>
+                        <td>@currStats.GoalsConceded</td>
                     </tr>
                 }
             </table>

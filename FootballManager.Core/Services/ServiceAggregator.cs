@@ -78,12 +78,14 @@ namespace FootballManager.Core.Services
             this.matchService = matchService;
             this.transferService = transferService;
             this.gameOptionsService = gameOptionsService;
-            this.playerStatsService= playerStatsService;
+            this.playerStatsService = playerStatsService;
             this.playerGeneratorService = playerGeneratorService;
             this.playerSorterService = playerSorterService;
-            this.playerStatsService= playerStatsService;
-            this.playerSorterService= playerSorterService;
-            
+            this.playerStatsService = playerStatsService;
+            this.playerSorterService = playerSorterService;
+            this.playerDataService = playerDataService;
+            this.playerModelService = playerModelService;
+
         }
     }
 }

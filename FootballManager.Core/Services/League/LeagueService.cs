@@ -8,7 +8,7 @@
 
     public class LeagueService : ILeagueService
     {
-        private readonly FootballManagerDbContext data;    
+        private readonly FootballManagerDbContext data;
         private readonly IPlayerStatsService playerStatsService;
         private Random rnd;
         public LeagueService(FootballManagerDbContext data, IPlayerStatsService playerStatsService)
@@ -52,10 +52,20 @@
                 var awayTeamGoal = GetTeamGoal(fixt.AwayTeamId);
                 SetFixtureGoal(fixt, homeTeamGoal, awayTeamGoal);
                 GetGoalScorers(fixt.HomeTeam, homeTeamGoal, fixt);
+                GetGoalConceded(fixt.AwayTeam, homeTeamGoal);
                 GetGoalScorers(fixt.AwayTeam, awayTeamGoal, fixt);
+                GetGoalConceded(fixt.HomeTeam, awayTeamGoal);
                 CheckWinner(homeTeamGoal, awayTeamGoal, fixt);
             }
         }
+
+        private void GetGoalConceded(VirtualTeam team, int goals)
+        {
+            var currentGoalkeeper = this.data.Players.FirstOrDefault(x => x.TeamId == team.Id && x.Position.Order == 1 && x.IsStarting11 == true);
+            currentGoalkeeper.PlayerStats.GoalsConceded += goals;
+            this.data.SaveChanges();
+        }
+
         private void SetFixtureGoal(Fixture fixt, int homeTeamGoal, int awayTeamGoal)
         {
             fixt.HomeTeamGoal = homeTeamGoal;
@@ -84,7 +94,7 @@
             var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
             var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
             var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentFixt.Day.CurrentDay && x.Year == currentFixt.Day.Year);
-            var currentGame = this.data.Games.FirstOrDefault(x=>x.Id== currentFixt.GameId);
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == currentFixt.GameId);
             var currentOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == currentGame.GameOptionId);
 
             currentFixt.IsPlayed = true;

@@ -1,4 +1,4 @@
-﻿    namespace FootballManager.Core.Services.Player.PlayerSorter
+﻿namespace FootballManager.Core.Services.Player.PlayerSorter
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
@@ -12,7 +12,7 @@
             this.data = data;
         }
 
-        public PlayersViewModel SortingPlayers(PlayerSorting sortBy, int id, Game currentGame)
+        public PlayersViewModel SortingPlayers(PlayerStatsSorting sortBy, int id, Game currentGame)
         {
             var allPlayers = new List<Player>();
 
@@ -42,26 +42,38 @@
 
             switch (sortBy)
             {
-                case PlayerSorting.FirstName:
+                case PlayerStatsSorting.FirstName:
                     newModel.Players = allPlayers.OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList();
                     break;
-                case PlayerSorting.TeamName:
+                case PlayerStatsSorting.Position:
                     newModel.Players = allPlayers.OrderBy(x => x.Team.Name).ThenByDescending(x => x.FirstName).ToList();
                     break;
-                case PlayerSorting.CityName:
+                case PlayerStatsSorting.Age:
+                    newModel.Players = allPlayers.OrderBy(x => x.Age).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerStatsSorting.TeamName:
+                    newModel.Players = allPlayers.OrderBy(x => x.Team.Name).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerStatsSorting.CityName:
                     newModel.Players = allPlayers.OrderBy(x => x.City.Name).ThenByDescending(x => x.FirstName).ToList();
-                    break;            
-                case PlayerSorting.Goals:
+                    break;
+                case PlayerStatsSorting.Appearance:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.Appearance).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerStatsSorting.Goals:
                     newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.Goals).ThenByDescending(x => x.FirstName).ToList();
                     break;
-                case PlayerSorting.Passes:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.Passes).ThenByDescending(x => x.FirstName).ToList();
+                case PlayerStatsSorting.Passes:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.Goals).ThenByDescending(x => x.FirstName).ToList();
                     break;
-                case PlayerSorting.Overall:
+                case PlayerStatsSorting.Tacklings:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.Tacklings).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerStatsSorting.GoalsConceding:
+                    newModel.Players = allPlayers.OrderByDescending(x => x.PlayerStats.GoalsConceded).ThenByDescending(x => x.FirstName).ToList();
+                    break;
+                case PlayerStatsSorting.Overall:
                     newModel.Players = allPlayers.OrderByDescending(x => x.Overall).ThenByDescending(x => x.FirstName).ToList();
-                    break;
-                case PlayerSorting.Price:
-                    newModel.Players = allPlayers.OrderByDescending(x => x.Price).ThenByDescending(x => x.FirstName).ToList();
                     break;
                 default:
                     newModel.Players = allPlayers.OrderByDescending(x => x.Team.Name).ToList();

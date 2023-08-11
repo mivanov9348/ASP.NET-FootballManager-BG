@@ -7,7 +7,7 @@
     public class PlayersViewModel
     {
         public int SortBy { get; set; }
-        public PlayerSorting PlayerSorting { get; set; }
+        public PlayerStatsSorting PlayerSorting { get; set; }
         public string FullName { get; set; }
         public string Nation { get; set; }
         public string City { get; set; }

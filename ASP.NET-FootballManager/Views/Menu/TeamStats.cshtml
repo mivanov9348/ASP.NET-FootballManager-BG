@@ -102,15 +102,16 @@
                 <th>Drb</th>
                 <th>Bcl</th>
                 <th>OVR</th>
+                <th>Appearance</th>
                 <th>Goals</th>
                 <th>Passes</th>
-                <th>Clean Sheets</th>
+                <th>Tacklings</th>
+                <th>Goal Conceded</th>
             </tr>
             @foreach (var player in @Model.Players)
             {
-                num++;
-                var currentAttr = Model.Attributes.FirstOrDefault(x => x.PlayerId == player.Id);
-                
+                num++;             
+
                 <tr>
                     <th scope="row">@num</th>
                     <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
@@ -118,19 +119,24 @@
                     <td>@player.Age</td>
                     <td>@player.Nation.Abbr</td>
                     <td>@player.City.Name</td>
-                    <td>@currentAttr.OneOnOne</td>
-                    <td>@currentAttr.Reflexes</td>
-                    <td>@currentAttr.Finishing</td>
-                    <td>@currentAttr.Passing</td>
-                    <td>@currentAttr.Heading</td>
-                    <td>@currentAttr.Tackling</td>
-                    <td>@currentAttr.Positioning</td>
-                    <td>@currentAttr.Pace</td>
-                    <td>@currentAttr.Stamina</td>
-                    <td>@currentAttr.Strength</td>
-                    <td>@currentAttr.Dribbling</td>
-                    <td>@currentAttr.BallControll</td>
-                    <td style="color:indianred">@player.Overall</td>                   
+                    <td>@player.PlayerAttributes.OneOnOne</td>
+                    <td>@player.PlayerAttributes.Reflexes</td>
+                    <td>@player.PlayerAttributes.Finishing</td>
+                    <td>@player.PlayerAttributes.Passing</td>
+                    <td>@player.PlayerAttributes.Heading</td>
+                    <td>@player.PlayerAttributes.Tackling</td>
+                    <td>@player.PlayerAttributes.Positioning</td>
+                    <td>@player.PlayerAttributes.Pace</td>
+                    <td>@player.PlayerAttributes.Stamina</td>
+                    <td>@player.PlayerAttributes.Strength</td>
+                    <td>@player.PlayerAttributes.Dribbling</td>
+                    <td>@player.PlayerAttributes.BallControll</td>
+                     <td style="color:indianred">@player.Overall</td>
+                    <td>@player.PlayerStats.Appearance</td>
+                    <td>@player.PlayerStats.Goals</td>
+                    <td>@player.PlayerStats.Passes</td>
+                    <td>@player.PlayerStats.Tacklings</td>
+                    <td>@player.PlayerStats.GoalsConceded</td>                 
                 </tr>
             }
         </table>

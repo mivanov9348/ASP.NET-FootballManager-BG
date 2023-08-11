@@ -162,7 +162,8 @@
                 Cities = await serviceAggregator.commonService.GetAllCities(),
                 Positions = await serviceAggregator.commonService.GetAllPositions(),
                 Leagues = await serviceAggregator.leagueService.GetAllLeagues(),
-                Attributes = await serviceAggregator.commonService.GetAllPlayersAttribute()
+                PlayerAttributes = await serviceAggregator.commonService.GetAllPlayersAttribute(),
+                PlayerStats = await serviceAggregator.commonService.GetAllPlayersStats()
             });
         }
         public async Task<IActionResult> PlayerDetails(int id)

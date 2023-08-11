@@ -14,6 +14,10 @@
             this.data = data;
         }
 
+        public CommonService()
+        {
+        }
+
         public (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo(string userId)
         {
             var currentManager = this.data.Managers.FirstOrDefault(x => x.UserId == userId);

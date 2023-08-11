@@ -110,8 +110,16 @@
             var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
             var playerStats = this.playerStats.GetPlayerStatsByPlayer(player);
 
-            var otherTeam = match.CurrentFixture.HomeTeam != team ? match.CurrentFixture.HomeTeam : match.CurrentFixture.AwayTeam;
-
+            var otherTeam = new VirtualTeam();
+            if (match.CurrentFixture.HomeTeam == team)
+            {
+                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == match.CurrentFixture.AwayTeamId);
+            }
+            else
+            {
+                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == match.CurrentFixture.HomeTeamId);
+            }
+            
             bool changePossesion = false;
 
             var maxProbability = playerProbability.CompareProbabilities(playerAttributes);
@@ -119,7 +127,6 @@
 
             switch (maxProbability)
             {
-
                 case "Tackling":
                     (string message, bool retainsPossession, bool isGoal) randomTacklingMessage = messages.TacklingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
                     match.SituationText = string.Format(randomTacklingMessage.message, $"{player.FirstName} {player.LastName}");

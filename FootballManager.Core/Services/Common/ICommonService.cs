@@ -10,6 +10,8 @@
         Task<List<City>> GetAllCities();
         Task<List<Player>> GetAllPlayers();
         Task<List<PlayerAttribute>> GetAllPlayersAttribute();
+        Task<List<PlayerStats>> GetAllPlayersStats();
+
         (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo(string userId);
     }
 }

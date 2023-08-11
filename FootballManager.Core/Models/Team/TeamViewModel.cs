@@ -15,8 +15,9 @@
         public List<Position> Positions { get; set; } = new List<Position>();
         public List<City> Cities { get; set; } = new List<City>();
         public List<League> Leagues { get; set; } = new List<League>();
-        public List<PlayerAttribute> Attributes { get; set; } = new List<PlayerAttribute>();
+        public List<PlayerAttribute> PlayerAttributes { get; set; } = new List<PlayerAttribute>();
 
+        public List<PlayerStats> PlayerStats { get; set; } = new List<PlayerStats>();
 
     }
 }
