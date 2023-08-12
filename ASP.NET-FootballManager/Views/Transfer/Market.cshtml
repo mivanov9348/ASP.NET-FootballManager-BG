@@ -81,11 +81,11 @@
             <input type="submit" class="squadBtn" asp-action="TeamSquad" value="Squad" />
             <p style="margin-top:5px;font-weight:bolder">Budget: @Model.CurrentTeam.Budget coins</p>
             <hr style="font-weight:bolder;margin-top:-12px" />
-            <input type="submit" asp-action="SortPlayers" asp-route-id="0" asp-route-positionOrder="@Model.PositionOrder" value="All" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="1" asp-route-positionOrder="@Model.PositionOrder" value="GK" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="2" asp-route-positionOrder="@Model.PositionOrder" value="DF" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="3" asp-route-positionOrder="@Model.PositionOrder" value="MF" />
-            <input type="submit" asp-route-action="SortPlayers" asp-route-id="4" asp-route-positionOrder="@Model.PositionOrder" value="ST" />
+            <input type="submit" asp-action="SortPlayers" asp-route-id="0" asp-route-positionOrder="0" value="All" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="1" value="GK" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="2" value="DF" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="3" value="MF" />
+            <input type="submit" asp-route-action="SortPlayers" asp-route-id="4" value="ST" />
         </div>
 
         <div class="FreeAgents">
@@ -125,18 +125,18 @@
                             <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-controller="Menu" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
                             <td>@player.Nation.Abbr</td>
                             <td>@player.Age</td>
-                            <td>@currentAttr.OneOnOne</td>
-                            <td>@currentAttr.Reflexes</td>
-                            <td>@currentAttr.Finishing</td>
-                            <td>@currentAttr.Passing</td>
-                            <td>@currentAttr.Heading</td>
-                            <td>@currentAttr.Tackling</td>
-                            <td>@currentAttr.Positioning</td>
-                            <td>@currentAttr.Pace</td>
-                            <td>@currentAttr.Stamina</td>
-                            <td>@currentAttr.Strength</td>
-                            <td>@currentAttr.Dribbling</td>
-                            <td>@currentAttr.BallControll</td>
+                            <td>@player.PlayerAttributes.OneOnOne</td>
+                            <td>@player.PlayerAttributes.Reflexes</td>
+                            <td>@player.PlayerAttributes.Finishing</td>
+                            <td>@player.PlayerAttributes.Passing</td>
+                            <td>@player.PlayerAttributes.Heading</td>
+                            <td>@player.PlayerAttributes.Tackling</td>
+                            <td>@player.PlayerAttributes.Positioning</td>
+                            <td>@player.PlayerAttributes.Pace</td>
+                            <td>@player.PlayerAttributes.Stamina</td>
+                            <td>@player.PlayerAttributes.Strength</td>
+                            <td>@player.PlayerAttributes.Dribbling</td>
+                            <td>@player.PlayerAttributes.BallControll</td>
                             <td>@player.Overall</td>
                             <td>@player.Price</td>
                             <td><input type="submit" value="Buy" asp-route-id="@player.Id" asp-action="ConfirmationTransfer" /></td>

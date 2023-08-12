@@ -26,47 +26,49 @@
         }
         public async Task<List<Player>> GetAllFreeAgents(int gameId, int orderId, Game Game, int positionOrder)
         {
-            var currentPlayers = this.data.Players.ToList();
+            var currentPlayers = this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true).ToList();
             switch (orderId)
             {
                 case 0:
-                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).ToList());
+                    return await Task.Run(() => currentPlayers);
                 case 1:
-                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == DataConstants.PositionOrder.Goalkeeper && x.GameId == Game.Id).ToList());
+                    return await Task.Run(() => currentPlayers.Where(x => x.PositionId == DataConstants.PositionOrder.Goalkeeper).ToList());
                 case 2:
-                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == DataConstants.PositionOrder.Defender && x.GameId == Game.Id).ToList());
-                case 3:                        
-                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == DataConstants.PositionOrder.Midlefielder && x.GameId == Game.Id).ToList());
-                case 4:                         
-                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == DataConstants.PositionOrder.Forward && x.GameId == Game.Id).ToList());
+                    return await Task.Run(() => currentPlayers.Where(x => x.PositionId == DataConstants.PositionOrder.Defender).ToList());
+                case 3:
+                    return await Task.Run(() => currentPlayers.Where(x => x.PositionId == DataConstants.PositionOrder.Midlefielder).ToList());
+                case 4:
+                    return await Task.Run(() => currentPlayers.Where(x => x.PositionId == DataConstants.PositionOrder.Forward).ToList());
                 case 5:
-                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
+                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Id == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
                 case 6:
-                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.Nation.Name).ToList());                
-                case 7:                   
-                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.Age).ToList());
-             //   case 8:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.one).ThenBy(x => x.LastName).ToList());
-             //   case 9:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 10:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 11:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 12:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 13:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 15:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 16:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 17:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 18:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
-             //   case 19:
-             //       return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList());
+                    return await Task.Run(() => currentPlayers.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderBy(x => x.Nation.Name).ToList());
+                case 7:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.Age).ToList());
+                case 8:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.PositionId == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.OneOnOne).ThenBy(x => x.FirstName).ToList());
+                case 9:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Reflexes).ThenBy(x => x.FirstName).ToList());
+                case 10:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Finishing).ThenBy(x => x.FirstName).ToList());
+                case 11:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Passing).ThenBy(x => x.FirstName).ToList());
+                case 12:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Heading).ThenBy(x => x.FirstName).ToList());
+                case 13:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Tackling).ThenBy(x => x.FirstName).ToList());
+                case 14:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Positioning).ThenBy(x => x.FirstName).ToList());
+                case 15:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Pace).ThenBy(x => x.FirstName).ToList());
+                case 16:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Stamina).ThenBy(x => x.FirstName).ToList());
+                case 17:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Strength).ThenBy(x => x.FirstName).ToList());
+                case 18:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.Dribbling).ThenBy(x => x.FirstName).ToList());
+                case 19:
+                    return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.Position.Order == positionOrder && x.GameId == Game.Id).OrderByDescending(x => x.PlayerAttributes.BallControll).ThenBy(x => x.FirstName).ToList());
                 case 20:
                     return await Task.Run(() => this.data.Players.Where(x => x.GameId == gameId && x.FreeAgent == true && x.GameId == Game.Id).OrderByDescending(x => x.Overall).ToList());
                 case 21:

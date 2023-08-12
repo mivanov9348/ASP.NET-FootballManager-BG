@@ -1,0 +1,106 @@
+﻿<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1, h2 {
+        text-align: center;
+    }
+
+    .teams-table, .fixtures-table {
+        width: 50%;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .teams-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .teams-container .team {
+            width: calc(50% - 10px);
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .draw-button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .draw-button:hover {
+            background-color: #0056b3;
+        }
+
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Team Draw System</title>
+</head>
+<body>
+    <h1>Team Draw System</h1>
+
+    <div class="teams-table">
+        <h2>Teams</h2>
+        <div class="teams-container">
+            <div class="team">Team 1</div>
+            <div class="team">Team 2</div>
+            <div class="team">Team 3</div>
+            <div class="team">Team 4</div>
+            <div class="team">Team 5</div>
+            <div class="team">Team 6</div>
+            <div class="team">Team 7</div>
+            <div class="team">Team 8</div>
+            <div class="team">Team 9</div>
+            <div class="team">Team 10</div>
+        </div>
+        <button class="draw-button">DRAW</button>
+    </div>
+
+    <div class="fixtures-table">
+        <h2>Fixtures</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Team 1</th>
+                    <th>Team 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Fixtures will be dynamically populated after draw -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

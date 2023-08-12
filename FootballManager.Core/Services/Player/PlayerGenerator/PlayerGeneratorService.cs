@@ -46,7 +46,7 @@
                     NationId = nation.Id,
                     LeagueId = team.LeagueId,
                     Position = positionType,
-                    PositionId = positionType.Id,
+                    PositionId = positionType.Id,                    
                     Team = team,
                     TeamId = team.Id,
                     Game = game,

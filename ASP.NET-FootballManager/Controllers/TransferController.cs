@@ -41,7 +41,7 @@
                 Positions = await serviceAggregator.commonService.GetAllPositions(),
                 PlayerAttributes = await serviceAggregator.commonService.GetAllPlayersAttribute(),
                 CurrentTeam = currentTeam,
-                PositionOrder = allFreeAgents.First().Position.Order
+                PositionOrder = positionOrder
             });
         }
         public async Task<IActionResult> Buy(int id)
