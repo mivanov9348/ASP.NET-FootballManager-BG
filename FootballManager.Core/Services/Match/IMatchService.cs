@@ -7,7 +7,7 @@
     {
         Task<List<Fixture>> GetFixturesByDay(Game CurrentGame);
         Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame);
-        Task<List<Player>> GetStarting11(int teamId);
+        Task<List<Player>> GetStarting11(int? teamId);
         (bool isValid, string error) ValidateTactics(VirtualTeam currentTeam);
         Match CreateMatch(Fixture currentFixture, Game CurrentGame);
         Task<Match> GetCurrentMatch(int matchId);

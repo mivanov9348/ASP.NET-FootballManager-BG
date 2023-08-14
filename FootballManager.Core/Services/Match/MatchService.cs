@@ -47,7 +47,7 @@
             return await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.DayId == currentDay.Id).ToList());
 
         }
-        public async Task<List<Player>> GetStarting11(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList());
+        public async Task<List<Player>> GetStarting11(int? teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList());
         public (bool isValid, string error) ValidateTactics(VirtualTeam currentTeam)
         {
             var allStartingPlayers = this.data.Players.Where(x => x.TeamId == currentTeam.Id && x.IsStarting11 == true).ToList();

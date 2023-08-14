@@ -14,6 +14,7 @@
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services;
     using FootballManager.Core.Services.Attribute;
+    using FootballManager.Core.Services.Draw;
     using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.Player.PlayerData;
     using FootballManager.Core.Services.Player.PlayerGenerator;
@@ -49,6 +50,7 @@
             services.AddScoped<IPlayerModelService, PlayerModelService>();
             services.AddScoped<IPlayerSorterService, PlayerSorterService>();
             services.AddScoped<IPlayerStatsService, PlayerStatsService>();
+            services.AddScoped<IDrawService,DrawService>();
             services.AddScoped<ServiceAggregator>();        
 
             return services;

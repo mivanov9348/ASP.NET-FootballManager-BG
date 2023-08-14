@@ -24,6 +24,11 @@
                    .HasForeignKey(x => x.LeagueId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(x => x.Draw)
+                   .WithMany(x => x.Fixtures)
+                   .HasForeignKey(x => x.DrawId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasMany(x => x.Matches)
                    .WithOne(x => x.CurrentFixture)
                    .OnDelete(DeleteBehavior.Restrict);

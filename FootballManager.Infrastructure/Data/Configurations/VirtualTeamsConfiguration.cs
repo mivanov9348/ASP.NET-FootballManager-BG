@@ -40,6 +40,12 @@
             builder.HasMany(x => x.AwayMatches)
               .WithOne(c => c.AwayTeam)
               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.AllDraws)
+                   .WithMany(c => c.Teams);
+
+           
+
         }
     }
 }

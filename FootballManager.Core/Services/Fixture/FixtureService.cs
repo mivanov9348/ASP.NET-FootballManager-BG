@@ -221,7 +221,7 @@
             return this.data.Fixtures.Where(x => x.LeagueId == id && x.Round == round && x.GameId == CurrentGame.Id).ToList();
 
         }
-        public async Task<int> GetAllRounds(int leagueId)
+        public async Task<int> GetAllRounds(int? leagueId)
         {
             var allFixt = new List<Fixture>();
             if (leagueId == 0)
@@ -233,7 +233,8 @@
                 allFixt = await Task.Run(() => this.data.Fixtures.Where(x => x.LeagueId == leagueId).ToList());
             }
             allFixt.Reverse();
-            return allFixt.First().Round;
+            int round = allFixt.First().Round;
+            return round;
         }
         public void AddFixtureToDay(Game game)
         {

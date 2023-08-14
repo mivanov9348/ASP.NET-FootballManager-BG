@@ -28,6 +28,7 @@
         public DbSet<Cup> Cups { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<GameOption> GameOptions { get; set; }
+        public DbSet<Draw> Draws { get; set; }
         public FootballManagerDbContext(DbContextOptions<FootballManagerDbContext> options)
             : base(options)
         {

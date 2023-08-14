@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20230810104507_AddDb")]
-    partial class AddDb
+    [Migration("20230814091716_AddDb9")]
+    partial class AddDb9
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -151,7 +151,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("AwayTeamGoal")
                         .HasColumnType("int");
 
-                    b.Property<int>("AwayTeamId")
+                    b.Property<int?>("AwayTeamId")
                         .HasColumnType("int");
 
                     b.Property<string>("AwayTeamName")
@@ -166,16 +166,19 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int?>("DayId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DrawId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("EuropeanCupId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GameId")
+                    b.Property<int?>("GameId")
                         .HasColumnType("int");
 
                     b.Property<int>("HomeTeamGoal")
                         .HasColumnType("int");
 
-                    b.Property<int>("HomeTeamId")
+                    b.Property<int?>("HomeTeamId")
                         .HasColumnType("int");
 
                     b.Property<string>("HomeTeamName")
@@ -190,7 +193,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("Round")
                         .HasColumnType("int");
 
-                    b.Property<int>("WinnerTeamId")
+                    b.Property<int?>("WinnerTeamId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -200,6 +203,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasIndex("CupId");
 
                     b.HasIndex("DayId");
+
+                    b.HasIndex("DrawId");
 
                     b.HasIndex("EuropeanCupId");
 
@@ -700,6 +705,34 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("VirtualTeams");
                 });
 
+            modelBuilder.Entity("DrawVirtualTeam", b =>
+                {
+                    b.Property<int>("AllDrawsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AllDrawsId", "TeamsId");
+
+                    b.HasIndex("TeamsId");
+
+                    b.ToTable("DrawVirtualTeam");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Draw", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Draws");
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
                 {
                     b.Property<int>("Id")
@@ -1117,8 +1150,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "AwayTeam")
                         .WithMany("AwayMatches")
                         .HasForeignKey("AwayTeamId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
                         .WithMany("Fixtures")
@@ -1130,6 +1162,11 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasForeignKey("DayId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", "Draw")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("DrawId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
                         .WithMany("Fixtures")
                         .HasForeignKey("EuropeanCupId")
@@ -1138,8 +1175,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "HomeTeam")
                         .WithMany("HomeMatches")
                         .HasForeignKey("HomeTeamId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
                         .WithMany("Fixtures")
@@ -1151,6 +1187,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Cup");
 
                     b.Navigation("Day");
+
+                    b.Navigation("Draw");
 
                     b.Navigation("EuropeanCup");
 
@@ -1388,6 +1426,21 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Team");
                 });
 
+            modelBuilder.Entity("DrawVirtualTeam", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", null)
+                        .WithMany()
+                        .HasForeignKey("AllDrawsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", null)
+                        .WithMany()
+                        .HasForeignKey("TeamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
@@ -1585,6 +1638,11 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("HomeMatches");
 
                     b.Navigation("Players");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Draw", b =>
+                {
+                    b.Navigation("Fixtures");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>

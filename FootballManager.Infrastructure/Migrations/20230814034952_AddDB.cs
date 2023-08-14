@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FootballManager.Infrastructure.Migrations
 {
-    public partial class AddDb : Migration
+    public partial class AddDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,18 @@ namespace FootballManager.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Draws",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Draws", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -524,6 +536,7 @@ namespace FootballManager.Infrastructure.Migrations
                     IsEuroParticipant = table.Column<bool>(type: "bit", nullable: false),
                     IsCupParticipant = table.Column<bool>(type: "bit", nullable: false),
                     IsPlayable = table.Column<bool>(type: "bit", nullable: false),
+                    DrawId = table.Column<int>(type: "int", nullable: true),
                     ManagerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -535,6 +548,11 @@ namespace FootballManager.Infrastructure.Migrations
                         principalTable: "Cups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VirtualTeams_Draws_DrawId",
+                        column: x => x.DrawId,
+                        principalTable: "Draws",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_VirtualTeams_EuropeanCups_EuropeanCupId",
                         column: x => x.EuropeanCupId,
@@ -586,7 +604,8 @@ namespace FootballManager.Infrastructure.Migrations
                     HomeTeamGoal = table.Column<int>(type: "int", nullable: false),
                     AwayTeamGoal = table.Column<int>(type: "int", nullable: false),
                     IsPlayed = table.Column<bool>(type: "bit", nullable: false),
-                    WinnerTeamId = table.Column<int>(type: "int", nullable: false)
+                    WinnerTeamId = table.Column<int>(type: "int", nullable: false),
+                    DrawId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -603,6 +622,11 @@ namespace FootballManager.Infrastructure.Migrations
                         principalTable: "Days",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Fixtures_Draws_DrawId",
+                        column: x => x.DrawId,
+                        principalTable: "Draws",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Fixtures_EuropeanCups_EuropeanCupId",
                         column: x => x.EuropeanCupId,
@@ -860,6 +884,11 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "DayId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Fixtures_DrawId",
+                table: "Fixtures",
+                column: "DrawId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Fixtures_EuropeanCupId",
                 table: "Fixtures",
                 column: "EuropeanCupId");
@@ -1014,6 +1043,11 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "CupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_VirtualTeams_DrawId",
+                table: "VirtualTeams",
+                column: "DrawId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VirtualTeams_EuropeanCupId",
                 table: "VirtualTeams",
                 column: "EuropeanCupId");
@@ -1088,6 +1122,9 @@ namespace FootballManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "VirtualTeams");
+
+            migrationBuilder.DropTable(
+                name: "Draws");
 
             migrationBuilder.DropTable(
                 name: "Games");

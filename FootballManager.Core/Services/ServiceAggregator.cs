@@ -14,6 +14,7 @@ namespace FootballManager.Core.Services
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
+    using FootballManager.Core.Services.Draw;
     using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.Player.PlayerData;
     using FootballManager.Core.Services.Player.PlayerGenerator;
@@ -41,7 +42,7 @@ namespace FootballManager.Core.Services
         public readonly IPlayerModelService playerModelService;
         public readonly IPlayerSorterService playerSorterService;
         public readonly IPlayerStatsService playerStatsService;
-
+        public readonly IDrawService drawService;
         public ServiceAggregator(
             IGameService gameService,
             IManagerService managerService,
@@ -61,7 +62,8 @@ namespace FootballManager.Core.Services
             IPlayerGeneratorService playerGeneratorService,
             IPlayerModelService playerModelService,
             IPlayerSorterService playerSorterService,
-            IPlayerStatsService playerStatsService
+            IPlayerStatsService playerStatsService,
+            IDrawService drawService
             )
         {
             this.managerService = managerService;
@@ -85,6 +87,7 @@ namespace FootballManager.Core.Services
             this.playerSorterService = playerSorterService;
             this.playerDataService = playerDataService;
             this.playerModelService = playerModelService;
+            this.drawService = drawService;
 
         }
     }

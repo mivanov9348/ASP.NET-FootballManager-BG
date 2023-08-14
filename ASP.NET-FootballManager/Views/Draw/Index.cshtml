@@ -1,4 +1,7 @@
-﻿<style>
+﻿@using FootballManager.Core.Models.Draw;
+@model DrawViewModel;
+
+<style>
     body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -70,37 +73,79 @@
 </head>
 <body>
     <h1>Team Draw System</h1>
+    <form method="get">
+        @if (Model.IsDrawStarted)
+        {
+            <div class="teams-table">
 
-    <div class="teams-table">
-        <h2>Teams</h2>
-        <div class="teams-container">
-            <div class="team">Team 1</div>
-            <div class="team">Team 2</div>
-            <div class="team">Team 3</div>
-            <div class="team">Team 4</div>
-            <div class="team">Team 5</div>
-            <div class="team">Team 6</div>
-            <div class="team">Team 7</div>
-            <div class="team">Team 8</div>
-            <div class="team">Team 9</div>
-            <div class="team">Team 10</div>
-        </div>
-        <button class="draw-button">DRAW</button>
-    </div>
+                <h2>Teams</h2>
+                <div class="teams-container">
+                    @foreach (var team in Model.Teams)
+                    {
+                        <div class="team">@team.Name</div>
+                    }
+                </div>
 
-    <div class="fixtures-table">
-        <h2>Fixtures</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Team 1</th>
-                    <th>Team 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Fixtures will be dynamically populated after draw -->
-            </tbody>
-        </table>
-    </div>
+                <input type="submit" asp-action="Draw" asp-route-drawId="@Model.CurrentDrawId" class="draw-button" value="Draw" />
+
+            </div>
+
+            <div class="fixtures-table">
+                <h2>Fixtures</h2>
+                <table>
+                    <thead>
+                        @foreach (var fixture in Model.AllFixtures)
+                        {
+                            <tr>
+                                <th>1</th>
+                                <th>@(fixture.HomeTeam != null ? fixture.HomeTeam.Name : "Team 1")</th>
+                                <th>@(fixture.HomeTeam != null ? fixture.HomeTeam.Name : "Team 2")</th>
+                            </tr>
+                        }
+                    </thead>
+                    <tbody>
+                        <!-- Fixtures will be dynamically populated after draw -->
+                    </tbody>
+                </table>
+
+
+            </div>
+        }
+        else
+        {
+            <div class="teams-table">
+
+                <h2>Teams</h2>
+                <div class="teams-container">
+                    @foreach (var team in Model.RemainingTeams)
+                    {
+                        <div class="team">@team.Name</div>
+                    }
+                    <button class="draw-button" asp-action="GenerateDraw">Generate Draw</button>
+                    <select asp-for="@Model.NumberOfTeams">
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="16">16</option>
+                        <option value="32">32</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="fixtures-table">
+                <h2>Fixtures</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team 1</th>
+                            <th>Team 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Fixtures will be dynamically populated after draw -->
+                    </tbody>
+                </table>
+            </div>
+        }
+    </form>
 </body>
 </html>

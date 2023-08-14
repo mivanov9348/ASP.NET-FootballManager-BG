@@ -12,7 +12,7 @@
         void ResetTeams(Game currentGame);
         Task<VirtualTeam> GetCurrentTeam(Game currentGame);
         Task<Team> GetOriginalTeam(VirtualTeam currentVirtual,Game CurrentGame);
-        Task<VirtualTeam> GetTeamById(int teamId);
+        Task<VirtualTeam> GetTeamById(int? teamId);
         Task<List<VirtualTeam>> GetAllVirtualTeams(Game currentGame);
         Task<List<Team>> GetAllTeams();
         Task<List<Team>> GetAllPlayableTeams();

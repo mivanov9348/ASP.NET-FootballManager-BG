@@ -72,7 +72,7 @@
             fixt.AwayTeamGoal = awayTeamGoal;
             this.data.SaveChanges();
         }
-        private int GetTeamGoal(int teamId)
+        private int GetTeamGoal(int? teamId)
         {
             var currTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
             var currTeamPlayers = this.data.Players.Where(x => x.TeamId == teamId).ToList();

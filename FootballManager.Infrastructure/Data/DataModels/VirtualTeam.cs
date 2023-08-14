@@ -1,4 +1,6 @@
-﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+﻿using FootballManager.Infrastructure.Data.DataModels;
+
+namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
 {   
     public class VirtualTeam
     {
@@ -35,5 +37,7 @@
         public ICollection<Player> Players { get; set; } = new HashSet<Player>();
         public virtual ICollection<Fixture> HomeMatches { get; set; } = new HashSet<Fixture>();
         public virtual ICollection<Fixture> AwayMatches { get; set; } = new HashSet<Fixture>();
+        public ICollection<Draw> AllDraws { get; set; } = new HashSet<Draw>();
+
     }
 }
