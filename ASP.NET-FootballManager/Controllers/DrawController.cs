@@ -3,6 +3,7 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Draw;
     using FootballManager.Core.Services;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Mvc;
 
     public class DrawController : Controller
@@ -21,29 +22,17 @@
         public IActionResult GenerateDraw(DrawViewModel model)
         {
             var draw = this.serviceAggregator.drawService.CreateDraw(model);
+            var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(draw);
 
-            return View("Index", new DrawViewModel
-            {
-                Teams = draw.Teams,
-                IsDrawStarted = true,
-                AllFixtures = draw.Fixtures,
-                RemainingTeams = draw.RemainingTeams,
-                CurrentDrawId = draw.Id
-            });
+            return View("Index", drawViewModel);
         }
 
         public IActionResult Draw(DrawViewModel model, int drawId)
         {
-            var team = this.serviceAggregator.drawService.DrawTeam(model);
-
-            return View("Index", new DrawViewModel
-            {
-                Teams = model.Teams,
-                IsDrawStarted = true,
-                currentDrawedTeam = team,
-                AllFixtures = model.AllFixtures,
-                RemainingTeams = model.RemainingTeams
-            });
+            var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);            
+            this.serviceAggregator.drawService.DrawTeam(currentDraw);
+            var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
+            return View("Index", drawViewModel);
         }
     }
 }

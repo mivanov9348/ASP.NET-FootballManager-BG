@@ -686,6 +686,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("Wins")
                         .HasColumnType("int");
 
+                    b.Property<bool>("isDrawed")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CupId");
@@ -725,6 +728,9 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsDrawStarted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

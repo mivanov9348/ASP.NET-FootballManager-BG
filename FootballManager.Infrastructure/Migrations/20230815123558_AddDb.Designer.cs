@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20230814091716_AddDb9")]
-    partial class AddDb9
+    [Migration("20230815123558_AddDb")]
+    partial class AddDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -688,6 +688,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("Wins")
                         .HasColumnType("int");
 
+                    b.Property<bool>("isDrawed")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CupId");
@@ -727,6 +730,9 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsDrawStarted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

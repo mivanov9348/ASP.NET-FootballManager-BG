@@ -38,6 +38,7 @@ namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
         public virtual ICollection<Fixture> HomeMatches { get; set; } = new HashSet<Fixture>();
         public virtual ICollection<Fixture> AwayMatches { get; set; } = new HashSet<Fixture>();
         public ICollection<Draw> AllDraws { get; set; } = new HashSet<Draw>();
+        public bool isDrawed { get; set; } = false;
 
     }
 }

@@ -7,6 +7,9 @@
     public interface IDrawService
     {
         Draw CreateDraw(DrawViewModel model);
-        VirtualTeam DrawTeam(DrawViewModel model);
+        void DrawTeam(Draw currentDraw);
+        Draw GetDrawById(int id);
+        List<VirtualTeam> GetRemainingTeams(Draw currentDraw);
+        DrawViewModel GetDrawViewModel(Draw currentDraw);
     }
 }
