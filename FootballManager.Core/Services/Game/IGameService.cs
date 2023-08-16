@@ -8,7 +8,6 @@
         bool isExistGame(string UserId);
         void NextDay(Game currentGame);
         void ResetGame(Game CurrentGame);
-
-        void ResetSave(string UserId);
+                void ResetSave(string UserId);
     }
 }

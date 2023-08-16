@@ -89,6 +89,37 @@
             this.data.SaveChanges();
         }
 
+        public void FinalizeDraw(Draw currentDraw)
+        {
+            var remainingTeams = this.GetRemainingTeams(currentDraw);
+
+            while (remainingTeams.Count > 0)
+            {
+                remainingTeams = this.GetRemainingTeams(currentDraw);
+                var randomDrawTeam = remainingTeams[rnd.Next(0, remainingTeams.Count)];
+
+                foreach (var fixture in currentDraw.Fixtures)
+                {
+                    if (fixture.HomeTeamId == null)
+                    {
+                        fixture.HomeTeamId = randomDrawTeam.Id;
+                        this.data.SaveChanges();
+                        break;
+                    }
+                    else if (fixture.AwayTeamId == null)
+                    {
+                        fixture.AwayTeamId = randomDrawTeam.Id;
+                        this.data.SaveChanges();
+                        break;
+                    }
+                }
+                randomDrawTeam.isDrawed = true;
+                remainingTeams = this.GetRemainingTeams(currentDraw);
+            }
+            currentDraw.IsDrawStarted = false;
+            this.data.SaveChanges();
+        }
+
         public Draw GetDrawById(int id) => this.data.Draws
             .Include(draw => draw.Teams)
             .Include(draw => draw.Fixtures)

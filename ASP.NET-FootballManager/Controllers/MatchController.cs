@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels; 
+    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Match;
     using FootballManager.Core.Services;
     using Microsoft.AspNetCore.Mvc;
@@ -12,6 +12,11 @@
         public MatchController(ServiceAggregator serviceAggregator)
         {
             this.serviceAggregator = serviceAggregator;
+        }
+
+        public IActionResult NextMatch()
+        {
+            return View();
         }
         public async Task<IActionResult> MatchDayPreview()
         {
@@ -40,7 +45,7 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var homeTeamPlayers = await     serviceAggregator.matchService.GetStarting11(currentFixture.HomeTeamId);
+            var homeTeamPlayers = await serviceAggregator.matchService.GetStarting11(currentFixture.HomeTeamId);
             var awayTeamPlayers = await serviceAggregator.matchService.GetStarting11(currentFixture.AwayTeamId);
 
             return View(new MatchViewModel

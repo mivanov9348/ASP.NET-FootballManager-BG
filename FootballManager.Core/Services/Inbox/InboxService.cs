@@ -1,16 +1,25 @@
 ﻿namespace ASP.NET_FootballManager.Services.Inbox
 {
     using ASP.NET_FootballManager.Data;
+    using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Menu;
+    using FootballManager.Infrastructure.Data.Constant;
+    using System;
+    using System.Numerics;
     using System.Text;
+    using static ASP.NET_FootballManager.Data.Constant.DataConstants;
 
     public class InboxService : IInboxService
     {
+        private Random rnd;
         private readonly FootballManagerDbContext data;
-
+        private readonly FootballManager.Infrastructure.Data.Constant.InboxMessages.Messages inboxMessages;
         public InboxService(FootballManagerDbContext data)
         {
             this.data = data;
+            this.inboxMessages = new FootballManager.Infrastructure.Data.Constant.InboxMessages.Messages();
+            this.rnd = new Random();
         }
         public void CreateManagerNews(Manager currentManager, Game currentGame)
         {
@@ -35,8 +44,8 @@
             var team = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId);
             var position = this.data.Positions.FirstOrDefault(x => x.Id == currentPlayer.PositionId);
 
-            var messageReview = $"{team.Name} confirm transfer!";
-            var fullMessage = $"{currentPlayer.FirstName} {currentPlayer.LastName} is a new {team.Name} player. {currentPlayer.FirstName} {currentPlayer.LastName} is a  {currentPlayer.Age} years old, play as {position.Name}.";
+            var randomMessageFunc = inboxMessages.NewPlayer[rnd.Next(0, inboxMessages.NewPlayer.Count())];
+            string randomMessage = randomMessageFunc(team.Name, currentPlayer.FirstName, currentPlayer.LastName, currentPlayer.Age, currentPlayer.Position.Name, currentPlayer.Price);
 
             var inbox = new Inbox
             {
@@ -44,16 +53,16 @@
                 Year = currentGame.Year,
                 Game = currentGame,
                 GameId = currentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage,
+                MessageReview = randomMessage,
+                FullMessage = randomMessage,
                 NewsImage = $"Faces/{currentPlayer.ProfileImage}"
             };
             AddAndSave(inbox);
         }
         public void NewSeasonNews(Game currentGame)
         {
-            var messageReview = $"Season {currentGame.Season} started!";
-            var fullMessage = $"Season {currentGame.Season} started! Good luck!";
+            var randomMessageFunc = inboxMessages.NewSeasonStart[rnd.Next(0, inboxMessages.NewSeasonStart.Count())];
+            string randomMessage = randomMessageFunc(currentGame.Team.Name, currentGame.Season);
 
             var newSeasonNews = new Inbox
             {
@@ -61,8 +70,8 @@
                 Year = currentGame.Year,
                 Game = currentGame,
                 GameId = currentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage
+                MessageReview = randomMessage,
+                FullMessage = randomMessage
             };
 
             AddAndSave(newSeasonNews);
@@ -77,18 +86,18 @@
 
             if (currentFixture.HomeTeamGoal > currentFixture.AwayTeamGoal)
             {
-                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} ";
-                fullMessage = $"{homeTeamName} wins over {awayTeamName} with {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} in round {currentFixture.Round}.";
+                var randomMessageFunc = inboxMessages.FinishMatch[rnd.Next(0, inboxMessages.FinishMatch.Count())];
+                fullMessage = randomMessageFunc(homeTeamName, awayTeamName, currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture.Round);
             }
             if (currentFixture.HomeTeamGoal < currentFixture.AwayTeamGoal)
             {
-                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} ";
-                fullMessage = $"{awayTeamName} wins over {homeTeamName} with {currentFixture.AwayTeamGoal}:{currentFixture.HomeTeamGoal} in round {currentFixture.Round}.";
+                var randomMessageFunc = inboxMessages.FinishMatch[rnd.Next(0, inboxMessages.FinishMatch.Count())];
+                fullMessage = randomMessageFunc(awayTeamName, homeTeamName, currentFixture.AwayTeamGoal, currentFixture.HomeTeamGoal, currentFixture.Round);
             }
             if (currentFixture.HomeTeamGoal == currentFixture.AwayTeamGoal)
             {
-                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal}";
-                fullMessage = $"{homeTeamName} finished draw with {awayTeamName} in round {currentFixture.Round}.";
+                var randomMessageFunc = inboxMessages.DrawMatch[rnd.Next(0, inboxMessages.DrawMatch.Count())];
+                fullMessage = randomMessageFunc(homeTeamName, awayTeamName, currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture.Round);
             }
 
             var matchNews = new Inbox
@@ -97,7 +106,7 @@
                 Year = CurrentGame.Year,
                 Game = CurrentGame,
                 GameId = CurrentGame.Id,
-                MessageReview = messageReview,
+                MessageReview = fullMessage,
                 FullMessage = fullMessage,
                 NewsImage = $"Team/{playerTeam.ImageUrl}"
             };
@@ -123,8 +132,9 @@
             var player = this.data.Players.FirstOrDefault(x => x.Id == playerId);
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
 
-            var messageReview = $"{team.Name} sell player!";
-            var fullMessage = $"{team.Name} sell {player.FirstName} {player.LastName}, a {player.Age} years old {position.Name}. {team.Name} will receive {player.Price} coins for the deal!";
+
+            var randomMessageFunc = inboxMessages.SellPlayer[rnd.Next(0, inboxMessages.SellPlayer.Count())];
+            string randomMessage = randomMessageFunc(team.Name, player.FirstName, player.LastName, player.Age, player.Position.Name, player.Price);
 
             var inbox = new Inbox
             {
@@ -132,8 +142,8 @@
                 Year = currentGame.Year,
                 Game = currentGame,
                 GameId = currentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage,
+                MessageReview = randomMessage,
+                FullMessage = randomMessage,
                 NewsImage = $"Faces/{player.ProfileImage}"
             };
             AddAndSave(inbox);
@@ -170,5 +180,18 @@
             this.data.SaveChanges();
         }
 
+        public async Task<InboxViewModel> GetInboxViewModel(Inbox currentMessage, int gameId)
+        {
+            var currentInboxMessages = await GetInboxMessages(gameId);
+            var newInboxViewModel = new InboxViewModel
+            {
+                News =  currentInboxMessages.OrderByDescending(x => x.Id).ToList(),
+                CurrentNews = currentMessage,
+                Year = currentMessage.Year,
+                Day = currentMessage.Day
+
+            };
+            return newInboxViewModel;
+        }
     }
 }

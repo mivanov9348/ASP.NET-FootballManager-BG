@@ -8,6 +8,7 @@
     {
         Draw CreateDraw(DrawViewModel model);
         void DrawTeam(Draw currentDraw);
+        void FinalizeDraw(Draw currentDraw);
         Draw GetDrawById(int id);
         List<VirtualTeam> GetRemainingTeams(Draw currentDraw);
         DrawViewModel GetDrawViewModel(Draw currentDraw);

@@ -114,7 +114,7 @@
 
                 <tr>
                     <th scope="row">@num</th>
-                    <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
+                    <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-controller="Players" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
                     <td>@player.Position.Abbr</td>
                     <td>@player.Age</td>
                     <td>@player.Nation.Abbr</td>

@@ -29,8 +29,15 @@
 
         public IActionResult Draw(DrawViewModel model, int drawId)
         {
-            var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);            
+            var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
             this.serviceAggregator.drawService.DrawTeam(currentDraw);
+            var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
+            return View("Index", drawViewModel);
+        }
+        public IActionResult FinalizeDraw(DrawViewModel model, int drawId)
+        {
+            var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
+            this.serviceAggregator.drawService.FinalizeDraw(currentDraw);
             var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
             return View("Index", drawViewModel);
         }

@@ -3,6 +3,7 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Player;
     using System.Collections.Generic;
 
     public class TransferService : ITransferService
@@ -77,6 +78,12 @@
             return null;
         }
         public async Task<List<Player>> GetCurrentTeamPlayers(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId).ToList());
+
+        public TransferViewModel GetTransferViewModel(Player player)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Sell(int playerId)
         {
             var currPl = this.data.Players.FirstOrDefault(x => x.Id == playerId);
