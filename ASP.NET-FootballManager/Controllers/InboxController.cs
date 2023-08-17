@@ -27,16 +27,20 @@
                 Day = currentMessage.Day
             });
         }
-        public async Task<IActionResult> OpenNews(int id)
+        public async Task<IActionResult> OpenNews(int newsId)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentInboxMessage = await serviceAggregator.inboxService.GetInboxMessages(CurrentGame.Id);
-            var currentMessage = await serviceAggregator.inboxService.GetFullMessage(id, CurrentGame);
+            var currentMessage = await serviceAggregator.inboxService.GetFullMessage(newsId, CurrentGame);
 
             return View("Index", new InboxViewModel
             {
                 News = currentInboxMessage.OrderByDescending(x => x.Id).ToList(),
-                CurrentNews = currentMessage
+                FullMessage = currentMessage.FullMessage,
+                MessageTitle = currentMessage.MessageTitle,
+                ImageUrl = currentMessage.NewsImage,
+                Day = currentMessage.Day,
+                Year = currentMessage.Year
             });
         }
     }

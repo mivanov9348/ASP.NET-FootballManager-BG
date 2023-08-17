@@ -102,7 +102,7 @@
                 teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
                 //GenerateLeagueFixtures
                 serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
-                return RedirectToAction("Inbox", "Menu");
+                return RedirectToAction("Inbox", "Index");
             }
             else
             {

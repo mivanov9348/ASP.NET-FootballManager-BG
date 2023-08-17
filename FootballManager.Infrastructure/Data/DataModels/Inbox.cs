@@ -4,8 +4,7 @@
     {
 
         public int Id { get; set; }
-
-        public string MessageReview { get; set; }
+        public string MessageTitle { get; set; }      
 
         public string FullMessage { get; set; }
 

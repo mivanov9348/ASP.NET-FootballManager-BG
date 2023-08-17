@@ -14,5 +14,6 @@
         Task<Inbox> GetFullMessage(int id, Game CurrentGame);
         void CupMatchesInfo(List<Fixture> dayFixtures,Game CurrentGame);
         Task<InboxViewModel> GetInboxViewModel(Inbox currentMessage, int gameId);
+        void CreateInbox(Game currentGame, string fullMessage, string messageTitle, Player currentPlayer);
     }
 }
