@@ -4,10 +4,11 @@
 
 <style>
     /* Reset some default styles */
-    body, h1, h2, p, img {
+    body {
         margin: 0;
         padding: 0;
         border: 0;
+       background-color:dimgrey;
     }
 
     /* Basic layout styles */
@@ -15,19 +16,22 @@
         display: flex;
         height: 100vh;
         font-family: Arial, sans-serif;
+      
     }
 
     .inbox-sidebar {
         flex: 0 0 20%;
-        background-color: #f0f0f0;
+        background-color: black;
         padding: 20px;
+      
     }
 
     .selected-news {
         flex: 1;
-        background-color: #fff;
+        background-color: dimgray;
         padding: 20px;
         border-left: 1px solid #ddd;
+        color:wheat;
     }
 
     /* Inbox header styles */
@@ -78,19 +82,20 @@
     .news-list {
         list-style: none;
         padding: 0;
+        text-align: center;
     }
 
     .news-item {
         margin-bottom: 10px;
         padding: 10px;
-        background-color: #fff;
+        background-color: dimgrey;
         border: 1px solid #ddd;
-        border-radius: 5px;
+        border-radius: 5px;      
     }
 
         .news-item a {
             text-decoration: none;
-            color: #333;
+            color: wheat;
             font-weight: bold;
         }
 </style>
@@ -109,9 +114,9 @@
                 <div class="news-list">
                     @foreach (var inbox in Model.News)
                     {
-                        <p>Season: @inbox.Year Day: @inbox.Day</p>
+                        <p style="color:wheat">Season: @inbox.Year Day: @inbox.Day</p>
                         <div class="news-item"><a asp-action="OpenNews" asp-route-newsId="@inbox.Id">@inbox.MessageTitle</a></div>
-                        <hr />
+                        <hr style="color:white" />
                     }
                 </div>
             </div>

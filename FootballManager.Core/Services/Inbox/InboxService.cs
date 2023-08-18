@@ -149,6 +149,7 @@
                 newInbox.NewsImage = $"Faces/{currentPlayer.ProfileImage}";
             }
             this.data.Inboxes.Add(newInbox);
+            this.data.SaveChanges();
         }
     }
 }
