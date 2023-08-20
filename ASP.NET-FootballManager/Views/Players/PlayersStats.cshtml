@@ -4,9 +4,23 @@
 
 <style>
     body {
-        background-color: black;
+        background-image: url("/Images/Wallpapers/PlayersStats.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         font-family: 'OLD SPORT 02 ATHLETIC NCV';
     }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
 
     .players {
         text-align: center;
@@ -14,6 +28,7 @@
         color: white;
         font-size: 20px;
         margin-left: -20px;
+        background-color: rgba(0, 0, 0, 0.7);
     }
 
         .players table {

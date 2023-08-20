@@ -23,8 +23,9 @@
 
         [Required]
         public int TeamId { get; set; }
+        public string ImageUrl { get; set; }
 
         public ICollection<Nation> Nations { get; set; } = new HashSet<Nation>();
-        public ICollection<Team> Teams { get; set; } = new HashSet<Team>();
+        public List<Team> Teams { get; set; } = new List<Team>();
     }
 }

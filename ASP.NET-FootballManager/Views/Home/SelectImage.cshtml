@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Manager Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .image-selection {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .image-item {
+            position: relative;
+            border: 2px solid black;
+        }
+
+            .image-item img {
+                max-width: 100%;
+                border: 2px solid transparent;
+                cursor: pointer;
+                transition: border-color 0.3s ease-in-out;
+                height: 250px;
+                width: auto;
+            }
+
+                .image-item img:hover {
+                    border-color: #007bff;
+                }
+
+        .select-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+            .select-button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="image-selection">
+        <h1>Choose Manager</h1>
+        <hr />
+        <div class="image-grid">
+            <div class="image-item"><img src="~/Images/Managers/1.png" alt="Manager 1"></div>
+            <div class="image-item"><img src="~/Images/Managers/2.png" alt="Manager 2"></div>
+            <!-- Add more image items as needed -->
+        </div>
+        <hr />
+        <form method="post" action="@Url.Action("AddImage", "Home")">
+            <input type="hidden" id="modelImageUrl" name="ImageUrl" value="" />
+            <button class="select-button" type="button">Select</button>
+        </form>
+    </div>
+    <script>
+        const imageItems = document.querySelectorAll('.image-item img');
+        let selectedImage = null;
+
+        imageItems.forEach(image => {
+            image.addEventListener('click', () => {
+                if (selectedImage) {
+                    selectedImage.classList.remove('selected');
+                }
+                image.classList.add('selected');
+                selectedImage = image;
+            });
+        });
+
+        const selectButton = document.querySelector('.select-button');
+
+        selectButton.addEventListener('click', () => {
+            if (selectedImage) {
+                const imageUrl = selectedImage.src;
+                const modelImageUrlElement = document.querySelector('#modelImageUrl');
+                modelImageUrlElement.value = imageUrl;
+                document.querySelector('form').submit();
+            } else {
+                alert('Please select an image before clicking the "Select" button.');
+            }
+        });
+    </script>
+</body>
+</html>

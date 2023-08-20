@@ -113,11 +113,11 @@
             var otherTeam = new VirtualTeam();
             if (match.CurrentFixture.HomeTeam == team)
             {
-                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == match.CurrentFixture.AwayTeamId);
+                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == match.CurrentFixture.AwayTeamId);
             }
             else
             {
-                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == match.CurrentFixture.HomeTeamId);
+                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == match.CurrentFixture.HomeTeamId);
             }
             
             bool changePossesion = false;

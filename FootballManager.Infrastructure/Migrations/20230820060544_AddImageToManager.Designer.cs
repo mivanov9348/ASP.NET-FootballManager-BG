@@ -4,6 +4,7 @@ using ASP.NET_FootballManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230820060544_AddImageToManager")]
+    partial class AddImageToManager
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -346,6 +348,9 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("NationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -356,6 +361,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentTeamId");
+
+                    b.HasIndex("NationId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -1255,6 +1262,12 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasForeignKey("CurrentTeamId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
+                        .WithMany("Managers")
+                        .HasForeignKey("NationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithOne()
                         .HasForeignKey("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", "UserId")
@@ -1266,6 +1279,8 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasForeignKey("UserId1");
 
                     b.Navigation("CurrentTeam");
+
+                    b.Navigation("Nation");
 
                     b.Navigation("User");
                 });
@@ -1596,6 +1611,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Cups");
 
                     b.Navigation("Leagues");
+
+                    b.Navigation("Managers");
 
                     b.Navigation("Players");
 

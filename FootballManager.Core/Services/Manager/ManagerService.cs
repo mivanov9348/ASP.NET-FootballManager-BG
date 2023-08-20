@@ -11,23 +11,28 @@
         {
             this.data = data;
         }
+
+        public void AddImageToManager(NewManagerViewModel model, string userId)
+        {
+            var currentManager = GetCurrentManager(userId);
+            currentManager.ImageUrl = model.ImageUrl;
+            this.data.SaveChanges();
+        }
+
         public Manager CreateNewManager(NewManagerViewModel ngvm, string userId)
         {
-            var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == ngvm.NationId);
-            var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == ngvm.TeamId);
+            var currentTeam = this.data.Teams.FirstOrDefault(x=>x.Id==ngvm.TeamId);
             var currentUser = this.data.Users.FirstOrDefault(x => x.Id == userId);
 
             var newManager = new Manager
             {
                 FirstName = ngvm.FirstName,
-                CurrentTeam = currentTeam,
-                CurrentTeamId = currentTeam.Id,
                 LastName = ngvm.LastName,
-                BornDate = ngvm.BornDate,
-                Nation = currentNation,
-                NationId = currentNation.Id,
+                BornDate = ngvm.BornDate,             
                 User = currentUser,
-                UserId = currentUser.Id
+                UserId = currentUser.Id,
+                CurrentTeam = currentTeam,
+                CurrentTeamId = currentTeam.Id,  
             };
 
             this.data.Managers.Add(newManager);

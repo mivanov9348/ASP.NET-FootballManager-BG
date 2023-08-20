@@ -10,10 +10,6 @@
         {
             builder.HasKey(x => x.Id);
 
-            builder.HasOne(x => x.Nation)
-              .WithMany(x => x.Managers)
-              .HasForeignKey(x => x.NationId);
-
             builder.HasOne(x => x.CurrentTeam)
               .WithMany(x => x.Managers)
               .HasForeignKey(x => x.CurrentTeamId);

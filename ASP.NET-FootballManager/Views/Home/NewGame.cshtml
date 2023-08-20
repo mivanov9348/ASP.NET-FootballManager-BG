@@ -3,9 +3,23 @@
 <style>
 
     body {
-        background-color: black;
+        background-image: url("/Images/Wallpapers/NewManager.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         font-family: 'OLD SPORT 02 ATHLETIC NCV';
     }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
 
     .FormInput {
         color: white;
@@ -16,7 +30,7 @@
     label {
         text-align: center;
         color: red;
-        margin-left: 450px;
+        margin-left: 490px;
         font-size: 50px;
     }
 
@@ -27,13 +41,18 @@
 
 
     .SubmitBtn {
-        color: red;
+        color: black;
+        font-weight: bolder;
     }
 
         .SubmitBtn:hover {
-            box-shadow: 0px 0px 20px red;
+            box-shadow: 0px 0px 20px white;
         }
 
+    #TeamImage{
+        height:180px;
+        width:auto;
+    }
 </style>
 
 <body>
@@ -50,40 +69,41 @@
             <br />
             <input type="date" asp-for="@Model.BornDate" placeholder="Birth Date" />
             <hr />
-            <select asp-for="@Model.NationId">
-                <option value="0">Select Nationality</option>
-                @foreach (var item in @Model.Nations)
+            <select asp-for="@Model.TeamId" onchange="updateTeamImage()">
+                <option value="0" data-imageurl="Default.png">Select Team</option>
+                @foreach (var team in @Model.Teams)
                 {
-                    <option value="@item.Id">@item.Name</option>
+                    <option value="@team.Id" data-imageurl="@team.ImageUrl">@team.Name</option>
                 }
             </select>
             <hr />
-            <select asp-for="@Model.TeamId">
-                <option value="0">Select Team</option>
-                @foreach (var item in @Model.Teams)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
-            </select>
+            <img id="TeamImage" src="/Images/Team/Default.png" alt="Team Image" />
             <hr />
-
-            <input class="SubmitBtn" id="SubmitBtn" type="submit" asp-action="StartGame" onclick="funct1()" value="Start Game" />
+            <input class="SubmitBtn" id="SubmitBtn" type="submit" asp-action="Index" value="Back" />
+            <input class="SubmitBtn" id="SubmitBtn" type="submit" asp-action="SelectImage" value="Next" />
             <br />
-            <span hidden id="timerLabel">90</span>
-            <p id="p"> </p>
-            <p id="left" style="color:red"></p>
         </div>
     </form>
 </body>
-
 <script>
-            document.getElementById("SubmitBtn").addEventListener("click", function() {
-          document.getElementById("p").innerHTML = "Loading! Estimating time remaining....";
-          let current = parseInt(document.getElementById("timerLabel").innerHTML);
-    const countdown = function() {
-      document.getElementById("left").innerHTML = --current || "Done"; // using current when 0 it is false
-      if (current <= 0) clearTimeout(tId); // stop the interval
-    };
-    const tId = setInterval(countdown, 1000)
-        });
+    function updateTeamImage() {
+    var selectElement = document.querySelector('select');
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var teamImage = document.getElementById('TeamImage');
+
+    // Log values for debugging
+    console.log("Selected option:", selectedOption);
+    
+    // Retrieve the image URL from the data-imageurl attribute
+    var imageUrl = selectedOption.getAttribute('data-imageurl');
+    console.log("Image URL:", imageUrl);
+
+    // Construct the full image URL
+    var fullImageUrl = '/Images/Team/' + imageUrl;
+    console.log("Full image URL:", fullImageUrl);
+
+    // Update the image source
+    teamImage.src = fullImageUrl;
+}
+
 </script>

@@ -36,6 +36,7 @@
         public async Task<IActionResult> NewGame(int id)
         {
             CurrentUser();
+            serviceAggregator.managerService.DeleteCurrentManager(userId);
             serviceAggregator.gameService.isExistGame(userId);
             bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
 
@@ -59,6 +60,26 @@
                 Teams = await serviceAggregator.teamService.GetAllPlayableTeams()
             });
         }
+
+        public async Task<IActionResult> SelectImage(NewManagerViewModel model)
+        {
+            CurrentUser();
+            var currentManager = serviceAggregator.managerService.CreateNewManager(model, userId);
+
+            return View(new NewManagerViewModel
+            {
+                Teams = await serviceAggregator.teamService.GetAllPlayableTeams()
+            });
+        }
+
+        public async Task<IActionResult> AddImage(NewManagerViewModel model)
+        {
+            CurrentUser();
+            var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
+            serviceAggregator.managerService.AddImageToManager(model, userId);
+            return View("StartGame");
+        }
+
         public async Task<IActionResult> StartGame(NewManagerViewModel ngvm)
         {
             CurrentUser();
@@ -79,8 +100,9 @@
                 {
                     serviceAggregator.gameOptionsService.SaveSampleOptions(userId);
                 }
-                //CreateManager               
-                var currentManager = serviceAggregator.managerService.CreateNewManager(ngvm, userId);
+                //GetCurrentManager
+                var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
+                //CreateGame
                 var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager);
                 //CalculateDaysForSeason              
                 serviceAggregator.dayService.CalculateDays(currentGame);
@@ -102,7 +124,7 @@
                 teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
                 //GenerateLeagueFixtures
                 serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
-                return RedirectToAction("Inbox", "Index");
+                return RedirectToAction("Index", "Inbox");
             }
             else
             {

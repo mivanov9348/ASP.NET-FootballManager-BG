@@ -3,35 +3,58 @@
 <partial name="~/Views/Shared/_SideBar.cshtml" />
 
 <style>
-    /* Reset some default styles */
+
     body {
-        margin: 0;
-        padding: 0;
-        border: 0;
-       background-color:dimgrey;
+        background-image: url("/Images/Wallpapers/Inbox.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        display: flex; /* Use flexbox to center the inbox container */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        margin: 0; /* Remove default body margin */
+        padding: 0; /* Remove default body padding */
+        position: relative; /* Set the position to allow absolute positioning */
+    }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+    .title {
+        text-align: center;
+        color:white;
     }
 
     /* Basic layout styles */
     .inbox-container {
+        margin-top: 10px;
+        margin-left: 100px;
         display: flex;
         height: 100vh;
         font-family: Arial, sans-serif;
-      
     }
 
     .inbox-sidebar {
         flex: 0 0 20%;
-        background-color: black;
+        background-color: rgba(0, 0, 0, 0.5);
         padding: 20px;
-      
     }
 
     .selected-news {
         flex: 1;
-        background-color: dimgray;
         padding: 20px;
         border-left: 1px solid #ddd;
-        color:wheat;
+        color: wheat;
+        background-color: rgba(0, 0, 0, 0.5);
     }
 
     /* Inbox header styles */
@@ -90,13 +113,17 @@
         padding: 10px;
         background-color: dimgrey;
         border: 1px solid #ddd;
-        border-radius: 5px;      
+        border-radius: 5px;
     }
 
         .news-item a {
             text-decoration: none;
             color: wheat;
             font-weight: bold;
+        }
+
+        .news-item:hover {
+            background-color: black;
         }
 </style>
 
@@ -109,6 +136,9 @@
 </head>
 <body>
     <form method="post">
+
+        <h2 class="title">Inbox</h2>
+        <hr />
         <div class="inbox-container">
             <div class="inbox-sidebar">
                 <div class="news-list">

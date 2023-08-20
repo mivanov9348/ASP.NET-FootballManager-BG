@@ -16,10 +16,7 @@
             builder.HasMany(x => x.Teams)
              .WithOne(x => x.Nation)
              .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(x => x.Managers)
-             .WithOne(x => x.Nation)
-             .OnDelete(DeleteBehavior.Restrict);
+       
 
             builder.HasMany(x => x.Players)
              .WithOne(x => x.Nation)

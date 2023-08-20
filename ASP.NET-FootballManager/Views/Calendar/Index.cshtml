@@ -3,24 +3,42 @@
 
 <style>
 
-    body {
-        background-color: black;
-        color: white;
-        text-align: center;
+     body {
+        background-image: url("/Images/Wallpapers/Calendar.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         font-family: 'OLD SPORT 02 ATHLETIC NCV';
     }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
 
     .panel {
         margin: 5px;
         width: 150px;
         border: 1px solid white;
         background-color: color();
+        background-color: rgba(0, 0, 0, 0.7);
+        text-align:center;
     }
 
     .days {
         margin-left: 200px;
         display: grid;
         grid-template-columns: repeat(5, 200px);
+    }
+
+    .competitionName{
+        color:red;
     }
 
 </style>
@@ -33,7 +51,7 @@
 <partial name="~/Views/Shared/_SideBar.cshtml" />
 
 <body>
-    <label style="color:white;font-size:40px">Season @Model.Year</label>
+    <label style="color:white;font-size:40px;text-align:center;">Season @Model.Year</label>
     <hr />
     <div class="days">
         @foreach (var item in @Model.Days)
@@ -61,7 +79,7 @@
 
             <div style="background-color:@color" class="panel">
                 <p style="color:green">Day: @item.CurrentDay</p>
-                <p>@competitionName</p>
+                <p class="competitionName">@competitionName</p>
             </div>
         }
     </div>

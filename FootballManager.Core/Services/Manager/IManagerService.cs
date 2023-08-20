@@ -7,6 +7,7 @@
         Manager CreateNewManager(NewManagerViewModel ngvm,string userId);
         Manager GetCurrentManager(string userId);       
         void DeleteCurrentManager(string UserId);
+        void AddImageToManager(NewManagerViewModel model, string userId);
 
     }
 }

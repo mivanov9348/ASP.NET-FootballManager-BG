@@ -61,8 +61,7 @@
                 {
                     FirstName = "Martin",
                     LastName = "Ivanov",
-                    BornDate = DateTime.Now,
-                    NationId = 1,
+                    BornDate = DateTime.Now,              
                     CurrentTeam = team,
                     CurrentTeamId = team.Id,
                     User = user,
