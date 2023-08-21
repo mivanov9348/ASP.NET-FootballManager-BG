@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20230817102222_AddDbInboxChanges")]
-    partial class AddDbInboxChanges
+    [Migration("20230821045347_AddDb")]
+    partial class AddDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -340,13 +340,13 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("NationId")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -358,8 +358,6 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentTeamId");
-
-                    b.HasIndex("NationId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -1259,12 +1257,6 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasForeignKey("CurrentTeamId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
-                        .WithMany("Managers")
-                        .HasForeignKey("NationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithOne()
                         .HasForeignKey("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", "UserId")
@@ -1276,8 +1268,6 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasForeignKey("UserId1");
 
                     b.Navigation("CurrentTeam");
-
-                    b.Navigation("Nation");
 
                     b.Navigation("User");
                 });
@@ -1608,8 +1598,6 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Cups");
 
                     b.Navigation("Leagues");
-
-                    b.Navigation("Managers");
 
                     b.Navigation("Players");
 

@@ -14,7 +14,7 @@
         [Required]
         public string LastName { get; set; }
         public DateTime BornDate { get; set; }
-        public string ImageUrl { get; set; }
+        public int ImageId { get; set; }
 
         public int? CurrentTeamId { get; set; }
         public Team CurrentTeam { get; set; }

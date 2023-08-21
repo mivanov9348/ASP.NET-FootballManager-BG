@@ -36,7 +36,6 @@
         public async Task<IActionResult> NewGame(int id)
         {
             CurrentUser();
-            serviceAggregator.managerService.DeleteCurrentManager(userId);
             serviceAggregator.gameService.isExistGame(userId);
             bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
 
@@ -64,6 +63,7 @@
         public async Task<IActionResult> SelectImage(NewManagerViewModel model)
         {
             CurrentUser();
+            serviceAggregator.managerService.DeleteCurrentManager(userId);
             var currentManager = serviceAggregator.managerService.CreateNewManager(model, userId);
 
             return View(new NewManagerViewModel
@@ -72,69 +72,53 @@
             });
         }
 
-        public async Task<IActionResult> AddImage(NewManagerViewModel model)
+        public async Task<IActionResult> AddImage(NewManagerViewModel model, int imageId)
         {
             CurrentUser();
             var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
             serviceAggregator.managerService.AddImageToManager(model, userId);
-            return View("StartGame");
+            return View("StartingGame");
         }
-
-        public async Task<IActionResult> StartGame(NewManagerViewModel ngvm)
+        public async Task<ActionResult> StartingGame()
+        {
+            StartGame();
+            return RedirectToAction("Index", "Inbox");
+        }
+        private void StartGame()
         {
             CurrentUser();
-            bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
 
-            if (isExistGame)
+            //CreateOptions
+            var optionsExist = serviceAggregator.gameOptionsService.IsOptionsSet(userId);
+            if (!optionsExist)
             {
-                serviceAggregator.managerService.DeleteCurrentManager(userId);
+                serviceAggregator.gameOptionsService.SaveSampleOptions(userId);
             }
+            //GetCurrentManager
+            var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
+            //CreateGame
+            var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager);
+            //CalculateDaysForSeason              
+            serviceAggregator.dayService.CalculateDays(currentGame);
+            serviceAggregator.fixtureService.AddFixtureToDay(currentGame);
+            //NewManagerNews                
+            serviceAggregator.inboxService.CreateManagerNews(currentManager, currentGame);
+            //GenerateTeamsForGame             
+            var teams = serviceAggregator.teamService.GenerateTeams(currentGame).ToList();
+            //GenerateCup               
+            serviceAggregator.cupService.GenerateCupParticipants(currentGame);
+            serviceAggregator.fixtureService.GenerateCupFixtures(currentGame);
+            //GenerateEuroCup
+            serviceAggregator.euroCupService.DistributionEuroParticipant(currentGame);
+            serviceAggregator.fixtureService.GenerateEuroFixtures(currentGame);
+            //GeneratePlayersAndTeamOverall
+            teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
+            serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
+            serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
+            teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
+            //GenerateLeagueFixtures
+            serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
 
-            (bool isValid, string ErrorMessage) = serviceAggregator.validationService.NewManagerValidator(ngvm);
-
-            if (isValid)
-            {
-                //CreateOptions
-                var optionsExist = serviceAggregator.gameOptionsService.IsOptionsSet(userId);
-                if (!optionsExist)
-                {
-                    serviceAggregator.gameOptionsService.SaveSampleOptions(userId);
-                }
-                //GetCurrentManager
-                var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
-                //CreateGame
-                var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager);
-                //CalculateDaysForSeason              
-                serviceAggregator.dayService.CalculateDays(currentGame);
-                serviceAggregator.fixtureService.AddFixtureToDay(currentGame);
-                //NewManagerNews                
-                serviceAggregator.inboxService.CreateManagerNews(currentManager, currentGame);
-                //GenerateTeamsForGame             
-                var teams = serviceAggregator.teamService.GenerateTeams(currentGame).ToList();
-                //GenerateCup               
-                serviceAggregator.cupService.GenerateCupParticipants(currentGame);
-                serviceAggregator.fixtureService.GenerateCupFixtures(currentGame);
-                //GenerateEuroCup
-                serviceAggregator.euroCupService.DistributionEuroParticipant(currentGame);
-                serviceAggregator.fixtureService.GenerateEuroFixtures(currentGame);
-                //GeneratePlayersAndTeamOverall
-                teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
-                serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
-                serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
-                teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
-                //GenerateLeagueFixtures
-                serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
-                return RedirectToAction("Index", "Inbox");
-            }
-            else
-            {
-                ViewData["Error"] = ErrorMessage;
-                return View("NewGame", new NewManagerViewModel
-                {
-                    Nations = await serviceAggregator.commonService.GetAllNations(),
-                    Teams = await serviceAggregator.teamService.GetAllTeams()
-                });
-            }
         }
         public IActionResult ExistingGame()
         {

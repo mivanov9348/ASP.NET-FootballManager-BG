@@ -15,7 +15,7 @@
         public void AddImageToManager(NewManagerViewModel model, string userId)
         {
             var currentManager = GetCurrentManager(userId);
-            currentManager.ImageUrl = model.ImageUrl;
+            currentManager.ImageId = model.ImageId;
             this.data.SaveChanges();
         }
 

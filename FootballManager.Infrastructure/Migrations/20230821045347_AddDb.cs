@@ -385,7 +385,7 @@ namespace FootballManager.Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     BornDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NationId = table.Column<int>(type: "int", nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: false),
                     CurrentTeamId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
@@ -404,12 +404,6 @@ namespace FootballManager.Infrastructure.Migrations
                         column: x => x.UserId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Managers_Nations_NationId",
-                        column: x => x.NationId,
-                        principalTable: "Nations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Managers_Teams_CurrentTeamId",
                         column: x => x.CurrentTeamId,
@@ -489,7 +483,7 @@ namespace FootballManager.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MessageReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MessageTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NewsImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GameId = table.Column<int>(type: "int", nullable: false),
@@ -969,11 +963,6 @@ namespace FootballManager.Infrastructure.Migrations
                 name: "IX_Managers_CurrentTeamId",
                 table: "Managers",
                 column: "CurrentTeamId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Managers_NationId",
-                table: "Managers",
-                column: "NationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Managers_UserId",

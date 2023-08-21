@@ -22,7 +22,7 @@
             var messageReview = $"{currentGame.Team.Name} appoint {currentGame.Manager.FirstName} {currentGame.Manager.LastName} as manager!";
             var fullMessage = $"Welcome to the new club! Season {currentGame.Season} started! Good luck!";
             var messageTitle = "New Manager";
-
+            var root = $"Managers/{currentManager.ImageId}.png";
             CreateInbox(currentGame, fullMessage, messageTitle, null);
 
         }
@@ -34,8 +34,8 @@
             var randomMessageFunc = inboxMessages.NewPlayer[rnd.Next(0, inboxMessages.NewPlayer.Count())];
             string randomMessage = randomMessageFunc(team.Name, currentPlayer.FirstName, currentPlayer.LastName, currentPlayer.Age, currentPlayer.Position.Name, currentPlayer.Price);
             string messageTitle = "New Player";
-
-            CreateInbox(currentGame, randomMessage, messageTitle, currentPlayer);
+            string root = $"Faces/{currentPlayer.ProfileImage}";
+            CreateInbox(currentGame, randomMessage, messageTitle, root);
 
         }
         public void NewSeasonNews(Game currentGame)
@@ -97,8 +97,8 @@
             var randomMessageFunc = inboxMessages.SellPlayer[rnd.Next(0, inboxMessages.SellPlayer.Count())];
             string randomMessage = randomMessageFunc(team.Name, player.FirstName, player.LastName, player.Age, player.Position.Name, player.Price);
             string messageTitle = "Sell Player";
-
-            CreateInbox(currentGame, randomMessage, messageTitle, player);
+            string root = $"Faces/{player.ProfileImage}";
+            CreateInbox(currentGame, randomMessage, messageTitle, root);
         }
         public void CupMatchesInfo(List<Fixture> dayFixtures, Game CurrentGame)
         {
@@ -132,7 +132,7 @@
             return newInboxViewModel;
         }
 
-        public void CreateInbox(Game currentGame, string fullMessage, string messageTitle, Player currentPlayer)
+        public void CreateInbox(Game currentGame, string fullMessage, string messageTitle, string imageRoot)
         {
             var newInbox = new Inbox
             {
@@ -141,13 +141,10 @@
                 Game = currentGame,
                 GameId = currentGame.Id,
                 MessageTitle = messageTitle,
-                FullMessage = fullMessage
+                FullMessage = fullMessage,
+                NewsImage = imageRoot
             };
 
-            if (currentPlayer != null)
-            {
-                newInbox.NewsImage = $"Faces/{currentPlayer.ProfileImage}";
-            }
             this.data.Inboxes.Add(newInbox);
             this.data.SaveChanges();
         }

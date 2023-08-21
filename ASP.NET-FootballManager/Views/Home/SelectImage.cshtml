@@ -63,47 +63,27 @@
             }
     </style>
 </head>
+
 <body>
-    <div class="image-selection">
-        <h1>Choose Manager</h1>
-        <hr />
-        <div class="image-grid">
-            <div class="image-item"><img src="~/Images/Managers/1.png" alt="Manager 1"></div>
-            <div class="image-item"><img src="~/Images/Managers/2.png" alt="Manager 2"></div>
-            <!-- Add more image items as needed -->
+    <form method="get">
+        <div class="image-selection">
+            <h1>Choose Manager</h1>
+            <hr />
+            <div class="image-grid">
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="1"><img src="~/Images/Managers/1.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="2"><img src="~/Images/Managers/2.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="3"><img src="~/Images/Managers/3.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="4"><img src="~/Images/Managers/4.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="5"><img src="~/Images/Managers/5.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="6"><img src="~/Images/Managers/6.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="7"><img src="~/Images/Managers/7.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="8"><img src="~/Images/Managers/8.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="9"><img src="~/Images/Managers/9.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="10"><img src="~/Images/Managers/10.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="11"><img src="~/Images/Managers/11.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="11"><img src="~/Images/Managers/12.png" alt="Manager 1"></a></div>
+            </div>
         </div>
-        <hr />
-        <form method="post" action="@Url.Action("AddImage", "Home")">
-            <input type="hidden" id="modelImageUrl" name="ImageUrl" value="" />
-            <button class="select-button" type="button">Select</button>
-        </form>
-    </div>
-    <script>
-        const imageItems = document.querySelectorAll('.image-item img');
-        let selectedImage = null;
-
-        imageItems.forEach(image => {
-            image.addEventListener('click', () => {
-                if (selectedImage) {
-                    selectedImage.classList.remove('selected');
-                }
-                image.classList.add('selected');
-                selectedImage = image;
-            });
-        });
-
-        const selectButton = document.querySelector('.select-button');
-
-        selectButton.addEventListener('click', () => {
-            if (selectedImage) {
-                const imageUrl = selectedImage.src;
-                const modelImageUrlElement = document.querySelector('#modelImageUrl');
-                modelImageUrlElement.value = imageUrl;
-                document.querySelector('form').submit();
-            } else {
-                alert('Please select an image before clicking the "Select" button.');
-            }
-        });
-    </script>
+    </form>
 </body>
 </html>
