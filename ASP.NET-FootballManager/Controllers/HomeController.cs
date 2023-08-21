@@ -41,15 +41,6 @@
 
             if (isExistGame)
             {
-                if (id == 1)
-                {
-                    serviceAggregator.gameService.ResetSave(userId);
-                    return View(new NewManagerViewModel
-                    {
-                        Nations = await serviceAggregator.commonService.GetAllNations(),
-                        Teams = await serviceAggregator.teamService.GetAllPlayableTeams()
-                    });
-                }
                 return RedirectToAction("ExistingGame");
             }
 
@@ -60,10 +51,23 @@
             });
         }
 
+        public async Task<IActionResult> ExistingGame(int id)
+        {
+            if (id == 1)
+            {
+                CurrentUser();
+                serviceAggregator.managerService.DeleteCurrentManager(userId);
+                return View("NewGame", new NewManagerViewModel
+                {
+                    Teams = await this.serviceAggregator.teamService.GetAllPlayableTeams()
+                });
+            }
+            return View();  
+        }
+
         public async Task<IActionResult> SelectImage(NewManagerViewModel model)
         {
             CurrentUser();
-            serviceAggregator.managerService.DeleteCurrentManager(userId);
             var currentManager = serviceAggregator.managerService.CreateNewManager(model, userId);
 
             return View(new NewManagerViewModel
@@ -77,9 +81,9 @@
             CurrentUser();
             var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
             serviceAggregator.managerService.AddImageToManager(model, userId);
-            return View("StartingGame");
+            return RedirectToAction("StartingGame");
         }
-        public async Task<ActionResult> StartingGame()
+        public ActionResult StartingGame()
         {
             StartGame();
             return RedirectToAction("Index", "Inbox");
@@ -120,10 +124,7 @@
             serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
 
         }
-        public IActionResult ExistingGame()
-        {
-            return View();
-        }
+
         private void CurrentUser()
         {
             if (this.User.Identity.IsAuthenticated != false)

@@ -39,7 +39,12 @@
             this.data.SaveChanges();
             return newManager;
         }
-        public void DeleteCurrentManager(string UserId) => this.data.Managers.Remove(this.data.Managers.FirstOrDefault(x => x.UserId == UserId));
+        public void DeleteCurrentManager(string UserId)
+        {
+            var currentManager = this.data.Managers.FirstOrDefault(x => x.UserId == UserId);
+            this.data.Managers.Remove(currentManager);
+            this.data.SaveChanges();
+        }
         public Manager GetCurrentManager(string userId) => this.data.Managers.FirstOrDefault(x => x.UserId == userId);
     }
 }
