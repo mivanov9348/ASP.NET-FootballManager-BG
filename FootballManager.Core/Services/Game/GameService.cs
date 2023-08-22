@@ -25,7 +25,7 @@
         public Game CreateNewGame(Manager manager)
         {
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == manager.CurrentTeamId);
-            //var currentGameOptions = this.data.GameOptions.FirstOrDefault(x => x.UserId == manager.UserId);
+            var currentGameOptions = this.data.GameOptions.FirstOrDefault(x => x.UserId == manager.UserId);
 
             var newGame = new Game
             {
@@ -38,11 +38,12 @@
                 Day = 1,
                 ManagerId = manager.Id,
                 Team = currentTeam,
-                TeamId = currentTeam.Id
-               
+                TeamId = currentTeam.Id,
+                GameOption= currentGameOptions,
+                GameOptionId= currentGameOptions.Id               
             };
 
-            //currentGameOptions.Games.Add(newGame);
+            currentGameOptions.Games.Add(newGame);
             this.data.Games.Add(newGame);
             this.data.SaveChanges();
             return newGame;

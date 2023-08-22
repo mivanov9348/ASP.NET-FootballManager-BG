@@ -84,6 +84,7 @@
                 PlayerMinimumAge = DataConstants.Age.minAge
             };
             this.data.GameOptions.Add(newGameOptions);
+            this.data.SaveChanges();
         }
     }
 }

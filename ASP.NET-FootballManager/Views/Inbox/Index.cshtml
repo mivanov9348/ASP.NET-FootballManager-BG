@@ -55,6 +55,7 @@
         border-left: 1px solid #ddd;
         color: wheat;
         background-color: rgba(0, 0, 0, 0.5);
+        text-align:center;
     }
 
     /* Inbox header styles */
@@ -152,12 +153,12 @@
             </div>
 
             <div class="selected-news">
-
                 <h2>@Model.MessageTitle</h2>
                 <hr />
+                 <img src="/Images/@Model.ImageUrl" width="auto" height="180" />
+                 <hr />               
                 <p>@Model.FullMessage</p>
-                <hr />
-                <img src="/Images/@Model.ImageUrl" width="180" height="180" />
+                <hr />               
             </div>
         </div>
     </form>

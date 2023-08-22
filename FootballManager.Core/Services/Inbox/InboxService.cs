@@ -23,7 +23,7 @@
             var fullMessage = $"Welcome to the new club! Season {currentGame.Season} started! Good luck!";
             var messageTitle = "New Manager";
             var root = $"Managers/{currentManager.ImageId}.png";
-            CreateInbox(currentGame, fullMessage, messageTitle, null);
+            CreateInbox(currentGame, fullMessage, messageTitle, root);
 
         }
         public void BuyPlayerNews(Player currentPlayer, Game currentGame)

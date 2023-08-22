@@ -56,7 +56,8 @@
             if (id == 1)
             {
                 CurrentUser();
-                serviceAggregator.managerService.DeleteCurrentManager(userId);
+                serviceAggregator.gameService.ResetSave(userId);
+               //serviceAggregator.managerService.DeleteCurrentManager(userId);
                 return View("NewGame", new NewManagerViewModel
                 {
                     Teams = await this.serviceAggregator.teamService.GetAllPlayableTeams()

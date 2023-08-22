@@ -17,8 +17,9 @@
         public void Buy(int playerId, VirtualTeam currentTeam)
         {
             var currentPlayer = this.data.Players.FirstOrDefault(x => x.Id == playerId);
+            var budget = currentTeam.Budget - currentPlayer.Price;
 
-            currentTeam.Budget -= currentPlayer.Price;
+            currentTeam.Budget = Math.Round(budget,2);
             currentPlayer.Team = currentTeam;
             currentPlayer.FreeAgent = false;
             currentPlayer.TeamId = currentTeam.Id;
@@ -89,11 +90,12 @@
             var currPl = this.data.Players.FirstOrDefault(x => x.Id == playerId);
             var currTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currPl.TeamId);
             var freeAgentsTeam = this.data.VirtualTeams.FirstOrDefault(x => x.IsPlayable == false);
+            var budget = currTeam.Budget + currPl.Price;
 
             currPl.FreeAgent = true;
             currPl.Team = freeAgentsTeam;
             currPl.TeamId = freeAgentsTeam.Id;
-            currTeam.Budget += currPl.Price;
+            currTeam.Budget = Math.Round(budget,2);
             this.data.SaveChanges();
 
             return $"{currPl.FirstName} {currPl.LastName} sold!";

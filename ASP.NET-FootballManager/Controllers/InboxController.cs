@@ -18,10 +18,14 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentInboxMessages = await serviceAggregator.inboxService.GetInboxMessages(CurrentGame.Id);
             var currentMessage = await serviceAggregator.inboxService.GetFullMessage(id, CurrentGame);
+            var lastMessage = currentInboxMessages.OrderByDescending(x => x.Id).First();
 
             return View(new InboxViewModel
             {
                 News = currentInboxMessages.OrderByDescending(x => x.Id).ToList(),
+                MessageTitle = lastMessage.MessageTitle,
+                ImageUrl = lastMessage.NewsImage,
+                FullMessage = lastMessage.FullMessage,
                 CurrentNews = currentMessage,
                 Year = currentMessage.Year,
                 Day = currentMessage.Day
