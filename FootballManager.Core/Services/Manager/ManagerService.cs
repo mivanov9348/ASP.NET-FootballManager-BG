@@ -21,6 +21,11 @@
 
         public Manager CreateNewManager(NewManagerViewModel ngvm, string userId)
         {
+            var currentManager = GetCurrentManager(userId);
+            if (currentManager != null)
+            {
+                DeleteCurrentManager(userId);
+            }
             var currentTeam = this.data.Teams.FirstOrDefault(x=>x.Id==ngvm.TeamId);
             var currentUser = this.data.Users.FirstOrDefault(x => x.Id == userId);
 

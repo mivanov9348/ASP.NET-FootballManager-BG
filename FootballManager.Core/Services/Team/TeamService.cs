@@ -88,5 +88,7 @@
         public async Task<Team> GetOriginalTeam(VirtualTeam currentVirtual, Game CurrentGame) => await Task.Run(() => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId));
         public async Task<VirtualTeam> GetTeamById(int? teamId) => await Task.Run(() => this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId));
         public async Task<List<Team>> GetAllPlayableTeams() => await Task.Run(() => this.data.Teams.Where(x => x.IsPlayable == true).ToList());
+
+        public Team GetManagerTeam(Manager currentManager) => this.data.Teams.FirstOrDefault(x => x.Id == currentManager.CurrentTeamId);
     }
 }

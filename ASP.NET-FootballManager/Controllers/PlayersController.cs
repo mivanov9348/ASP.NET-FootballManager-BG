@@ -17,7 +17,7 @@
         public IActionResult PlayersStats(PlayersViewModel pvm, int id)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            pvm = serviceAggregator.playerSorterService.SortingPlayers(pvm.PlayerSorting, id, CurrentGame);
+            pvm = serviceAggregator.playerSorterService.SortingPlayers(pvm.PlayerSorting, id, CurrentGame,1);
             return View(pvm);
         }
 
@@ -30,5 +30,12 @@
 
             return View(model);
         }
+        public IActionResult Page( PlayersViewModel pvm, int pageNum)
+        {
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            pvm = serviceAggregator.playerSorterService.SortingPlayers(pvm.PlayerSorting, 1, CurrentGame, pageNum);
+            return View("PlayersStats",pvm);
+        }
+
     }
 }

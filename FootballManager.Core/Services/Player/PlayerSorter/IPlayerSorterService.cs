@@ -6,6 +6,6 @@ namespace FootballManager.Core.Services.Player.PlayerSorter
 {
     public interface IPlayerSorterService
     {
-        PlayersViewModel SortingPlayers(PlayerStatsSorting sortBy, int id, Game currentGame);
+        PlayersViewModel SortingPlayers(PlayerStatsSorting sortBy, int id, Game currentGame, int pageNum);
     }
 }

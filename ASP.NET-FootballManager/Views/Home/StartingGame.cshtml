@@ -1,4 +1,7 @@
-﻿<style>
+﻿@using FootballManager.Core.Models.Home;
+@model StartingGameViewModel
+
+<style>
     body {
         background-image: url("/Images/Wallpapers/NewManager.jpg");
         background-size: cover;
@@ -18,13 +21,48 @@
             z-index: -1;
         }
 
-    p{
-        color:red;
-        text-align:center;
-        font-weight:bolder;
+    .container {
+        text-align: center;
+        color: white;
+    }
+
+    .title {
+        color: gold;
+    }
+
+    img {
+        height: 180px;
+        width: auto;
+    }
+
+    input {
+        font-size: 20px;
+        font-weight: bolder;
+    }
+
+        input:hover {
+            background-color: goldenrod;
+        }
+
+    p {
+        color: red;
+        text-align: center;
+        font-weight: bolder;
     }
 
 </style>
 <body>
-    <p>Game Loading...</p>
+    <form method="get">
+        <div class="container">
+            <h1 class="title">Manager</h1>
+            <hr />
+            <h1>@Model.ManagerName</h1>
+            <img src="~/Images/Managers/@(Model.ManagerImage).png" />
+            <hr />
+            <img src="~/Images/Team/@Model.ManagerTeamImage" />
+            <h4>@Model.ManagerTeam</h4>
+            <hr />
+            <input type="submit" value="Start Game" asp-action="StartingGame" asp-route-id="1" />
+        </div>
+    </form>
 </body>

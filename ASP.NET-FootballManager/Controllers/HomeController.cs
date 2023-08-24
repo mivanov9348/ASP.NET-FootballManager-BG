@@ -5,6 +5,9 @@
     using System.Security.Claims;
     using ASP.NET_FootballManager.Models;
     using FootballManager.Core.Services;
+    using FootballManager.Core.Models.Home;
+    using System.Linq;
+
 
     public class HomeController : Controller
     {
@@ -57,13 +60,13 @@
             {
                 CurrentUser();
                 serviceAggregator.gameService.ResetSave(userId);
-               //serviceAggregator.managerService.DeleteCurrentManager(userId);
+                //serviceAggregator.managerService.DeleteCurrentManager(userId);
                 return View("NewGame", new NewManagerViewModel
                 {
                     Teams = await this.serviceAggregator.teamService.GetAllPlayableTeams()
                 });
             }
-            return View();  
+            return View();
         }
 
         public async Task<IActionResult> SelectImage(NewManagerViewModel model)
@@ -84,10 +87,27 @@
             serviceAggregator.managerService.AddImageToManager(model, userId);
             return RedirectToAction("StartingGame");
         }
-        public ActionResult StartingGame()
+        public ActionResult StartingGame(int id)
         {
-            StartGame();
-            return RedirectToAction("Index", "Inbox");
+            CurrentUser();
+            var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
+            var team = serviceAggregator.teamService.GetManagerTeam(currentManager);
+
+            if (id == 0)
+            {
+                return View(new StartingGameViewModel
+                {
+                    ManagerName = $"{currentManager.FirstName} {currentManager.LastName}",
+                    ManagerImage = currentManager.ImageId,
+                    ManagerTeam = team.Name,
+                    ManagerTeamImage = team.ImageUrl
+                }); ;
+            }
+            else
+            {
+                StartGame();
+                return RedirectToAction("Index", "Inbox");
+            }
         }
         private void StartGame()
         {

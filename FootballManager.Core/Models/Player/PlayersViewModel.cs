@@ -20,7 +20,8 @@
         public int Goals { get; set; }
         public int Passes { get; set; }
         public int GoalConceded { get; set; }      
-        public int Tacklings { get; set; }      
+        public int Tacklings { get; set; }
+        public int PageCounts { get; set; }
         public PlayerAttribute currentPlAttr { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Nation> Nations { get; set; } = new List<Nation>();
