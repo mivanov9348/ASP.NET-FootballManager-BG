@@ -7,18 +7,21 @@
     using FootballManager.Core.Services;
     using FootballManager.Core.Models.Home;
     using System.Linq;
-
+    using Microsoft.AspNetCore.SignalR;
+    using ASP.NET_FootballManager.Hub;
 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ServiceAggregator serviceAggregator;
+        private readonly IHubContext<GameHub> hubContext;
         private string userId;
         public HomeController(ILogger<HomeController> logger,
-            ServiceAggregator serviceAggregator)
+            ServiceAggregator serviceAggregator, IHubContext<GameHub> hubContext)
         {
             _logger = logger;
             this.serviceAggregator = serviceAggregator;
+            this.hubContext = hubContext;
         }
         public IActionResult Index()
         {
@@ -87,9 +90,10 @@
             serviceAggregator.managerService.AddImageToManager(model, userId);
             return RedirectToAction("StartingGame");
         }
-        public ActionResult StartingGame(int id)
+        public async Task<ActionResult> StartingGame(int id)
         {
             CurrentUser();
+
             var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
             var team = serviceAggregator.teamService.GetManagerTeam(currentManager);
 
@@ -105,11 +109,15 @@
             }
             else
             {
-                StartGame();
+                await StartGame();
                 return RedirectToAction("Index", "Inbox");
             }
         }
-        private void StartGame()
+        private async Task SendMessageToHTML(string message)
+        {
+            await hubContext.Clients.All.SendAsync("ReceiveMessage", message);
+        }
+        private async Task StartGame()
         {
             CurrentUser();
 
@@ -118,32 +126,43 @@
             if (!optionsExist)
             {
                 serviceAggregator.gameOptionsService.SaveSampleOptions(userId);
+                await SendMessageToHTML("Options have been created.");
             }
             //GetCurrentManager
             var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
             //CreateGame
+            await SendMessageToHTML("Creating New Game...");
             var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager);
             //CalculateDaysForSeason              
+            await SendMessageToHTML("Calculating Days...");
             serviceAggregator.dayService.CalculateDays(currentGame);
             serviceAggregator.fixtureService.AddFixtureToDay(currentGame);
-            //NewManagerNews                
+            //NewManagerNews
+            await SendMessageToHTML("Writing news...");
             serviceAggregator.inboxService.CreateManagerNews(currentManager, currentGame);
-            //GenerateTeamsForGame             
+            //GenerateTeamsForGame
+            await SendMessageToHTML("Generating teams...");
             var teams = serviceAggregator.teamService.GenerateTeams(currentGame).ToList();
             //GenerateCup               
+            await SendMessageToHTML("Generating cups...");
             serviceAggregator.cupService.GenerateCupParticipants(currentGame);
             serviceAggregator.fixtureService.GenerateCupFixtures(currentGame);
             //GenerateEuroCup
+            await SendMessageToHTML("Generating european cups...");
             serviceAggregator.euroCupService.DistributionEuroParticipant(currentGame);
             serviceAggregator.fixtureService.GenerateEuroFixtures(currentGame);
             //GeneratePlayersAndTeamOverall
+            await SendMessageToHTML("Generating players...");
             teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
+            await SendMessageToHTML("Generating free agents...");
             serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
+            await SendMessageToHTML("Calculating players prices...");
             serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
+            await SendMessageToHTML("Calculating players overall...");
             teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
             //GenerateLeagueFixtures
+            await SendMessageToHTML("Generating fixtures and starting the game...");
             serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
-
         }
 
         private void CurrentUser()

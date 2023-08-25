@@ -1,4 +1,5 @@
 using ASP.NET_FootballManager.Data;
+using ASP.NET_FootballManager.Hub;
 using FootballManager.Core.Extensions;
 using FootballManager.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Identity;
@@ -69,10 +70,14 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<GameHub>("/gameHub"); 
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+
 app.MapRazorPages();
 
 app.Run();

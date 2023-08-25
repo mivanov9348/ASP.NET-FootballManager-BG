@@ -1,60 +1,71 @@
 ﻿@using FootballManager.Core.Models.Home;
 @model StartingGameViewModel
+@{
+    Layout = null;
+}
 
-<style>
-    body {
-        background-image: url("/Images/Wallpapers/NewManager.jpg");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        font-family: 'OLD SPORT 02 ATHLETIC NCV';
-    }
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Game</title>
+    <!-- Include SignalR JavaScript library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
+        .container {
+            text-align: center;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: gold;
+        }
+
+        img {
+            height: 180px;
+            width: auto;
+        }
+
+        input[type="submit"] {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #loading-bar {
+            background-color: rgba(0, 0, 0, 0.2);
+            height: 20px;
             width: 100%;
+            margin-top: 10px;
+        }
+
+        #loading-progress {
+            background-color: #4CAF50;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: -1;
+            width: 0;
         }
 
-    .container {
-        text-align: center;
-        color: white;
-    }
-
-    .title {
-        color: gold;
-    }
-
-    img {
-        height: 180px;
-        width: auto;
-    }
-
-    input {
-        font-size: 20px;
-        font-weight: bolder;
-    }
-
-        input:hover {
-            background-color: goldenrod;
+        #messageDiv {
+            margin-top: 10px;
         }
-
-    p {
-        color: red;
-        text-align: center;
-        font-weight: bolder;
-    }
-
-</style>
+    </style>
+</head>
 <body>
     <form method="get">
         <div class="container">
-            <h1 class="title">Manager</h1>
+            <h1>Manager</h1>
             <hr />
             <h1>@Model.ManagerName</h1>
             <img src="~/Images/Managers/@(Model.ManagerImage).png" />
@@ -62,7 +73,61 @@
             <img src="~/Images/Team/@Model.ManagerTeamImage" />
             <h4>@Model.ManagerTeam</h4>
             <hr />
-            <input type="submit" value="Start Game" asp-action="StartingGame" asp-route-id="1" />
+            <input type="submit" value="Start Game" id="startGameBtn" asp-action="StartingGame" asp-route-id="1" />
+
+            <!-- Message div -->
+            <div id="messageDiv"></div>
         </div>
+
+        <script>
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/gameHub")
+                .build();
+
+            connection.on("ReceiveMessage", function (message) {
+                const messageDiv = document.getElementById("messageDiv");
+                cconnection.on("ReceiveMessage", function (message) {
+                    const messageDiv = document.getElementById("messageDiv");
+                    const newMessageElement = document.createElement("div");
+
+                    // Apply green color to previous messages
+                    messageDiv.childNodes.forEach(node => {
+                        const previousMessageElement = document.createElement("p");
+                        previousMessageElement.textContent = node.textContent;
+                        previousMessageElement.style.color = "green"; // Apply green color
+                        newMessageElement.appendChild(previousMessageElement);
+                    });
+
+                    // Add the new message
+                    const currentMessageElement = document.createElement("p");
+                    currentMessageElement.textContent = message;
+                    newMessageElement.appendChild(currentMessageElement);
+
+                    messageDiv.innerHTML = ""; // Clear existing messages
+                    messageDiv.appendChild(newMessageElement);
+
+                    console.log(message);
+                });
+
+
+            document.getElementById("startGameBtn").addEventListener("click", function () {
+                connection.start().then(function () {
+                    console.log("Connection started");
+                }).catch(function (error) {
+                    console.error("Connection error: " + error);
+                });
+
+                // Call your API endpoint to start the game
+                fetch("/api/Game/StartGame")
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Game started:", data);
+                    })
+                    .catch(error => {
+                        console.error("Error starting game:", error);
+                    });
+            });
+        </script>
     </form>
 </body>
+</html>
