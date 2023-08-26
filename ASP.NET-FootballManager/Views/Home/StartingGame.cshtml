@@ -74,7 +74,10 @@
             <h4>@Model.ManagerTeam</h4>
             <hr />
             <input type="submit" value="Start Game" id="startGameBtn" asp-action="StartingGame" asp-route-id="1" />
-
+            <hr />
+            <div id="loading-bar">
+                <div id="loading-progress"></div>
+            </div>
             <!-- Message div -->
             <div id="messageDiv"></div>
         </div>
@@ -84,39 +87,43 @@
                 .withUrl("/gameHub")
                 .build();
 
+            const loadingBar = document.getElementById("loading-bar");
+            const loadingProgress = document.getElementById("loading-progress");
+            let progress = 0;
+
             connection.on("ReceiveMessage", function (message) {
                 const messageDiv = document.getElementById("messageDiv");
-                cconnection.on("ReceiveMessage", function (message) {
-                    const messageDiv = document.getElementById("messageDiv");
-                    const newMessageElement = document.createElement("div");
+                const newMessageElement = document.createElement("p"); // Wrap each message in a <p> element
 
-                    // Apply green color to previous messages
-                    messageDiv.childNodes.forEach(node => {
-                        const previousMessageElement = document.createElement("p");
-                        previousMessageElement.textContent = node.textContent;
-                        previousMessageElement.style.color = "green"; // Apply green color
-                        newMessageElement.appendChild(previousMessageElement);
-                    });
-
-                    // Add the new message
-                    const currentMessageElement = document.createElement("p");
-                    currentMessageElement.textContent = message;
-                    newMessageElement.appendChild(currentMessageElement);
-
-                    messageDiv.innerHTML = ""; // Clear existing messages
-                    messageDiv.appendChild(newMessageElement);
-
-                    console.log(message);
+                messageDiv.childNodes.forEach(node => {
+                    const previousMessageElement = document.createElement("del");
+                    previousMessageElement.innerHTML = node.innerHTML;
+                    newMessageElement.appendChild(previousMessageElement);
                 });
 
+                const currentMessageElement = document.createElement("p");
+                currentMessageElement.textContent = message;
+                newMessageElement.appendChild(currentMessageElement);
+
+                messageDiv.innerHTML = "";
+                messageDiv.appendChild(newMessageElement);
+
+                // Update loading bar based on received messages
+                progress += 8;
+                loadingProgress.style.width = progress + "%";
+            });
+
+            connection.onclose(function (error) {
+                console.log("Connection closed with error: " + error);
+            });
+
+            connection.start().then(function () {
+                console.log("Connection started");
+            }).catch(function (error) {
+                console.error("Connection error: " + error);
+            });
 
             document.getElementById("startGameBtn").addEventListener("click", function () {
-                connection.start().then(function () {
-                    console.log("Connection started");
-                }).catch(function (error) {
-                    console.error("Connection error: " + error);
-                });
-
                 // Call your API endpoint to start the game
                 fetch("/api/Game/StartGame")
                     .then(response => response.json())

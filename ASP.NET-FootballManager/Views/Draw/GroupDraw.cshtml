@@ -1,0 +1,159 @@
+﻿@using FootballManager.Core.Models.Draw;
+@model GroupDrawViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .tables-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+            /* Adjust the width for each table */
+            .tables-row table {
+                width: calc(25% - 10px); /* Four tables per row */
+                margin: 5px;
+            }
+
+        form {
+            text-align: center;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .teams-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .teams-section input[type="text"] {
+                width: 80%;
+                padding: 5px;
+                font-size: 14px;
+            }
+
+        .teams-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+            .teams-list .team {
+                width: calc(25% - 10px);
+                margin: 5px;
+                font-size: 12px;
+            }
+
+        .team-container {
+            width: calc(8.33% - 10px); /* 12 teams per row */
+            margin: 5px;
+            font-size: 12px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .drawButton {
+            text-align: center;
+        }
+
+            .drawButton:hover {
+                color: dimgrey;
+            }
+
+        .resetButton {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        <h1 class="title">Group Draw</h1>
+        <hr />
+        @if (!Model.IsDrawStarted)
+        {
+            <select id="groupSelect" asp-for="@Model.NumberOfGroups">
+                <option value="">Groups:</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
+            </select>
+            <select id="teamsSelect" asp-for="@Model.TeamsPerGroup">
+                <option value="">Teams Per Group:</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="16">16</option>
+            </select>
+            <input type="submit" value="Select" asp-action="GroupDraw" />
+            <hr />
+        }
+        else
+        {
+            <div class="teams-list">
+                @for (int i = 1; i <= @Model.TeamsCount; i++)
+                {
+                    <div class="team-container">Team @i</div>
+                }
+            </div>
+            <hr />
+            <input type="submit" value="Draw" class="drawButton" />
+            <form method="get">
+                <input type="submit" value="Reset" class="resetButton" asp-action="ResetGroupDraw" />
+            </form>
+            <hr />
+            <div id="tablesContainer" class="tables-row">
+                @for (int i = 0; i < Model.NumberOfGroups; i++)
+                {
+                    <table>
+                        <tr>
+                            <th>Num</th>
+                            <th>Team Name</th>
+                            <th>Nation</th>
+                        </tr>
+                        @for (int k = 1; k <= @Model.TeamsPerGroup; k++)
+                        {
+                            <tr>
+                                <td>@k</td>
+                                <td>Team A</td>
+                                <td>NA</td>
+                            </tr>
+                        }
+
+
+                    </table>
+                }
+            </div>
+        }
+
+    </form>
+</body>
+</html>

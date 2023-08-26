@@ -10,15 +10,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Team Draw System</title>
+    <title>Draw Menu</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            background-image: url("/Images/Wallpapers/Draw.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'OLD SPORT 02 ATHLETIC NCV';
         }
+
+            body::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                z-index: -1;
+            }
 
         h1, h2, h5 {
             text-align: center;
@@ -104,70 +115,26 @@
             display: block;
             clear: both;
         }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 300px; /* Adjust the width as needed */
+            margin-left: 32%;
+            margin-top: 20px;
+        }
+
+            .container input[type="submit"] {
+                width: 45%; /* Each button takes up 45% width */
+            }
     </style>
 </head>
 <body>
-    <form method="post">
-        <div class="flex-container">
-            <div class="teams-table">
-                <h5>Teams</h5>
-                <hr />
-                <div class="teams-container">
-                    @foreach (var team in Model.RemainingTeams)
-                    {
-                        <div class="team">@team.Name</div>
-                    }
-                </div>
-                @if (!Model.IsDrawStarted)
-                {
-                    <button class="draw-button" asp-action="GenerateDraw">Generate Draw</button>
-                    <br />
-                    <select class="numOfTeams" asp-for="@Model.NumberOfTeams">
-                        <option value="4">4</option>
-                        <option value="8">8</option>
-                        <option value="16">16</option>
-                        <option value="32">32</option>
-                    </select>
-                }
-            </div>
-
-            <div class="draw-button-container">
-                @if (Model.IsDrawStarted)
-                {
-                  
-                    <input type="submit" asp-action="Draw" asp-route-drawId="@Model.CurrentDrawId" class="draw-button" value="Draw" />
-              
-                    <input type="submit" asp-action="FinalizeDraw" asp-route-drawId="@Model.CurrentDrawId" class="draw-button" value="Finalize Draw" />
-                    
-                }
-            </div>
-            <div class="fixtures-table">
-                <h5>Fixtures</h5>
-                <hr />
-                <table>
-                    <thead>
-                        @foreach (var fixture in Model.AllFixtures)
-                        {
-                            num += 1;
-                            <tr>
-                                <th>@num</th>
-                                <th>@(fixture.HomeTeam != null ? fixture.HomeTeam.Name : "Home Team")</th>
-                                <th>@(fixture.AwayTeam != null ? fixture.AwayTeam.Name : "Away Team")</th>
-                            </tr>
-                        }
-                    </thead>
-                    @if (Model.IsDrawStarted)
-                    {
-                        <tbody>
-                            <!-- Fixtures will be dynamically populated after draw -->
-                        </tbody>
-                    }
-                </table>
-            </div>
+    <form method="get">
+        <div class="container">
+            <input type="submit" value="Elimination" asp-action="EliminationDraw" />
+            <input type="submit" value="Group" asp-action="GroupDraw" />
         </div>
-
-        <!-- Add a horizontal separator between the two tables -->
-        <div class="separator"></div>
     </form>
 </body>
 </html>

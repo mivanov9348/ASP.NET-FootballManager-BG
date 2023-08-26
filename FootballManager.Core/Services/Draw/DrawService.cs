@@ -18,7 +18,7 @@
             this.data = data;
         }
 
-        public Draw CreateDraw(DrawViewModel model)
+        public Draw CreateEliminationDraw(DrawViewModel model)
         {
             DeleteDraws();
 
@@ -55,41 +55,49 @@
             this.data.SaveChanges();
             return newDraw;
         }
-        public void DrawTeam(Draw currentDraw)
+        public Draw CreateGroupDraw(DrawViewModel model)
         {
-
+            throw new NotImplementedException();
+        }
+        public VirtualTeam DrawTeam(Draw currentDraw)
+        {
             var remainingTeams = this.GetRemainingTeams(currentDraw);
+            var randomDrawTeam = new VirtualTeam();
 
-            if (remainingTeams.Count > 0)
+            randomDrawTeam = remainingTeams[rnd.Next(0, remainingTeams.Count)];
+
+            return randomDrawTeam;
+        }
+
+        public void FillEliminationTable(Draw currentDraw, VirtualTeam team)
+        {
+            foreach (var fixture in currentDraw.Fixtures)
             {
-                var randomDrawTeam = remainingTeams[rnd.Next(0, remainingTeams.Count)];
 
-                foreach (var fixture in currentDraw.Fixtures)
+                if (fixture.HomeTeamId == null)
                 {
-                    if (fixture.HomeTeamId == null)
-                    {
-                        fixture.HomeTeamId = randomDrawTeam.Id;
-                        this.data.SaveChanges();
-                        break;  // Break after assigning the home team
-                    }
-                    else if (fixture.AwayTeamId == null)
-                    {
-                        fixture.AwayTeamId = randomDrawTeam.Id;
-                        this.data.SaveChanges();
-                        break;  // Break after assigning the away team
-                    }
+                    fixture.HomeTeamId = team.Id;
+                    fixture.HomeTeamName = team.Name;
+                    this.data.SaveChanges();
+                    break;  // Break after assigning the home team
                 }
-                randomDrawTeam.isDrawed = true;
-
+                else if (fixture.AwayTeamId == null)
+                {
+                    fixture.AwayTeamId = team.Id;
+                    fixture.AwayTeamName = team.Name;
+                    this.data.SaveChanges();
+                    break;  // Break after assigning the away team
+                }
             }
-            else
-            {
-                currentDraw.IsDrawStarted = false;
-            }
+            team.isDrawed = true;
             this.data.SaveChanges();
         }
 
-        public void FinalizeDraw(Draw currentDraw)
+        public void FillGroupTable()
+        {
+            throw new NotImplementedException();
+        }
+        public void AutomaticFill(Draw currentDraw)
         {
             var remainingTeams = this.GetRemainingTeams(currentDraw);
 
@@ -116,24 +124,15 @@
                 randomDrawTeam.isDrawed = true;
                 remainingTeams = this.GetRemainingTeams(currentDraw);
             }
-            currentDraw.IsDrawStarted = false;
             this.data.SaveChanges();
         }
-
         public Draw GetDrawById(int id) => this.data.Draws
             .Include(draw => draw.Teams)
             .Include(draw => draw.Fixtures)
             .FirstOrDefault(x => x.Id == id);
-
         public DrawViewModel GetDrawViewModel(Draw currentDraw)
         {
             var remainingTeams = this.GetRemainingTeams(currentDraw);
-
-            if (remainingTeams.Count == 0)
-            {
-                currentDraw.IsDrawStarted = false;
-                this.data.SaveChanges();
-            }
 
             var newViewModel = new DrawViewModel
             {
@@ -146,14 +145,12 @@
 
             return newViewModel;
         }
-
         public List<VirtualTeam> GetRemainingTeams(Draw currentDraw)
         {
             var currentDrawTeams = currentDraw.Teams;
             return currentDrawTeams.Where(x => x.isDrawed == false).ToList();
         }
-
-        private void DeleteDraws()
+        public void DeleteDraws()
         {
             var allDraws = this.data.Draws.ToList();
             var allFixtures = this.data.Fixtures.Where(x => x.DrawId != null).ToList();
@@ -165,7 +162,6 @@
             this.data.Draws.RemoveRange(allDraws);
             this.data.SaveChanges();
         }
-
         private bool IsExist(VirtualTeam team, List<VirtualTeam> teams)
         {
             if (teams.Contains(team))
@@ -175,6 +171,9 @@
 
             return false;
         }
+
+
+
 
     }
 }
