@@ -13,6 +13,10 @@
                   .WithMany(x => x.Leagues)
                   .HasForeignKey(x => x.NationId);
 
+            builder.HasOne(x => x.Draw)
+                  .WithMany(x => x.Leagues)
+                  .HasForeignKey(x => x.DrawId);
+
             builder.HasMany(x => x.Players)
                   .WithOne(x => x.League)
                   .OnDelete(DeleteBehavior.Restrict);

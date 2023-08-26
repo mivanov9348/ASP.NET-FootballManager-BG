@@ -17,7 +17,6 @@
             this.rnd = new Random();
             this.data = data;
         }
-
         public Draw CreateEliminationDraw(DrawViewModel model)
         {
             DeleteDraws();
@@ -55,9 +54,50 @@
             this.data.SaveChanges();
             return newDraw;
         }
-        public Draw CreateGroupDraw(DrawViewModel model)
+        public Draw CreateGroupDraw(GroupDrawViewModel model)
         {
-            throw new NotImplementedException();
+            DeleteDraws();
+
+            var allTeams = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true || x.IsEuroParticipant == true).ToList();
+            var numOfTeams = model.TeamsPerGroup * model.NumberOfGroups;
+            var teams = new List<VirtualTeam>();
+
+            for (int i = 0; i < numOfTeams; i++)
+            {
+                var team = allTeams[rnd.Next(0, allTeams.Count)];
+                while (IsExist(team, teams))
+                {
+                    team = allTeams[rnd.Next(0, allTeams.Count)];
+                }
+                teams.Add(team);
+            }
+
+            var newDraw = new Draw
+            {
+                Teams = teams,
+                TeamsPergroup = model.TeamsPerGroup,
+                NumOfGroups = model.NumberOfGroups,
+                IsDrawStarted = true
+            };
+            this.data.Draws.Add(newDraw);
+
+            var allDrawLeagues = new List<League>();
+
+            for (int i = 1; i <= model.NumberOfGroups; i++)
+            {
+                
+                var newLeague = new League
+                {
+                    Name = $"Group {i}",
+                    DrawId = newDraw.Id,
+                };
+                allDrawLeagues.Add(newLeague);
+            }
+
+            newDraw.Leagues = allDrawLeagues;
+
+            this.data.SaveChanges();
+            return newDraw;
         }
         public VirtualTeam DrawTeam(Draw currentDraw)
         {
@@ -92,7 +132,6 @@
             team.isDrawed = true;
             this.data.SaveChanges();
         }
-
         public void FillGroupTable()
         {
             throw new NotImplementedException();
@@ -111,12 +150,14 @@
                     if (fixture.HomeTeamId == null)
                     {
                         fixture.HomeTeamId = randomDrawTeam.Id;
+                        fixture.HomeTeamName = randomDrawTeam.Name;
                         this.data.SaveChanges();
                         break;
                     }
                     else if (fixture.AwayTeamId == null)
                     {
                         fixture.AwayTeamId = randomDrawTeam.Id;
+                        fixture.AwayTeamName = randomDrawTeam.Name;
                         this.data.SaveChanges();
                         break;
                     }
@@ -145,6 +186,23 @@
 
             return newViewModel;
         }
+        public GroupDrawViewModel GetGroupDrawViewModel(Draw currentDraw)
+        {
+            var remainingTeams = this.GetRemainingTeams(currentDraw);
+
+            var newViewModel = new GroupDrawViewModel
+            {
+                Teams = currentDraw.Teams,
+                IsDrawStarted = currentDraw.IsDrawStarted,
+                DrawId = currentDraw.Id,
+                RemainingTeams = remainingTeams,
+                NumberOfGroups = currentDraw.NumOfGroups,
+                TeamsPerGroup = currentDraw.TeamsPergroup,
+                Leagues = currentDraw.Leagues
+            };
+
+            return newViewModel;
+        }
         public List<VirtualTeam> GetRemainingTeams(Draw currentDraw)
         {
             var currentDrawTeams = currentDraw.Teams;
@@ -154,11 +212,15 @@
         {
             var allDraws = this.data.Draws.ToList();
             var allFixtures = this.data.Fixtures.Where(x => x.DrawId != null).ToList();
+            var allLeagues = this.data.Leagues.Where(x => x.DrawId != null).ToList();
+
             foreach (var teams in this.data.VirtualTeams)
             {
                 teams.isDrawed = false;
             }
             this.data.Fixtures.RemoveRange(allFixtures);
+            this.data.Leagues.RemoveRange(allLeagues);
+
             this.data.Draws.RemoveRange(allDraws);
             this.data.SaveChanges();
         }
@@ -171,9 +233,6 @@
 
             return false;
         }
-
-
-
 
     }
 }

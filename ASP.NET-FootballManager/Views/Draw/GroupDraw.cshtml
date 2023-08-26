@@ -104,7 +104,6 @@
                 <option value="4">4</option>
                 <option value="8">8</option>
                 <option value="16">16</option>
-                <option value="32">32</option>
             </select>
             <select id="teamsSelect" asp-for="@Model.TeamsPerGroup">
                 <option value="">Teams Per Group:</option>
@@ -119,37 +118,41 @@
         else
         {
             <div class="teams-list">
-                @for (int i = 1; i <= @Model.TeamsCount; i++)
+                @foreach (var team in Model.RemainingTeams)
                 {
-                    <div class="team-container">Team @i</div>
+                    <div class="team-container">@team.Name</div>
                 }
             </div>
             <hr />
-            <input type="submit" value="Draw" class="drawButton" />
-            <form method="get">
+            <form method="post">
+                <input type="submit" value="Draw" class="drawButton" asp-action="GroupDraw" asp-route-drawId="@Model.DrawId" />
                 <input type="submit" value="Reset" class="resetButton" asp-action="ResetGroupDraw" />
             </form>
             <hr />
             <div id="tablesContainer" class="tables-row">
-                @for (int i = 0; i < Model.NumberOfGroups; i++)
+                @foreach (var league in @Model.Leagues)
                 {
                     <table>
+                        <tr>
+                            <th colspan="3">@league.Name</th>
+                        </tr>
                         <tr>
                             <th>Num</th>
                             <th>Team Name</th>
                             <th>Nation</th>
                         </tr>
-                        @for (int k = 1; k <= @Model.TeamsPerGroup; k++)
+
+                        @foreach (var team in league.VirtualTeams)
                         {
                             <tr>
-                                <td>@k</td>
-                                <td>Team A</td>
-                                <td>NA</td>
+                                <th>1</th>
+                                <th>@(team.Name != null ? team.Name : "")</th>
+                                <th></th>
                             </tr>
                         }
 
-
                     </table>
+
                 }
             </div>
         }

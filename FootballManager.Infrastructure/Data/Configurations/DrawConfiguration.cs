@@ -19,7 +19,10 @@ namespace FootballManager.Infrastructure.Data.Configurations
                    .WithOne(x => x.Draw)
                    .OnDelete(DeleteBehavior.Restrict);
 
-           
+            builder.HasMany(x => x.Leagues)
+                   .WithOne(x => x.Draw)
+                   .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

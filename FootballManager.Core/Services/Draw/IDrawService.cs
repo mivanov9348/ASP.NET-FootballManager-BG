@@ -7,7 +7,7 @@
     public interface IDrawService
     {
         Draw CreateEliminationDraw(DrawViewModel model);
-        Draw CreateGroupDraw(DrawViewModel model);
+        Draw CreateGroupDraw(GroupDrawViewModel model);
         VirtualTeam DrawTeam(Draw currentDraw);
         void FillEliminationTable(Draw currentDraw, VirtualTeam team);
         void FillGroupTable();
@@ -16,5 +16,7 @@
         Draw GetDrawById(int id);
         List<VirtualTeam> GetRemainingTeams(Draw currentDraw);
         DrawViewModel GetDrawViewModel(Draw currentDraw);
+        GroupDrawViewModel GetGroupDrawViewModel(Draw currentDraw);
+
     }
 }

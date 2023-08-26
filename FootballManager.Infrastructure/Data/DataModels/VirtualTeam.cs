@@ -7,7 +7,7 @@ namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
         public int Id { get; set; }
         public string Name { get; set; }
         public string ImageUrl { get; set; }
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
         public Team Team { get; set; }
         public int GameId { get; set; }
         public Game Game { get; set; }

@@ -4,6 +4,7 @@ using ASP.NET_FootballManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230826124240_AddDrawOptions")]
+    partial class AddDrawOptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,24 +302,19 @@ namespace FootballManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("DrawId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Level")
+                    b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("NationId")
+                    b.Property<int>("NationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Rounds")
+                    b.Property<int>("Rounds")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DrawId");
 
                     b.HasIndex("NationId");
 
@@ -680,7 +677,7 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TeamId")
+                    b.Property<int>("TeamId")
                         .HasColumnType("int");
 
                     b.Property<int>("Titles")
@@ -1250,17 +1247,11 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", b =>
                 {
-                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", "Draw")
-                        .WithMany("Leagues")
-                        .HasForeignKey("DrawId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
                         .WithMany("Leagues")
                         .HasForeignKey("NationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Draw");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Nation");
                 });
@@ -1423,7 +1414,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", "Team")
                         .WithMany("VirtualTeams")
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Cup");
 
@@ -1651,8 +1643,6 @@ namespace FootballManager.Infrastructure.Migrations
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Draw", b =>
                 {
                     b.Navigation("Fixtures");
-
-                    b.Navigation("Leagues");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
