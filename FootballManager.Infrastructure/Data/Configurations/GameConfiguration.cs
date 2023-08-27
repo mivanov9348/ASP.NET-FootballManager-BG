@@ -2,6 +2,7 @@
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     public class GameConfiguration : IEntityTypeConfiguration<Game>
@@ -22,6 +23,11 @@
                    .WithMany(x => x.Games)
                    .HasForeignKey(x => x.GameOptionId);
 
+            builder.HasOne<IdentityUser>()
+                  .WithOne()
+                  .HasForeignKey<Game>(x => x.UserId);
+
+
             builder.HasMany(x => x.Inboxes)
                 .WithOne(x => x.Game)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -41,6 +47,7 @@
             builder.HasMany(x => x.Matches)
                .WithOne(x => x.Game)
                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

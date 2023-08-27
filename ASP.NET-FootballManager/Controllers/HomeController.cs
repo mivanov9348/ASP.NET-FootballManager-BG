@@ -132,7 +132,7 @@
             var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
             //CreateGame
             await SendMessageToHTML("Creating New Game...");
-            var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager);
+            var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager, userId);
             //CalculateDaysForSeason              
             await SendMessageToHTML("Calculating Days...");
             serviceAggregator.dayService.CalculateDays(currentGame);

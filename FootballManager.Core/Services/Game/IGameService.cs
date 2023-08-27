@@ -3,8 +3,8 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public interface IGameService
     {
-        Game CreateNewGame(Manager manager);
-        Game GetCurrentGame(int id);
+        Game CreateNewGame(Manager manager, string userId);
+        Game GetCurrentGame(string userId);
 
         bool isExistGame(string UserId);
         void NextDay(Game currentGame);

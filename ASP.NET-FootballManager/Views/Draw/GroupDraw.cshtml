@@ -115,47 +115,55 @@
             <input type="submit" value="Select" asp-action="GroupDraw" />
             <hr />
         }
-        else
+
+        <div class="teams-list">
+            @foreach (var team in Model.RemainingTeams)
+            {
+                <div class="team-container">@team.Name</div>
+            }
+        </div>
+        <hr />
+        @if (Model.IsDrawStarted)
         {
-            <div class="teams-list">
-                @foreach (var team in Model.RemainingTeams)
-                {
-                    <div class="team-container">@team.Name</div>
-                }
-            </div>
-            <hr />
             <form method="post">
-                <input type="submit" value="Draw" class="drawButton" asp-action="GroupDraw" asp-route-drawId="@Model.DrawId" />
+                <input type="submit" value="Draw" class="drawButton" asp-action="DrawAGroupTeam" asp-route-drawId="@Model.DrawId" />
                 <input type="submit" value="Reset" class="resetButton" asp-action="ResetGroupDraw" />
             </form>
-            <hr />
-            <div id="tablesContainer" class="tables-row">
-                @foreach (var league in @Model.Leagues)
-                {
-                    <table>
-                        <tr>
-                            <th colspan="3">@league.Name</th>
-                        </tr>
-                        <tr>
-                            <th>Num</th>
-                            <th>Team Name</th>
-                            <th>Nation</th>
-                        </tr>
-
-                        @foreach (var team in league.VirtualTeams)
-                        {
-                            <tr>
-                                <th>1</th>
-                                <th>@(team.Name != null ? team.Name : "")</th>
-                                <th></th>
-                            </tr>
-                        }
-
-                    </table>
-
-                }
-            </div>
         }
+        <hr />
+        <div id="tablesContainer" class="tables-row">
+            @foreach (var league in @Model.Leagues)
+            {
+                <table>
+                    <tr>
+                        <th colspan="3">@league.Name</th>
+                    </tr>
+                    <tr>
+                        <th>Num</th>
+                        <th>Team Name</th>
+                        <th>Nation</th>
+                    </tr>
+
+                    @foreach (var team in league.VirtualTeams)
+                    {
+                        <tr>
+                            <th>1</th>
+                            <th>@(team.Name != null ? team.Name : "")</th>
+                            @if (team.Team != null)
+                            {
+                                <th>@(team.Team.Nation.Abbr != null ? team.Team.Nation.Abbr : "")</th>
+                            }
+                            else
+                            {
+                                <th></th>
+                            }
+                        </tr>
+                    }
+
+                </table>
+
+            }
+        </div>
 
     </form>
 </body>

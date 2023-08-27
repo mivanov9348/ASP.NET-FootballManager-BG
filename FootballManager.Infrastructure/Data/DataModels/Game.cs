@@ -1,10 +1,15 @@
 ﻿using FootballManager.Infrastructure.Data.DataModels;
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
 {
     public class Game
     {
         public int Id { get; set; }
+        [Required]
+        public string UserId { get; set; }
+        public IdentityUser User { get; set; }
         public int ManagerId { get; set; }
         public Manager Manager { get; set; }
         public int TeamId { get; set; }

@@ -54,6 +54,8 @@ namespace FootballManager.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NumOfGroups = table.Column<int>(type: "int", nullable: true),
+                    TeamsPergroup = table.Column<int>(type: "int", nullable: true),
                     IsDrawStarted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -310,13 +312,20 @@ namespace FootballManager.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Level = table.Column<int>(type: "int", nullable: false),
-                    Rounds = table.Column<int>(type: "int", nullable: false),
-                    NationId = table.Column<int>(type: "int", nullable: false)
+                    Level = table.Column<int>(type: "int", nullable: true),
+                    Rounds = table.Column<int>(type: "int", nullable: true),
+                    DrawId = table.Column<int>(type: "int", nullable: true),
+                    NationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Leagues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Leagues_Draws_DrawId",
+                        column: x => x.DrawId,
+                        principalTable: "Draws",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Leagues_Nations_NationId",
                         column: x => x.NationId,
@@ -418,6 +427,8 @@ namespace FootballManager.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ManagerId = table.Column<int>(type: "int", nullable: false),
                     TeamId = table.Column<int>(type: "int", nullable: false),
                     GameOptionId = table.Column<int>(type: "int", nullable: false),
@@ -431,6 +442,17 @@ namespace FootballManager.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Games_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Games_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Games_GameOptions_GameOptionId",
                         column: x => x.GameOptionId,
@@ -509,7 +531,7 @@ namespace FootballManager.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TeamId = table.Column<int>(type: "int", nullable: false),
+                    TeamId = table.Column<int>(type: "int", nullable: true),
                     GameId = table.Column<int>(type: "int", nullable: false),
                     LeagueId = table.Column<int>(type: "int", nullable: true),
                     CupId = table.Column<int>(type: "int", nullable: true),
@@ -950,9 +972,25 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Games_UserId",
+                table: "Games",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_UserId1",
+                table: "Games",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Inboxes_GameId",
                 table: "Inboxes",
                 column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Leagues_DrawId",
+                table: "Leagues",
+                column: "DrawId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leagues_NationId",
@@ -1131,9 +1169,6 @@ namespace FootballManager.Infrastructure.Migrations
                 name: "Days");
 
             migrationBuilder.DropTable(
-                name: "Draws");
-
-            migrationBuilder.DropTable(
                 name: "Positions");
 
             migrationBuilder.DropTable(
@@ -1165,6 +1200,9 @@ namespace FootballManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Leagues");
+
+            migrationBuilder.DropTable(
+                name: "Draws");
 
             migrationBuilder.DropTable(
                 name: "Nations");

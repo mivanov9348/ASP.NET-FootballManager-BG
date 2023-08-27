@@ -54,7 +54,7 @@
             this.data.SaveChanges();
             return newDraw;
         }
-        public Draw CreateGroupDraw(GroupDrawViewModel model)
+        public Draw CreateGroupDraw(GroupDrawViewModel model, Game currentGame)
         {
             DeleteDraws();
 
@@ -85,13 +85,27 @@
 
             for (int i = 1; i <= model.NumberOfGroups; i++)
             {
-                
                 var newLeague = new League
                 {
                     Name = $"Group {i}",
-                    DrawId = newDraw.Id,
+                    DrawId = newDraw.Id
                 };
                 allDrawLeagues.Add(newLeague);
+
+                var allLeagueVirtualTeams = new List<VirtualTeam>();
+                for (int j = 0; j < model.TeamsPerGroup; j++)
+                {
+                    var newVirtualTeam = new VirtualTeam
+                    {
+                        Game = currentGame,
+                        GameId = currentGame.Id,
+                        League = newLeague,
+                        LeagueId = newLeague.Id
+                    };
+                    this.data.VirtualTeams.Add(newVirtualTeam);
+                    allLeagueVirtualTeams.Add(newVirtualTeam);
+                }
+                newLeague.VirtualTeams = allLeagueVirtualTeams;
             }
 
             newDraw.Leagues = allDrawLeagues;
@@ -103,7 +117,6 @@
         {
             var remainingTeams = this.GetRemainingTeams(currentDraw);
             var randomDrawTeam = new VirtualTeam();
-
             randomDrawTeam = remainingTeams[rnd.Next(0, remainingTeams.Count)];
 
             return randomDrawTeam;
@@ -113,7 +126,6 @@
         {
             foreach (var fixture in currentDraw.Fixtures)
             {
-
                 if (fixture.HomeTeamId == null)
                 {
                     fixture.HomeTeamId = team.Id;
@@ -132,9 +144,22 @@
             team.isDrawed = true;
             this.data.SaveChanges();
         }
-        public void FillGroupTable()
+        public void FillGroupTable(Draw currentDraw, VirtualTeam team)
         {
-            throw new NotImplementedException();
+            var allDrawLeagues = this.data.Leagues.Where(x => x.DrawId == currentDraw.Id).ToList();
+            foreach (var league in allDrawLeagues)
+            {
+                var leagueVirtualTeams = this.data.VirtualTeams.Where(x => x.LeagueId == league.Id).ToList();
+
+                if (leagueVirtualTeams.Count < currentDraw.TeamsPergroup)
+                {
+                    var firstEmptyTeam = leagueVirtualTeams.FirstOrDefault(x => x.Team == null);
+                    firstEmptyTeam = team;
+                    team.isDrawed = true;
+                    break;
+                }
+            }
+            this.data.SaveChanges();
         }
         public void AutomaticFill(Draw currentDraw)
         {
@@ -189,16 +214,20 @@
         public GroupDrawViewModel GetGroupDrawViewModel(Draw currentDraw)
         {
             var remainingTeams = this.GetRemainingTeams(currentDraw);
+            var allNations = this.data.Nations.ToList();
+            var allTeams = this.data.Teams.ToList();
 
             var newViewModel = new GroupDrawViewModel
             {
-                Teams = currentDraw.Teams,
+                Teams = allTeams,
                 IsDrawStarted = currentDraw.IsDrawStarted,
                 DrawId = currentDraw.Id,
                 RemainingTeams = remainingTeams,
                 NumberOfGroups = currentDraw.NumOfGroups,
                 TeamsPerGroup = currentDraw.TeamsPergroup,
-                Leagues = currentDraw.Leagues
+                Leagues = currentDraw.Leagues,
+                Nations = allNations,
+
             };
 
             return newViewModel;

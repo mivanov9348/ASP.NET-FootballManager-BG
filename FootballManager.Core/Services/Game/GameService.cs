@@ -21,8 +21,8 @@
             }
             return false;
         }
-        public Game GetCurrentGame(int id) => this.data.Games.FirstOrDefault(x => x.ManagerId == id);
-        public Game CreateNewGame(Manager manager)
+        public Game GetCurrentGame(string userId) => this.data.Games.FirstOrDefault(x => x.UserId == userId);
+        public Game CreateNewGame(Manager manager, string userId)
         {
             var currentTeam = this.data.Teams.FirstOrDefault(x => x.Id == manager.CurrentTeamId);
             var currentGameOptions = this.data.GameOptions.FirstOrDefault(x => x.UserId == manager.UserId);
@@ -39,8 +39,9 @@
                 ManagerId = manager.Id,
                 Team = currentTeam,
                 TeamId = currentTeam.Id,
-                GameOption= currentGameOptions,
-                GameOptionId= currentGameOptions.Id               
+                GameOption = currentGameOptions,
+                GameOptionId = currentGameOptions.Id,
+                UserId = userId
             };
 
             currentGameOptions.Games.Add(newGame);

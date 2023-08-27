@@ -6,6 +6,8 @@
     using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
+    using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+    using System.Security.Claims;
 
     public class DrawController : Controller
     {
@@ -92,32 +94,34 @@
         [HttpPost]
         public IActionResult GroupDraw(GroupDrawViewModel model)
         {
-            var currentDraw = this.serviceAggregator.drawService.CreateGroupDraw(model);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
+            var currentDraw = this.serviceAggregator.drawService.CreateGroupDraw(model, currentGame);
             var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
             var currentModel = this.serviceAggregator.drawService.GetGroupDrawViewModel(currentDraw);
 
             return View(currentModel);
         }
-      // public IActionResult GroupDraw(GroupDrawViewModel model, int drawId)
-      // {
-      //     var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
-      //     var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
-      //
-      //     if (remainingTeams.Count > 0)
-      //     {
-      //         var drawedTeam = this.serviceAggregator.drawService.DrawTeam(currentDraw);
-      //
-      //         remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
-      //     }
-      //
-      //     if (remainingTeams.Count == 0)
-      //     {
-      //         currentDraw.IsDrawStarted = false;
-      //     }
-      //
-      //     var groupDrawViewModel = this.serviceAggregator.drawService.GetGroupDrawViewModel(currentDraw);
-      //     return View("GroupDraw", groupDrawViewModel);
-      // }      
+        public IActionResult DrawAGroupTeam(GroupDrawViewModel model, int drawId)
+        {
+            var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
+            var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
+           
+            if (remainingTeams.Count > 0)
+            {
+                var drawedTeam = this.serviceAggregator.drawService.DrawTeam(currentDraw);
+                this.serviceAggregator.drawService.FillGroupTable(currentDraw, drawedTeam);
+                remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
+            }
+
+            if (remainingTeams.Count == 0)
+            {
+                currentDraw.IsDrawStarted = false;
+            }
+
+            var groupDrawViewModel = this.serviceAggregator.drawService.GetGroupDrawViewModel(currentDraw);
+            return View("GroupDraw", groupDrawViewModel);
+        }
 
         public IActionResult ResetGroupDraw(GroupDrawViewModel model)
         {
@@ -127,6 +131,6 @@
             {
                 IsDrawStarted = false
             });
-        }        
+        }
     }
 }
