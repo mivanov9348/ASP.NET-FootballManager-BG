@@ -106,12 +106,16 @@
         {
             var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
             var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
-           
+            var drawedleagueName = "";
+            var drawedTeamName = "";
+
             if (remainingTeams.Count > 0)
             {
                 var drawedTeam = this.serviceAggregator.drawService.DrawTeam(currentDraw);
-                this.serviceAggregator.drawService.FillGroupTable(currentDraw, drawedTeam);
+                var teamAndLeagueName = this.serviceAggregator.drawService.FillGroupTable(currentDraw, drawedTeam);
                 remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
+                drawedTeamName = teamAndLeagueName.Item1;
+                drawedleagueName = teamAndLeagueName.Item2;
             }
 
             if (remainingTeams.Count == 0)
@@ -120,6 +124,8 @@
             }
 
             var groupDrawViewModel = this.serviceAggregator.drawService.GetGroupDrawViewModel(currentDraw);
+            groupDrawViewModel.DrawedTeamName = drawedTeamName;
+            groupDrawViewModel.DrawedGroupName = drawedleagueName;
             return View("GroupDraw", groupDrawViewModel);
         }
 

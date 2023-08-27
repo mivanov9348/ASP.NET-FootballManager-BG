@@ -89,6 +89,12 @@
             background-color: red;
             color: white;
         }
+
+        .drawText {
+            text-align: center;
+            font-weight: bolder;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -110,12 +116,10 @@
                 <option value="2">2</option>
                 <option value="4">4</option>
                 <option value="8">8</option>
-                <option value="16">16</option>
             </select>
             <input type="submit" value="Select" asp-action="GroupDraw" />
             <hr />
         }
-
         <div class="teams-list">
             @foreach (var team in Model.RemainingTeams)
             {
@@ -129,8 +133,10 @@
                 <input type="submit" value="Draw" class="drawButton" asp-action="DrawAGroupTeam" asp-route-drawId="@Model.DrawId" />
                 <input type="submit" value="Reset" class="resetButton" asp-action="ResetGroupDraw" />
             </form>
+            <p class="drawText"><span style="color:red">@Model.DrawedTeamName</span> is draw in <span style="color:green">@Model.DrawedGroupName</span></p>
+
+            <hr />
         }
-        <hr />
         <div id="tablesContainer" class="tables-row">
             @foreach (var league in @Model.Leagues)
             {
@@ -143,6 +149,7 @@
                         <th>Team Name</th>
                         <th>Nation</th>
                     </tr>
+
 
                     @foreach (var team in league.VirtualTeams)
                     {
@@ -159,12 +166,17 @@
                             }
                         </tr>
                     }
-
+                    @for (int i = 0; i < (Model.TeamsPerGroup - league.VirtualTeams.Count); i++)
+                    {
+                        <tr>
+                            <th>1</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    }
                 </table>
-
             }
         </div>
-
     </form>
 </body>
 </html>

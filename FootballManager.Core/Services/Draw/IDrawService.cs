@@ -10,7 +10,7 @@
         Draw CreateGroupDraw(GroupDrawViewModel model, Game currentGame);
         VirtualTeam DrawTeam(Draw currentDraw);
         void FillEliminationTable(Draw currentDraw, VirtualTeam team);
-        void FillGroupTable(Draw currentDraw, VirtualTeam team);
+        (string,string) FillGroupTable(Draw currentDraw, VirtualTeam team);
         void AutomaticFill(Draw currentDraw);
         void DeleteDraws();
         Draw GetDrawById(int id);

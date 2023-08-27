@@ -91,21 +91,6 @@
                     DrawId = newDraw.Id
                 };
                 allDrawLeagues.Add(newLeague);
-
-                var allLeagueVirtualTeams = new List<VirtualTeam>();
-                for (int j = 0; j < model.TeamsPerGroup; j++)
-                {
-                    var newVirtualTeam = new VirtualTeam
-                    {
-                        Game = currentGame,
-                        GameId = currentGame.Id,
-                        League = newLeague,
-                        LeagueId = newLeague.Id
-                    };
-                    this.data.VirtualTeams.Add(newVirtualTeam);
-                    allLeagueVirtualTeams.Add(newVirtualTeam);
-                }
-                newLeague.VirtualTeams = allLeagueVirtualTeams;
             }
 
             newDraw.Leagues = allDrawLeagues;
@@ -144,22 +129,22 @@
             team.isDrawed = true;
             this.data.SaveChanges();
         }
-        public void FillGroupTable(Draw currentDraw, VirtualTeam team)
+        public (string,string) FillGroupTable(Draw currentDraw, VirtualTeam team)
         {
             var allDrawLeagues = this.data.Leagues.Where(x => x.DrawId == currentDraw.Id).ToList();
+            var currentLeagueName = "";
             foreach (var league in allDrawLeagues)
             {
-                var leagueVirtualTeams = this.data.VirtualTeams.Where(x => x.LeagueId == league.Id).ToList();
-
-                if (leagueVirtualTeams.Count < currentDraw.TeamsPergroup)
+                if (league.VirtualTeams.Count < currentDraw.TeamsPergroup)
                 {
-                    var firstEmptyTeam = leagueVirtualTeams.FirstOrDefault(x => x.Team == null);
-                    firstEmptyTeam = team;
+                    league.VirtualTeams.Add(team);
                     team.isDrawed = true;
+                    currentLeagueName = league.Name;
                     break;
                 }
             }
             this.data.SaveChanges();
+            return (team.Name,currentLeagueName);
         }
         public void AutomaticFill(Draw currentDraw)
         {
@@ -263,6 +248,7 @@
             return false;
         }
 
+       
     }
 }
 
