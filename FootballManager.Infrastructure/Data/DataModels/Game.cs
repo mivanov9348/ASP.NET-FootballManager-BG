@@ -1,4 +1,5 @@
 ﻿using FootballManager.Infrastructure.Data.DataModels;
+using FootballManager.Infrastructure.Data.DataModels.Calendar;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 

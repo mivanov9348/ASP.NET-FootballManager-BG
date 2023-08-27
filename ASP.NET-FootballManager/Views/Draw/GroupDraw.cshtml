@@ -1,6 +1,7 @@
 ﻿@using FootballManager.Core.Models.Draw;
 @model GroupDrawViewModel
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,12 +96,16 @@
             font-weight: bolder;
             font-style: italic;
         }
+
+        .autoCompleteButton{
+            background-color:blue;
+            color:white;
+        }
     </style>
 </head>
 <body>
     <form method="post">
-        <h1 class="title">Group Draw</h1>
-        <hr />
+            <hr />
         @if (!Model.IsDrawStarted)
         {
             <select id="groupSelect" asp-for="@Model.NumberOfGroups">
@@ -131,6 +136,7 @@
         {
             <form method="post">
                 <input type="submit" value="Draw" class="drawButton" asp-action="DrawAGroupTeam" asp-route-drawId="@Model.DrawId" />
+                <input type="submit" hidden value="Auto Complete" class="autoCompleteButton" asp-action="AutoCompleteGroupDraw" asp-route-drawId="@Model.DrawId"  />
                 <input type="submit" value="Reset" class="resetButton" asp-action="ResetGroupDraw" />
             </form>
             <p class="drawText"><span style="color:red">@Model.DrawedTeamName</span> is draw in <span style="color:green">@Model.DrawedGroupName</span></p>
@@ -153,6 +159,7 @@
 
                     @foreach (var team in league.VirtualTeams)
                     {
+
                         <tr>
                             <th>1</th>
                             <th>@(team.Name != null ? team.Name : "")</th>
@@ -178,5 +185,6 @@
             }
         </div>
     </form>
+ 
 </body>
 </html>

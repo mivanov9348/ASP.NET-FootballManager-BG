@@ -54,23 +54,21 @@
             var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
             return View("EliminationDraw", drawViewModel);
         }
-        public IActionResult FinalizeEliminationDraw(DrawViewModel model, int drawId)
-        {
-            var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
-            var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
-
-            if (remainingTeams.Any())
-            {
-                this.serviceAggregator.drawService.AutomaticFill(currentDraw);
-            }
-
-
-            currentDraw.IsDrawStarted = false;
-
-
-            var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
-            return View("EliminationDraw", drawViewModel);
-        }
+       // public IActionResult FinalizeEliminationDraw(DrawViewModel model, int drawId)
+       // {
+       //     var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
+       //     var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
+       //
+       //     if (remainingTeams.Any())
+       //     {
+       //         this.serviceAggregator.drawService.AutoCompleteElimination(currentDraw);
+       //     }
+       //
+       //     currentDraw.IsDrawStarted = false;
+       //
+       //     var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
+       //     return View("EliminationDraw", drawViewModel);
+       // }
         public IActionResult ResetEliminationDraw(GroupDrawViewModel model)
         {
             this.serviceAggregator.drawService.DeleteDraws();
@@ -127,6 +125,22 @@
             groupDrawViewModel.DrawedTeamName = drawedTeamName;
             groupDrawViewModel.DrawedGroupName = drawedleagueName;
             return View("GroupDraw", groupDrawViewModel);
+        }
+        public IActionResult AutoCompleteGroupDraw(int drawId)
+        {
+            // var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
+            // var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
+            //
+            // if (remainingTeams.Any())
+            // {
+            //     this.serviceAggregator.drawService.AutomaticFill(currentDraw);
+            // }
+            //
+            // currentDraw.IsDrawStarted = false;
+            //
+            // var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
+            // return View("EliminationDraw", drawViewModel);
+            return View("GroupDraw");
         }
 
         public IActionResult ResetGroupDraw(GroupDrawViewModel model)

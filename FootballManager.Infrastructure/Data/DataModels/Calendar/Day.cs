@@ -1,5 +1,7 @@
-namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
-{    
+using FootballManager.Infrastructure.Data.DataModels.Calendar;
+
+namespace FootballManager.Infrastructure.Data.DataModels.Calendar
+{
     using System.ComponentModel.DataAnnotations;
     public class Day
     {

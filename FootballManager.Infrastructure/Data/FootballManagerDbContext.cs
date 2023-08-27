@@ -2,6 +2,7 @@
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@
         public DbSet<Nation> Nations { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Day> Days { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerAttribute> PlayerAttributes { get; set; }
         public DbSet<PlayerStats> PlayerStats { get; set; }
@@ -22,8 +24,7 @@
         public DbSet<VirtualTeam> VirtualTeams { get; set; }
         public DbSet<Inbox> Inboxes { get; set; }
         public DbSet<Fixture> Fixtures { get; set; }
-        public DbSet<Match> Matches { get; set; }
-        public DbSet<Day> Days { get; set; }
+        public DbSet<Match> Matches { get; set; }       
         public DbSet<EuropeanCup> EuropeanCups { get; set; }
         public DbSet<Cup> Cups { get; set; }
         public DbSet<Message> Messages { get; set; }
