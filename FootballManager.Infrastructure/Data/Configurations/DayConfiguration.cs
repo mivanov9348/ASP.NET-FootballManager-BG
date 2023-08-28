@@ -9,13 +9,21 @@
         {
             builder.HasKey(x => x.Id);
 
+            builder.HasOne(x => x.Month)
+                  .WithMany(x => x.Days)
+                  .HasForeignKey(x => x.MonthId);
+
+            builder.HasOne(x => x.Year)
+                   .WithMany(x => x.Days)
+                   .HasForeignKey(x => x.YearId);
+
             builder.HasOne(x => x.Game)
-               .WithMany(x => x.Days)
-               .HasForeignKey(x => x.GameId);
+                   .WithMany(x => x.Days)
+                   .HasForeignKey(x => x.GameId);
 
             builder.HasMany(x => x.Fixtures)
-               .WithOne(x => x.Day)
-               .OnDelete(DeleteBehavior.Restrict);
+                   .WithOne(x => x.Day)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

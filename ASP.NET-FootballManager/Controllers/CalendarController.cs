@@ -13,7 +13,6 @@ namespace ASP.NET_FootballManager.Controllers
         {
             this.serviceAggregator = serviceAggregator;
         }
-
         public async Task<IActionResult> Index()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);

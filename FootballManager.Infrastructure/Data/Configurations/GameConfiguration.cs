@@ -27,7 +27,6 @@
                   .WithOne()
                   .HasForeignKey<Game>(x => x.UserId);
 
-
             builder.HasMany(x => x.Inboxes)
                 .WithOne(x => x.Game)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -37,6 +36,14 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(x => x.Players)
+                .WithOne(x => x.Game)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.Years)
+                .WithOne(x => x.Game)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.Months)
                 .WithOne(x => x.Game)
                 .OnDelete(DeleteBehavior.Restrict);
 

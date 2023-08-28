@@ -13,6 +13,8 @@
         public DbSet<Nation> Nations { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Year> Years { get; set; }
+        public DbSet<Month> Months { get; set; }
         public DbSet<Day> Days { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerAttribute> PlayerAttributes { get; set; }

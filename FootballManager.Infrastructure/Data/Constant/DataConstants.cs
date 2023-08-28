@@ -82,6 +82,12 @@
             public const int FourthLevel = 4;
         }
 
+        public class YearStats
+        {
+            public const int MonthsCount = 12;
+            public const int DaysCount = 30;
+           
+        }
 
     }
 }
