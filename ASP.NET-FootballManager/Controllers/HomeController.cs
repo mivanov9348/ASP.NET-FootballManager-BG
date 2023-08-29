@@ -133,9 +133,13 @@
             //CreateGame
             await SendMessageToHTML("Creating New Game...");
             var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager, userId);
+            //CreateCalendarYear
+            await SendMessageToHTML("Creating Season Year...");
+            serviceAggregator.calendarService.CreateYear(currentGame);
             //CalculateDaysForSeason              
             await SendMessageToHTML("Calculating Days...");
-            serviceAggregator.dayService.CalculateDays(currentGame);
+
+
             serviceAggregator.fixtureService.AddFixtureToDay(currentGame);
             //NewManagerNews
             await SendMessageToHTML("Writing news...");

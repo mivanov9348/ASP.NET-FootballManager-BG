@@ -14,7 +14,7 @@
         public void GenerateLeagueFixtures(Game game)
         {
             var allLeagues = this.data.Leagues.ToList();
-            var leagueDays = this.data.Days.Where(x => x.isLeagueDay == true && x.GameId == game.Id && x.Year == game.Year).ToList();
+            var leagueDays = this.data.Days.Where(x => x.isLeagueDay == true && x.GameId == game.Id && x.Year.YearOrder == game.Year).ToList();
 
             foreach (var item in allLeagues)
             {
@@ -80,7 +80,7 @@
             var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
             var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
 
-            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true && x.Year == game.Year);
+            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true && x.Year.YearOrder == game.Year);
 
             if (currentDay != null)
             {
@@ -142,14 +142,12 @@
                     this.data.SaveChanges();
                 }
             }
-
-
         }
         public void GenerateCupFixtures(Game game)
         {
             var teamsInCup = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true && x.GameId == game.Id).ToList();
             var currentCup = this.data.Cups.First();
-            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.GameId == game.Id && x.IsPlayed == false && x.isCupDay && x.Year == game.Year);
+            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.GameId == game.Id && x.IsPlayed == false && x.isCupDay && x.Year.YearOrder == game.Year);
 
             if (currentDay != null)
             {
@@ -239,7 +237,7 @@
         public void AddFixtureToDay(Game game)
         {
             var fixtureList = this.data.Fixtures.Where(x => x.GameId == game.Id);
-            var days = this.data.Days.Where(x => x.GameId == game.Id && x.Year == game.Year);
+            var days = this.data.Days.Where(x => x.GameId == game.Id && x.Year.YearOrder == game.Year);
             var round = 0;
 
             var leagueFixtures = fixtureList.Where(x => x.League != null && x.Cup == null && x.EuropeanCup == null).ToList();

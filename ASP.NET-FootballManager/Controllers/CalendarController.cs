@@ -16,7 +16,7 @@ namespace ASP.NET_FootballManager.Controllers
         public async Task<IActionResult> Index()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var days = await serviceAggregator.dayService.GetAllDays(CurrentGame);
+            var days = await serviceAggregator.calendarService.GetAllDays(CurrentGame);
             var year = CurrentGame.Year;
 
             return View(new CalendarViewModel

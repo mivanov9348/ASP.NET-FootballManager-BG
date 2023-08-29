@@ -66,7 +66,7 @@
             var positions = await serviceAggregator.commonService.GetAllPositions();
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay = await serviceAggregator.dayService.GetCurrentDay(CurrentGame);
+            var currentDay = await serviceAggregator.calendarService.GetCurrentDay(CurrentGame);
 
             if (currentFixture == null)
             {
@@ -109,7 +109,7 @@
             var currentMatch = await serviceAggregator.matchService.GetCurrentMatch(id);
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay = await serviceAggregator.dayService.GetCurrentDay(CurrentGame);
+            var currentDay = await serviceAggregator.calendarService.GetCurrentDay(CurrentGame);
             var player = new Player();
 
             serviceAggregator.matchService.Time(currentMatch);

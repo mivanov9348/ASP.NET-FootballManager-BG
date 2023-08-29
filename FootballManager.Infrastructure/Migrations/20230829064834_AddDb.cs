@@ -474,32 +474,6 @@ namespace FootballManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Days",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    CurrentDay = table.Column<int>(type: "int", nullable: false),
-                    isMatchDay = table.Column<bool>(type: "bit", nullable: false),
-                    isEuroCupDay = table.Column<bool>(type: "bit", nullable: false),
-                    isCupDay = table.Column<bool>(type: "bit", nullable: false),
-                    isLeagueDay = table.Column<bool>(type: "bit", nullable: false),
-                    IsPlayed = table.Column<bool>(type: "bit", nullable: false),
-                    GameId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Days", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Days_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Inboxes",
                 columns: table => new
                 {
@@ -597,6 +571,26 @@ namespace FootballManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Years",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    YearOrder = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Years", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Years_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DrawVirtualTeam",
                 columns: table => new
                 {
@@ -618,6 +612,206 @@ namespace FootballManager.Infrastructure.Migrations
                         principalTable: "VirtualTeams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Players",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    Overall = table.Column<double>(type: "float", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    IsStarting11 = table.Column<bool>(type: "bit", nullable: false),
+                    ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FreeAgent = table.Column<bool>(type: "bit", nullable: false),
+                    PositionId = table.Column<int>(type: "int", nullable: false),
+                    NationId = table.Column<int>(type: "int", nullable: false),
+                    CityId = table.Column<int>(type: "int", nullable: false),
+                    TeamId = table.Column<int>(type: "int", nullable: false),
+                    LeagueId = table.Column<int>(type: "int", nullable: true),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    PlayerAttributesId = table.Column<int>(type: "int", nullable: false),
+                    PlayerStatsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Players", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Players_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Players_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Players_Leagues_LeagueId",
+                        column: x => x.LeagueId,
+                        principalTable: "Leagues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Players_Nations_NationId",
+                        column: x => x.NationId,
+                        principalTable: "Nations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Players_Positions_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "Positions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Players_VirtualTeams_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "VirtualTeams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Months",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MonthName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MonthOrder = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    YearId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Months", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Months_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Months_Years_YearId",
+                        column: x => x.YearId,
+                        principalTable: "Years",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlayerAttributes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    Finishing = table.Column<int>(type: "int", nullable: false),
+                    FinishingWeight = table.Column<double>(type: "float", nullable: false),
+                    Passing = table.Column<int>(type: "int", nullable: false),
+                    PassingWeight = table.Column<double>(type: "float", nullable: false),
+                    Heading = table.Column<int>(type: "int", nullable: false),
+                    HeadingWeight = table.Column<double>(type: "float", nullable: false),
+                    Tackling = table.Column<int>(type: "int", nullable: false),
+                    TacklingWeight = table.Column<double>(type: "float", nullable: false),
+                    Positioning = table.Column<int>(type: "int", nullable: false),
+                    PositioningWeight = table.Column<double>(type: "float", nullable: false),
+                    Pace = table.Column<int>(type: "int", nullable: false),
+                    PaceWeight = table.Column<double>(type: "float", nullable: false),
+                    Stamina = table.Column<int>(type: "int", nullable: false),
+                    StaminaWeight = table.Column<double>(type: "float", nullable: false),
+                    Strength = table.Column<int>(type: "int", nullable: false),
+                    StrengthWeight = table.Column<double>(type: "float", nullable: false),
+                    Dribbling = table.Column<int>(type: "int", nullable: false),
+                    DribblingWeight = table.Column<double>(type: "float", nullable: false),
+                    BallControll = table.Column<int>(type: "int", nullable: false),
+                    BallControllWeight = table.Column<double>(type: "float", nullable: false),
+                    OneOnOne = table.Column<int>(type: "int", nullable: false),
+                    OneOnOneWeight = table.Column<double>(type: "float", nullable: false),
+                    Reflexes = table.Column<int>(type: "int", nullable: false),
+                    ReflexesWeight = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayerAttributes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlayerAttributes_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlayerStats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    Appearance = table.Column<int>(type: "int", nullable: false),
+                    Goals = table.Column<int>(type: "int", nullable: false),
+                    Passes = table.Column<int>(type: "int", nullable: false),
+                    GoalsConceded = table.Column<int>(type: "int", nullable: false),
+                    Tacklings = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayerStats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlayerStats_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Days",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CurrentDay = table.Column<int>(type: "int", nullable: false),
+                    isMatchDay = table.Column<bool>(type: "bit", nullable: false),
+                    isEuroCupDay = table.Column<bool>(type: "bit", nullable: false),
+                    isCupDay = table.Column<bool>(type: "bit", nullable: false),
+                    isLeagueDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsDrawDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsPlayed = table.Column<bool>(type: "bit", nullable: false),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    MonthId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Days", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Days_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Days_Months_MonthId",
+                        column: x => x.MonthId,
+                        principalTable: "Months",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Days_Years_YearId",
+                        column: x => x.YearId,
+                        principalTable: "Years",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -691,70 +885,6 @@ namespace FootballManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Players",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    Overall = table.Column<double>(type: "float", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    IsStarting11 = table.Column<bool>(type: "bit", nullable: false),
-                    ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FreeAgent = table.Column<bool>(type: "bit", nullable: false),
-                    PositionId = table.Column<int>(type: "int", nullable: false),
-                    NationId = table.Column<int>(type: "int", nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: false),
-                    TeamId = table.Column<int>(type: "int", nullable: false),
-                    LeagueId = table.Column<int>(type: "int", nullable: true),
-                    GameId = table.Column<int>(type: "int", nullable: false),
-                    PlayerAttributesId = table.Column<int>(type: "int", nullable: false),
-                    PlayerStatsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Players", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Players_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Players_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Players_Leagues_LeagueId",
-                        column: x => x.LeagueId,
-                        principalTable: "Leagues",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Players_Nations_NationId",
-                        column: x => x.NationId,
-                        principalTable: "Nations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Players_Positions_PositionId",
-                        column: x => x.PositionId,
-                        principalTable: "Positions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Players_VirtualTeams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "VirtualTeams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Matches",
                 columns: table => new
                 {
@@ -782,73 +912,6 @@ namespace FootballManager.Infrastructure.Migrations
                         principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PlayerAttributes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PlayerId = table.Column<int>(type: "int", nullable: false),
-                    Finishing = table.Column<int>(type: "int", nullable: false),
-                    FinishingWeight = table.Column<double>(type: "float", nullable: false),
-                    Passing = table.Column<int>(type: "int", nullable: false),
-                    PassingWeight = table.Column<double>(type: "float", nullable: false),
-                    Heading = table.Column<int>(type: "int", nullable: false),
-                    HeadingWeight = table.Column<double>(type: "float", nullable: false),
-                    Tackling = table.Column<int>(type: "int", nullable: false),
-                    TacklingWeight = table.Column<double>(type: "float", nullable: false),
-                    Positioning = table.Column<int>(type: "int", nullable: false),
-                    PositioningWeight = table.Column<double>(type: "float", nullable: false),
-                    Pace = table.Column<int>(type: "int", nullable: false),
-                    PaceWeight = table.Column<double>(type: "float", nullable: false),
-                    Stamina = table.Column<int>(type: "int", nullable: false),
-                    StaminaWeight = table.Column<double>(type: "float", nullable: false),
-                    Strength = table.Column<int>(type: "int", nullable: false),
-                    StrengthWeight = table.Column<double>(type: "float", nullable: false),
-                    Dribbling = table.Column<int>(type: "int", nullable: false),
-                    DribblingWeight = table.Column<double>(type: "float", nullable: false),
-                    BallControll = table.Column<int>(type: "int", nullable: false),
-                    BallControllWeight = table.Column<double>(type: "float", nullable: false),
-                    OneOnOne = table.Column<int>(type: "int", nullable: false),
-                    OneOnOneWeight = table.Column<double>(type: "float", nullable: false),
-                    Reflexes = table.Column<int>(type: "int", nullable: false),
-                    ReflexesWeight = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlayerAttributes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PlayerAttributes_Players_PlayerId",
-                        column: x => x.PlayerId,
-                        principalTable: "Players",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PlayerStats",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PlayerId = table.Column<int>(type: "int", nullable: false),
-                    Appearance = table.Column<int>(type: "int", nullable: false),
-                    Goals = table.Column<int>(type: "int", nullable: false),
-                    Passes = table.Column<int>(type: "int", nullable: false),
-                    GoalsConceded = table.Column<int>(type: "int", nullable: false),
-                    Tacklings = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlayerStats", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PlayerStats_Players_PlayerId",
-                        column: x => x.PlayerId,
-                        principalTable: "Players",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -904,6 +967,16 @@ namespace FootballManager.Infrastructure.Migrations
                 name: "IX_Days_GameId",
                 table: "Days",
                 column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Days_MonthId",
+                table: "Days",
+                column: "MonthId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Days_YearId",
+                table: "Days",
+                column: "YearId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DrawVirtualTeam_TeamsId",
@@ -1024,6 +1097,16 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Months_GameId",
+                table: "Months",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Months_YearId",
+                table: "Months",
+                column: "YearId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PlayerAttributes_PlayerId",
                 table: "PlayerAttributes",
                 column: "PlayerId",
@@ -1119,6 +1202,11 @@ namespace FootballManager.Infrastructure.Migrations
                 name: "IX_VirtualTeams_TeamId",
                 table: "VirtualTeams",
                 column: "TeamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Years_GameId",
+                table: "Years",
+                column: "GameId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1173,6 +1261,12 @@ namespace FootballManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "VirtualTeams");
+
+            migrationBuilder.DropTable(
+                name: "Months");
+
+            migrationBuilder.DropTable(
+                name: "Years");
 
             migrationBuilder.DropTable(
                 name: "Games");

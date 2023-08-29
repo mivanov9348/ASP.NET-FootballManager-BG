@@ -46,7 +46,7 @@
 
             await serviceAggregator.leagueService.PromotedRelegated(CurrentGame);
             serviceAggregator.gameService.ResetGame(CurrentGame);
-            serviceAggregator.dayService.CalculateDays(CurrentGame);
+            //serviceAggregator.dayService.CalculateDays(CurrentGame);
             serviceAggregator.fixtureService.AddFixtureToDay(CurrentGame);
             serviceAggregator.matchService.DeleteMatches(CurrentGame);
             serviceAggregator.fixtureService.DeleteFixtures(CurrentGame);

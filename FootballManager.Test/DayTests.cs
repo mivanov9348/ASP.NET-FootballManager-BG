@@ -26,13 +26,7 @@
             options = new DbContextOptionsBuilder<FootballManagerDbContext>()
                  .UseInMemoryDatabase(databaseName: "FootballManager")
                      .Options;
-
-            serviceProvider = serviceCollection
-            .AddSingleton(x => new FootballManagerDbContext(options))
-            .AddSingleton<IDayService, DayService>()
-            .BuildServiceProvider();
-
-            serviceProvider.GetService<IDayService>();
+                           
 
         }
 

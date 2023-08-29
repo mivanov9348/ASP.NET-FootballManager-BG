@@ -7,7 +7,7 @@
         Year CreateYear(Game currentGame);
         Year GetCurrentYear();
         Month GetCurrentMonth();
-        Day GetCurrentDay(Game currentGame);    
-        
+        Task <Day> GetCurrentDay(Game currentGame);
+        Task<List<Day>> GetAllDays(Game currentGame);
     }
 }

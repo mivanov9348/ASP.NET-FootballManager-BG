@@ -5,7 +5,6 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.Constant;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
-
     public class CalendarService : ICalendarService
     {
         private readonly FootballManagerDbContext data;
@@ -15,7 +14,6 @@
             this.data = data;
             this.constants = new DataConstants();
         }
-
         public Year CreateYear(Game currentGame)
         {
             var monthsCount = DataConstants.YearStats.MonthsCount;
@@ -29,6 +27,7 @@
             };
 
             this.data.Years.Add(newYear);
+            this.data.SaveChanges();
 
             var allMonths = new List<Month>();
             for (int i = 1; i <= monthsCount; i++)
@@ -43,11 +42,14 @@
                     GameId = currentGame.Id
                 };
 
+                this.data.Months.Add(newMonth);
+                this.data.SaveChanges();
+
                 for (int day = 1; day <= daysCount; day++)
                 {
                     var newDay = new Day
                     {
-                        CurrentDay = day,
+                        CurrentDay = day,                        
                         Game = currentGame,
                         GameId = currentGame.Id,
                         Year = newYear,
@@ -58,15 +60,22 @@
 
                     newMonth.Days.Add(newDay);
                     newYear.Days.Add(newDay);
+                    this.data.SaveChanges();
                 }
-
                 allMonths.Add(newMonth);
+                this.data.SaveChanges();
             }
 
+            this.data.SaveChanges();
             return newYear;
         }
 
-        public Day GetCurrentDay(Game currentGame)
+        public Task<List<Day>> GetAllDays(Game currentGame)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Day> GetCurrentDay(Game currentGame)
         {
             throw new NotImplementedException();
         }
@@ -79,6 +88,16 @@
         public Year GetCurrentYear()
         {
             throw new NotImplementedException();
+        }
+
+        private string NameOfDay(int day)
+        {
+            if (day > 7)
+            {
+                day = day - 7;
+            }
+
+            return ((DaysEnum)day).ToString();
         }
     }
 }

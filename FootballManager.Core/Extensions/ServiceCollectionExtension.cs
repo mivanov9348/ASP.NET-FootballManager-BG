@@ -14,6 +14,7 @@
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services;
     using FootballManager.Core.Services.Attribute;
+    using FootballManager.Core.Services.Calendar;
     using FootballManager.Core.Services.Draw;
     using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.Player.PlayerData;
@@ -39,8 +40,7 @@
             services.AddScoped<ITransferService, TransferService>();
             services.AddScoped<IInboxService, InboxService>();
             services.AddScoped<IFixtureService, FixtureService>();
-            services.AddScoped<IEuroCupService, EuroCupService>();
-            services.AddScoped<IDayService, DayService>();
+            services.AddScoped<IEuroCupService, EuroCupService>();        
             services.AddScoped<ICupService, CupService>();
             services.AddScoped<IPlayerAttributeService, PlayerAttributeService>();        
             services.AddScoped<IPlayerProbability, PlayerProbability>();
@@ -51,6 +51,7 @@
             services.AddScoped<IPlayerSorterService, PlayerSorterService>();
             services.AddScoped<IPlayerStatsService, PlayerStatsService>();
             services.AddScoped<IDrawService,DrawService>();
+            services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<ServiceAggregator>();        
 
             return services;

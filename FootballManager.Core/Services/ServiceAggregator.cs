@@ -1,26 +1,27 @@
-﻿
+﻿using ASP.NET_FootballManager.Services.Common;
+using ASP.NET_FootballManager.Services.Cup;
+using ASP.NET_FootballManager.Services.EuroCup;
+using ASP.NET_FootballManager.Services.Fixture;
+using ASP.NET_FootballManager.Services.Game;
+using ASP.NET_FootballManager.Services.Inbox;
+using ASP.NET_FootballManager.Services.League;
+using ASP.NET_FootballManager.Services.Manager;
+using ASP.NET_FootballManager.Services.Match;
+using ASP.NET_FootballManager.Services.Team;
+using ASP.NET_FootballManager.Services.Transfer;
+using ASP.NET_FootballManager.Services.Validation;
+using FootballManager.Core.Services.Calendar;
+using FootballManager.Core.Services.Draw;
+using FootballManager.Core.Services.GameOption;
+using FootballManager.Core.Services.Player.PlayerData;
+using FootballManager.Core.Services.Player.PlayerGenerator;
+using FootballManager.Core.Services.Player.PlayerModel;
+using FootballManager.Core.Services.Player.PlayerSorter;
+using FootballManager.Core.Services.Player.PlayerStats;
 
 namespace FootballManager.Core.Services
 {
-    using ASP.NET_FootballManager.Services.Common;
-    using ASP.NET_FootballManager.Services.Cup;
-    using ASP.NET_FootballManager.Services.EuroCup;
-    using ASP.NET_FootballManager.Services.Fixture;
-    using ASP.NET_FootballManager.Services.Game;
-    using ASP.NET_FootballManager.Services.Inbox;
-    using ASP.NET_FootballManager.Services.League;
-    using ASP.NET_FootballManager.Services.Manager;
-    using ASP.NET_FootballManager.Services.Match;
-    using ASP.NET_FootballManager.Services.Team;
-    using ASP.NET_FootballManager.Services.Transfer;
-    using ASP.NET_FootballManager.Services.Validation;
-    using FootballManager.Core.Services.Draw;
-    using FootballManager.Core.Services.GameOption;
-    using FootballManager.Core.Services.Player.PlayerData;
-    using FootballManager.Core.Services.Player.PlayerGenerator;
-    using FootballManager.Core.Services.Player.PlayerModel;
-    using FootballManager.Core.Services.Player.PlayerSorter;
-    using FootballManager.Core.Services.Player.PlayerStats;
+  
     public class ServiceAggregator
     {
         public readonly ICommonService commonService;
@@ -30,7 +31,6 @@ namespace FootballManager.Core.Services
         public readonly ITeamService teamService;
         public readonly IInboxService inboxService;
         public readonly IFixtureService fixtureService;
-        public readonly IDayService dayService;
         public readonly IEuroCupService euroCupService;
         public readonly ICupService cupService;
         public readonly ILeagueService leagueService;
@@ -43,6 +43,8 @@ namespace FootballManager.Core.Services
         public readonly IPlayerSorterService playerSorterService;
         public readonly IPlayerStatsService playerStatsService;
         public readonly IDrawService drawService;
+        public readonly ICalendarService calendarService;
+
         public ServiceAggregator(
             IGameService gameService,
             IManagerService managerService,
@@ -50,8 +52,7 @@ namespace FootballManager.Core.Services
             IValidationService validationService,
             ITeamService teamService,
             IInboxService inboxService,
-            IFixtureService fixtureService,
-            IDayService dayService,
+            IFixtureService fixtureService,     
             IEuroCupService euroCupService,
             ICupService cupService,
             ILeagueService leagueService,
@@ -63,7 +64,8 @@ namespace FootballManager.Core.Services
             IPlayerModelService playerModelService,
             IPlayerSorterService playerSorterService,
             IPlayerStatsService playerStatsService,
-            IDrawService drawService
+            IDrawService drawService,
+            ICalendarService calendarService
             )
         {
             this.managerService = managerService;
@@ -72,8 +74,7 @@ namespace FootballManager.Core.Services
             this.gameService = gameService;
             this.teamService = teamService;
             this.inboxService = inboxService;
-            this.fixtureService = fixtureService;
-            this.dayService = dayService;
+            this.fixtureService = fixtureService;        
             this.euroCupService = euroCupService;
             this.cupService = cupService;
             this.leagueService = leagueService;
@@ -88,7 +89,7 @@ namespace FootballManager.Core.Services
             this.playerDataService = playerDataService;
             this.playerModelService = playerModelService;
             this.drawService = drawService;
-
+            this.calendarService = calendarService;
         }
     }
 }
