@@ -18,6 +18,8 @@ namespace FootballManager.Infrastructure.Data.DataModels.Calendar
         public int MonthId { get; set; }
         public Month Month { get; set; }
         public int GameId { get; set; }
+        public Week Week { get; set; }
+        public int WeekId { get; set; }
         public Game Game { get; set; }
         public ICollection<Fixture> Fixtures { get; set; } = new HashSet<Fixture>();
 

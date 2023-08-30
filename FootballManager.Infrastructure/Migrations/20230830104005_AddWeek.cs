@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FootballManager.Infrastructure.Migrations
 {
-    public partial class AddDb : Migration
+    public partial class AddWeek : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -707,6 +707,33 @@ namespace FootballManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Weeks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WeekOrder = table.Column<int>(type: "int", nullable: false),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Weeks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Weeks_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Weeks_Years_YearId",
+                        column: x => x.YearId,
+                        principalTable: "Years",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PlayerAttributes",
                 columns: table => new
                 {
@@ -789,7 +816,8 @@ namespace FootballManager.Infrastructure.Migrations
                     IsPlayed = table.Column<bool>(type: "bit", nullable: false),
                     YearId = table.Column<int>(type: "int", nullable: false),
                     MonthId = table.Column<int>(type: "int", nullable: false),
-                    GameId = table.Column<int>(type: "int", nullable: false)
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    WeekId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -807,11 +835,41 @@ namespace FootballManager.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Days_Weeks_WeekId",
+                        column: x => x.WeekId,
+                        principalTable: "Weeks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Days_Years_YearId",
                         column: x => x.YearId,
                         principalTable: "Years",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MonthWeek",
+                columns: table => new
+                {
+                    MonthsId = table.Column<int>(type: "int", nullable: false),
+                    WeeksId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MonthWeek", x => new { x.MonthsId, x.WeeksId });
+                    table.ForeignKey(
+                        name: "FK_MonthWeek_Months_MonthsId",
+                        column: x => x.MonthsId,
+                        principalTable: "Months",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MonthWeek_Weeks_WeeksId",
+                        column: x => x.WeeksId,
+                        principalTable: "Weeks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -974,6 +1032,11 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "MonthId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Days_WeekId",
+                table: "Days",
+                column: "WeekId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Days_YearId",
                 table: "Days",
                 column: "YearId");
@@ -1107,6 +1170,11 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "YearId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MonthWeek_WeeksId",
+                table: "MonthWeek",
+                column: "WeeksId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PlayerAttributes_PlayerId",
                 table: "PlayerAttributes",
                 column: "PlayerId",
@@ -1204,6 +1272,16 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Weeks_GameId",
+                table: "Weeks",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Weeks_YearId",
+                table: "Weeks",
+                column: "YearId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Years_GameId",
                 table: "Years",
                 column: "GameId");
@@ -1239,6 +1317,9 @@ namespace FootballManager.Infrastructure.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "MonthWeek");
+
+            migrationBuilder.DropTable(
                 name: "PlayerAttributes");
 
             migrationBuilder.DropTable(
@@ -1264,6 +1345,9 @@ namespace FootballManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Months");
+
+            migrationBuilder.DropTable(
+                name: "Weeks");
 
             migrationBuilder.DropTable(
                 name: "Years");

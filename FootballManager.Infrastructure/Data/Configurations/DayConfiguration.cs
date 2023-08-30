@@ -21,6 +21,10 @@
                    .WithMany(x => x.Days)
                    .HasForeignKey(x => x.GameId);
 
+            builder.HasOne(x => x.Week)
+                   .WithMany(x => x.Days)
+                   .HasForeignKey(x => x.WeekId);
+
             builder.HasMany(x => x.Fixtures)
                    .WithOne(x => x.Day)
                    .OnDelete(DeleteBehavior.Restrict);

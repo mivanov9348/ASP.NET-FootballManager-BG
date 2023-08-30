@@ -137,7 +137,8 @@
             await SendMessageToHTML("Creating Season Year...");
             serviceAggregator.calendarService.CreateYear(currentGame);
             //CalculateDaysForSeason              
-            await SendMessageToHTML("Calculating Days...");
+            
+
 
 
             serviceAggregator.fixtureService.AddFixtureToDay(currentGame);

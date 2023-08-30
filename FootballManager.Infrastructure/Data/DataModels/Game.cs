@@ -28,6 +28,7 @@ namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Year> Years { get; set; } = new List<Year>();
         public List<Month> Months { get; set; } = new List<Month>();
+        public List<Week> Weeks { get; set; } = new List<Week>();
         public List<Day> Days { get; set; } = new List<Day>();   
         public ICollection<Match> Matches { get; set; } = new HashSet<Match>();
     }

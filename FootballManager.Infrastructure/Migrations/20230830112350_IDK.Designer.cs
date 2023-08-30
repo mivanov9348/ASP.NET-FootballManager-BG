@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20230829064834_AddDb")]
-    partial class AddDb
+    [Migration("20230830112350_IDK")]
+    partial class IDK
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -725,6 +725,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("MonthId")
                         .HasColumnType("int");
 
+                    b.Property<int>("WeekId")
+                        .HasColumnType("int");
+
                     b.Property<int>("YearId")
                         .HasColumnType("int");
 
@@ -745,6 +748,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasIndex("GameId");
 
                     b.HasIndex("MonthId");
+
+                    b.HasIndex("WeekId");
 
                     b.HasIndex("YearId");
 
@@ -778,6 +783,32 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("Months");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Week", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeekOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("Weeks");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Year", b =>
@@ -1202,6 +1233,21 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MonthWeek", b =>
+                {
+                    b.Property<int>("MonthsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeeksId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MonthsId", "WeeksId");
+
+                    b.HasIndex("WeeksId");
+
+                    b.ToTable("MonthWeek");
+                });
+
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
                 {
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
@@ -1543,6 +1589,12 @@ namespace FootballManager.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Week", "Week")
+                        .WithMany("Days")
+                        .HasForeignKey("WeekId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Year", "Year")
                         .WithMany("Days")
                         .HasForeignKey("YearId")
@@ -1552,6 +1604,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("Month");
+
+                    b.Navigation("Week");
 
                     b.Navigation("Year");
                 });
@@ -1566,6 +1620,25 @@ namespace FootballManager.Infrastructure.Migrations
 
                     b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Year", "Year")
                         .WithMany("Months")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Year");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Week", b =>
+                {
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("Weeks")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Year", "Year")
+                        .WithMany("Weeks")
                         .HasForeignKey("YearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1674,6 +1747,21 @@ namespace FootballManager.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MonthWeek", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Month", null)
+                        .WithMany()
+                        .HasForeignKey("MonthsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Week", null)
+                        .WithMany()
+                        .HasForeignKey("WeeksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
                 {
                     b.Navigation("Players");
@@ -1717,6 +1805,8 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Players");
 
                     b.Navigation("VirtualTeams");
+
+                    b.Navigation("Weeks");
 
                     b.Navigation("Years");
                 });
@@ -1792,11 +1882,18 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Days");
                 });
 
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Week", b =>
+                {
+                    b.Navigation("Days");
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Year", b =>
                 {
                     b.Navigation("Days");
 
                     b.Navigation("Months");
+
+                    b.Navigation("Weeks");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Draw", b =>

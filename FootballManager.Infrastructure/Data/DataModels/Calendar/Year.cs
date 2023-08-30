@@ -13,6 +13,7 @@
         public int GameId { get; set; }
         public Game Game { get; set; }
         public List<Month> Months { get; set; } = new List<Month>();
+        public List<Week> Weeks { get; set; } = new List<Week>();
         public List<Day> Days { get; set; } = new List<Day>();
     }
 }

@@ -85,8 +85,10 @@
         public class YearStats
         {
             public const int MonthsCount = 12;
-            public const int DaysCount = 30;
-           
+            public const int DaysInWeek = 7;
+            public const int DaysInMonth = 30;
+            public const int ThirtyOneDaysInMonth = 31;
+
         }
 
     }
