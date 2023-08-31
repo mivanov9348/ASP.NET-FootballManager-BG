@@ -80,7 +80,7 @@
             var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
             var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
 
-            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true && x.Year.YearOrder == game.Year);
+            var currentDay = this.data.Days.OrderBy(x => x.DayOrder).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true && x.Year.YearOrder == game.Year);
 
             if (currentDay != null)
             {
@@ -147,7 +147,7 @@
         {
             var teamsInCup = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true && x.GameId == game.Id).ToList();
             var currentCup = this.data.Cups.First();
-            var currentDay = this.data.Days.OrderBy(x => x.CurrentDay).FirstOrDefault(x => x.GameId == game.Id && x.IsPlayed == false && x.isCupDay && x.Year.YearOrder == game.Year);
+            var currentDay = this.data.Days.OrderBy(x => x.DayOrder).FirstOrDefault(x => x.GameId == game.Id && x.IsPlayed == false && x.isCupDay && x.Year.YearOrder == game.Year);
 
             if (currentDay != null)
             {

@@ -10,7 +10,7 @@
     {
         public int Id { get; set; }
         public int YearOrder { get; set; }
-        public int GameId { get; set; }
+        public int? GameId { get; set; }
         public Game Game { get; set; }
         public List<Month> Months { get; set; } = new List<Month>();
         public List<Week> Weeks { get; set; } = new List<Week>();

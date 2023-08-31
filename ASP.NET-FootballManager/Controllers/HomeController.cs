@@ -135,7 +135,8 @@
             var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager, userId);
             //CreateCalendarYear
             await SendMessageToHTML("Creating Season Year...");
-            serviceAggregator.calendarService.CreateYear(currentGame);
+            var year = serviceAggregator.calendarService.GenerateYear(currentGame);
+            serviceAggregator.calendarService.GenerateMonths(currentGame,year);
             //CalculateDaysForSeason              
             
 

@@ -4,6 +4,7 @@ using ASP.NET_FootballManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230830165851_RemoveGameIdReuired")]
+    partial class RemoveGameIdReuired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -705,11 +707,11 @@ namespace FootballManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CurrentDay")
+                        .HasColumnType("int");
+
                     b.Property<string>("DayName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DayOrder")
-                        .HasColumnType("int");
 
                     b.Property<int>("GameId")
                         .HasColumnType("int");
@@ -721,9 +723,6 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("MonthId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeekDayOrder")
                         .HasColumnType("int");
 
                     b.Property<int>("WeekId")

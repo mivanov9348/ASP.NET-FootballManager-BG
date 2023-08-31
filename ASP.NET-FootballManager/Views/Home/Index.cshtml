@@ -91,6 +91,12 @@
                     </span>
                 </a>
                 <hr>
+                <a asp-action="GenerateDemoYear" asp-controller="Calendar">
+                    <span class="nav-text">
+                        Demo Year
+                    </span>
+                </a>
+                <hr>
                 <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <span class="nav-text">
                         Logout

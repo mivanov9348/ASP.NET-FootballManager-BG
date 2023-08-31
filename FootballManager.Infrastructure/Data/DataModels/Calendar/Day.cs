@@ -6,7 +6,8 @@ namespace FootballManager.Infrastructure.Data.DataModels.Calendar
     {
         public int Id { get; set; }
         public string DayName { get; set; }
-        public int CurrentDay { get; set; }
+        public int DayOrder { get; set; }
+        public int WeekDayOrder { get; set; }
         public bool isMatchDay { get; set; }
         public bool isEuroCupDay { get; set; }
         public bool isCupDay { get; set; }

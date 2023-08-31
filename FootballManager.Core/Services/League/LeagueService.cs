@@ -93,7 +93,7 @@
         {
             var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
             var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
-            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentFixt.Day.CurrentDay && x.Year == currentFixt.Day.Year);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentFixt.Day.DayOrder && x.Year == currentFixt.Day.Year);
             var currentGame = this.data.Games.FirstOrDefault(x => x.Id == currentFixt.GameId);
             var currentOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == currentGame.GameOptionId);
 
