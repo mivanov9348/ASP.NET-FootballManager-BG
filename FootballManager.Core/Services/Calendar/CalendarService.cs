@@ -4,8 +4,7 @@
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.Constant;
-    using FootballManager.Infrastructure.Data.DataModels.Calendar;
-    using FootballManager.Infrastructure.Migrations;
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;   
     using System;
 
     public class CalendarService : ICalendarService
@@ -55,10 +54,10 @@
                 this.data.SaveChanges();
 
                 var daysCount = DaysInMonth(month);
-                var weeksCount = (int)Math.Ceiling((double)daysCount / DataConstants.YearStats.DaysInWeek);
+                var weeksInMonth = (int)Math.Ceiling((double)daysCount / DataConstants.YearStats.DaysInWeek);
                 var previousMonth = GetPreviousMonth(newMonth);
 
-                GenerateWeeks(newMonth, previousMonth, currentYear, currentGame, weeksCount);
+                GenerateWeeks(newMonth, previousMonth, currentYear, currentGame, weeksInMonth);
             }
         }
 
@@ -72,52 +71,53 @@
             return null;
         }
 
-        public void GenerateWeeks(Month newMonth, Month previousMonth, Year newYear, Game currentGame, int weeksCount)
+        public void GenerateWeeks(Month newMonth, Month previousMonth, Year newYear, Game currentGame, int weeksInMonth)
         {
-            var weekOrder = 1;
+            var weeksOrder = 1;
+            
+
             var dayOrder = 0;
             var daysLeft = DaysInMonth(newMonth.MonthOrder);
+            var weekDays = -0;
 
-            Week currentWeek = GetCurrentWeek(currentGame, previousMonth);
-
-            for (int weekIndex = 1; weekIndex <= weeksCount; weekIndex++)
+            for (int weekIndex = 1; weekIndex <= weeksInMonth; weekIndex++)
             {
+                Week currentWeek = GetCurrentWeek(currentGame, previousMonth);
+                if (newYear.Weeks.Count > 0)
+                {
+                    weeksOrder = newYear.Weeks.OrderByDescending(x => x.WeekOrder).FirstOrDefault(x => x.YearId == newYear.Id).WeekOrder + 1;
+                }
+
                 if (currentWeek == null)
                 {
                     currentWeek = new Week
                     {
                         YearId = newYear.Id,
                         Year = newYear,
-                        WeekOrder = weekOrder,
+                        WeekOrder = weeksOrder,
                         Game = currentGame,
                         GameId = currentGame.Id
                     };
-                
                     newMonth.Weeks.Add(currentWeek);
+
+                    weekDays = 1;
                 }
 
-                for (int dayOfWeekIndex = 1; dayOfWeekIndex <= DataConstants.YearStats.DaysInWeek; dayOfWeekIndex++)
+                weekDays = currentWeek.Days.Count() + 1;
+
+                for (int dayOfWeekIndex = weekDays; dayOfWeekIndex <= DataConstants.YearStats.DaysInWeek; dayOfWeekIndex++)
                 {
                     dayOrder++;
-                   
-                        GenerateDays(currentGame, dayOrder, dayOfWeekIndex, newYear, newMonth, currentWeek);
+
+                    GenerateDays(currentGame, dayOrder, dayOfWeekIndex, newYear, newMonth, currentWeek);
 
                     if (dayOrder == daysLeft)
                     {
                         break;
                     }
                 }
-                this.data.SaveChanges();
-
-                if (dayOrder > daysLeft)
-                {
-                    dayOrder = 0;
-                    currentWeek = null;
-                }
-
-                weekOrder++;
+                this.data.SaveChanges();                              
             }
-
             this.data.SaveChanges();
         }
 
@@ -130,7 +130,7 @@
                 {
                     return lastWeek;
                 }
-            }            
+            }
             return null;
         }
 
@@ -171,31 +171,31 @@
             switch (month)
             {
                 case 1:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return DataConstants.YearStats.JanuaryDays;
                 case 2:
-                    return DataConstants.YearStats.DaysInMonth;
+                    return DataConstants.YearStats.FebruaryDays;
                 case 3:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return DataConstants.YearStats.MarchDays;
                 case 4:
-                    return DataConstants.YearStats.DaysInMonth;
+                    return DataConstants.YearStats.AprilDays;
                 case 5:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return DataConstants.YearStats.MayDays;
                 case 6:
-                    return DataConstants.YearStats.DaysInMonth;
+                    return DataConstants.YearStats.JuneDays;
                 case 7:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return DataConstants.YearStats.JulyDays;
                 case 8:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return DataConstants.YearStats.AugustDays;
                 case 9:
-                    return DataConstants.YearStats.DaysInMonth;
+                    return DataConstants.YearStats.SeptemberDays;
                 case 10:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return DataConstants.YearStats.OctoberDays;
                 case 11:
-                    return DataConstants.YearStats.DaysInMonth;
+                    return DataConstants.YearStats.NovemberDays;
                 case 12:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return DataConstants.YearStats.DecemberDays;
                 default:
-                    return DataConstants.YearStats.ThirtyOneDaysInMonth;
+                    return 30;
 
             }
         }

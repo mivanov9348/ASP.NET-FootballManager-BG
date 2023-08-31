@@ -86,10 +86,18 @@
         {
             public const int MonthsCount = 12;
             public const int DaysInWeek = 7;
-            public const int DaysInMonth = 30;
-            public const int ThirtyOneDaysInMonth = 31;
-
+            public const int JanuaryDays = 30;
+            public const int FebruaryDays = 28;
+            public const int MarchDays = 31;
+            public const int AprilDays = 30;
+            public const int MayDays = 31;
+            public const int JuneDays = 30;
+            public const int JulyDays = 31;
+            public const int AugustDays = 31;
+            public const int SeptemberDays = 30;
+            public const int OctoberDays = 31;
+            public const int NovemberDays = 30;
+            public const int DecemberDays = 31;
         }
-
     }
 }
