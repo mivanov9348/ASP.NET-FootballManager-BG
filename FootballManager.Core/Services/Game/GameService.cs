@@ -77,6 +77,7 @@
                 this.data.Inboxes.RemoveRange(this.data.Inboxes.Where(c => c.GameId == userGame.Id));
                 this.data.VirtualTeams.RemoveRange(this.data.VirtualTeams.Where(c => c.GameId == userGame.Id));
                 this.data.Days.RemoveRange(this.data.Days.Where(c => c.GameId == userGame.Id));
+                this.data.EuropeanCups.RemoveRange(this.data.EuropeanCups.Where(x => x.GameId == userGame.Id));
                 this.data.Games.RemoveRange(this.data.Games.Where(x => x.Id == userGame.Id));
                 this.data.Managers.RemoveRange(this.data.Managers.Where(x => x.Id == userManager.Id));
                 this.data.Days.RemoveRange(this.data.Days.ToList());

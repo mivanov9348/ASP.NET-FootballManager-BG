@@ -5,9 +5,10 @@
 
     public interface IEuroCupService
     {
+        void RemoveEuropeanParticipants(Game game);
         void CreateChampionsCup(Game game, Year year);
         void CreateEuroCup(Game game, Year year);
-        void FillChampionsLeagueParticipants(Game game);
+        void FillChampionsCupParticipants(Game game);
         void FillEuroCupParticipants(Game game);
         void CheckWinner(Fixture currentFixture);
         void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture);

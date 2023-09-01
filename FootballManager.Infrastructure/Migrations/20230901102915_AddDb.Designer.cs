@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20230830165851_RemoveGameIdReuired")]
-    partial class RemoveGameIdReuired
+    [Migration("20230901102915_AddDb")]
+    partial class AddDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,6 +83,9 @@ namespace FootballManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -96,7 +99,12 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("Rounds")
                         .HasColumnType("int");
 
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
 
                     b.ToTable("EuropeanCups");
                 });
@@ -707,11 +715,11 @@ namespace FootballManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CurrentDay")
-                        .HasColumnType("int");
-
                     b.Property<string>("DayName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DayOrder")
+                        .HasColumnType("int");
 
                     b.Property<int>("GameId")
                         .HasColumnType("int");
@@ -723,6 +731,9 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("MonthId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeekDayOrder")
                         .HasColumnType("int");
 
                     b.Property<int>("WeekId")
@@ -1270,6 +1281,17 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Nation");
                 });
 
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
+                {
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("EuropeanCups")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
                 {
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "AwayTeam")
@@ -1791,6 +1813,8 @@ namespace FootballManager.Infrastructure.Migrations
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
                 {
                     b.Navigation("Days");
+
+                    b.Navigation("EuropeanCups");
 
                     b.Navigation("Inboxes");
 

@@ -20,6 +20,12 @@
             this.constants = new DataConstants();
             this.rnd = new Random();
         }
+        public void RemoveEuropeanParticipants(Game currentGame)
+        {
+            var currentEuroCupTeams = this.data.VirtualTeams.Where(x => x.EuropeanCupId != null && x.GameId == currentGame.Id && x.League.Nation.Name != "Bulgaria").ToList();
+            currentEuroCupTeams.ForEach(x => x.EuropeanCupId = null);
+            this.data.SaveChanges();
+        }
         public void CreateChampionsCup(Game game, Year year)
         {
             var newChampionsLeague = new EuropeanCup
@@ -50,20 +56,16 @@
             this.data.EuropeanCups.Add(newEuroCup);
             this.data.SaveChanges();
         }
-        public void FillChampionsLeagueParticipants(Game game)
+        public void FillChampionsCupParticipants(Game game)
         {
             var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
-            helpers.RemoveCurrentEuroParticipants(championsCup);
-            var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
-            this.helpers.FillEuropeanCompetitions(championsCup, teamsInChampionsCup);
+            this.helpers.FillEuropeanCompetitions(championsCup);
         }
         public void FillEuroCupParticipants(Game game)
         {
             var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
-            helpers.RemoveCurrentEuroParticipants(euroCup);
-            var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
-            this.helpers.FillEuropeanCompetitions(euroCup, teamsInEuroCup);
-        }        
+            this.helpers.FillEuropeanCompetitions(euroCup);
+        }
         public void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture)
         {
             var currentGame = this.data.Games.FirstOrDefault(x => x.Id == dayFixtures.First().GameId);
@@ -83,7 +85,7 @@
 
                 fixture.HomeTeamGoal = rnd.Next(0, homeTeamOverall);
                 fixture.AwayTeamGoal = rnd.Next(0, awayTeamOverall);
-               helpers.GetGoalScorers(fixture.HomeTeam, fixture.HomeTeamGoal, fixture);
+                helpers.GetGoalScorers(fixture.HomeTeam, fixture.HomeTeamGoal, fixture);
                 helpers.WinnerCalculate(fixture);
             }
             currentGame.EuroCupRound += 1;

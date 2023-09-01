@@ -81,6 +81,9 @@ namespace FootballManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -94,7 +97,12 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("Rounds")
                         .HasColumnType("int");
 
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
 
                     b.ToTable("EuropeanCups");
                 });
@@ -1271,6 +1279,17 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Nation");
                 });
 
+            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
+                {
+                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("EuropeanCups")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
                 {
                     b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "AwayTeam")
@@ -1792,6 +1811,8 @@ namespace FootballManager.Infrastructure.Migrations
             modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
                 {
                     b.Navigation("Days");
+
+                    b.Navigation("EuropeanCups");
 
                     b.Navigation("Inboxes");
 

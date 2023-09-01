@@ -52,9 +52,8 @@
             serviceAggregator.fixtureService.DeleteFixtures(CurrentGame);
             serviceAggregator.fixtureService.GenerateLeagueFixtures(CurrentGame);
             serviceAggregator.cupService.GenerateCupParticipants(CurrentGame);
-            serviceAggregator.fixtureService.GenerateCupFixtures(CurrentGame);
-            serviceAggregator.euroCupService.DistributionEuroParticipant(CurrentGame);
-            serviceAggregator.fixtureService.GenerateEuroFixtures(CurrentGame);
+      
+
             serviceAggregator.playerGeneratorService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgentsEachClub.gk, DataConstants.FreeAgentsEachClub.df, DataConstants.FreeAgentsEachClub.mf, DataConstants.FreeAgentsEachClub.st);
             serviceAggregator.playerStatsService.CalculatingPlayersPrice(CurrentGame);
            // playerService.UpdateAttributes(CurrentGame);

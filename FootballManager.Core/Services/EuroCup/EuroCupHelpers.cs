@@ -20,15 +20,17 @@
         }
 
 
-        public void FillEuropeanCompetitions(EuropeanCup currentCup, List<VirtualTeam> teams)
+        public void FillEuropeanCompetitions(EuropeanCup currentCup)
         {
+            var allTeams = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCupId == null && x.GameId == currentCup.GameId).ToList();
             var euroBgTeams = this.data.VirtualTeams.Where(x => x.GameId == currentCup.GameId && x.League.Nation.Name == "Bulgaria" && x.IsEuroParticipant == true).ToList();
 
-            var restParticipants = currentCup.Participants - euroBgTeams.Count();
+            var restParticipantsCount = currentCup.Participants - euroBgTeams.Count();
 
-            for (int i = 0; i < restParticipants; i++)
+            for (int i = 0; i < restParticipantsCount; i++)
             {
-                var randomTeam = teams[rnd.Next(0, teams.Count())];
+                allTeams = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCupId == null && x.GameId == currentCup.GameId).ToList();
+                var randomTeam = allTeams[rnd.Next(0, allTeams.Count())];
 
                 randomTeam.IsEuroParticipant = true;
                 randomTeam.EuropeanCupId = currentCup.Id;
@@ -90,11 +92,6 @@
             }
             this.data.SaveChanges();
         }
-        public void RemoveCurrentEuroParticipants(EuropeanCup currentEuroCup)
-        {
-            var currentEuroCupTeams = this.data.VirtualTeams.Where(x => x.EuropeanCupId == currentEuroCup.Id && x.League.Nation.Name != "Bulgaria").ToList();
-            currentEuroCupTeams.ForEach(x => x.EuropeanCupId = null);
-            this.data.SaveChanges();
-        }
+
     }
 }

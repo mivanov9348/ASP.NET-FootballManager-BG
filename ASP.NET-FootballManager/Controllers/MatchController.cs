@@ -73,12 +73,10 @@
                 if (currentDay.isCupDay)
                 {
                     serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);
-                    serviceAggregator.fixtureService.GenerateCupFixtures(CurrentGame);
                 }
                 if (currentDay.isEuroCupDay)
                 {
                     serviceAggregator.euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
-                    serviceAggregator.fixtureService.GenerateEuroFixtures(CurrentGame);
                 }
                 serviceAggregator.inboxService.CupMatchesInfo(dayFixtures, CurrentGame);
                 serviceAggregator.gameService.NextDay(CurrentGame);
@@ -124,14 +122,12 @@
                 if (currentDay.isCupDay)
                 {
                     serviceAggregator.cupService.CheckWinner(currentFixture);
-                    serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);
-                    serviceAggregator.fixtureService.GenerateCupFixtures(CurrentGame);
+                    serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);                  
                 }
                 if (currentDay.isEuroCupDay)
                 {
                     serviceAggregator.euroCupService.CheckWinner(currentFixture);
                     serviceAggregator.euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
-                    serviceAggregator.fixtureService.GenerateEuroFixtures(CurrentGame);
                 }
                 serviceAggregator.gameService.NextDay(CurrentGame);
                 serviceAggregator.inboxService.MatchFinishedNews(CurrentGame, currentFixture);
