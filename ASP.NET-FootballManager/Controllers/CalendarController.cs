@@ -26,23 +26,8 @@ namespace ASP.NET_FootballManager.Controllers
                 Days = days,
                 Year = year
             });
-        }
+        }              
 
-        public async Task<IActionResult> GenerateDemoYear()
-        {
-            CurrentUser();
-
-            var year = serviceAggregator.calendarService.GenerateYear(null);
-            serviceAggregator.calendarService.GenerateMonths(year.Game, year);
-            return RedirectToAction("Index", "Home");
-        }
-
-        private void CurrentUser()
-        {
-            if (this.User.Identity.IsAuthenticated != false)
-            {
-                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            }
-        }
+        
     }
 }

@@ -99,5 +99,12 @@
             public const int NovemberDays = 30;
             public const int DecemberDays = 31;
         }
+
+        public class EuropeanCups
+        {
+            public const int ChampionsLeagueParticipants = 32;
+            public const int EuroCupParticipants = 32;
+
+        }
     }
 }

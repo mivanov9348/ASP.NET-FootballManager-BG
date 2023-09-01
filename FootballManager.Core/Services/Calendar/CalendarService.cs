@@ -4,23 +4,25 @@
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.Constant;
-    using FootballManager.Infrastructure.Data.DataModels.Calendar;   
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;
+    using Microsoft.Net.Http.Headers;
     using System;
+    using System.Collections.Generic;
 
     public class CalendarService : ICalendarService
     {
         private readonly FootballManagerDbContext data;
+        private readonly CalendarHelper helper;
         private readonly DataConstants constants;
         public CalendarService(FootballManagerDbContext data)
         {
             this.data = data;
+            helper = new CalendarHelper(data);
             this.constants = new DataConstants();
         }
+
         public Year GenerateYear(Game currentGame)
         {
-            ResetAllYears();
-            currentGame = this.data.Games.FirstOrDefault(x => x.Id == 6);
-
             var newYear = new Year
             {
                 Game = currentGame,
@@ -53,36 +55,24 @@
                 this.data.Months.Add(newMonth);
                 this.data.SaveChanges();
 
-                var daysCount = DaysInMonth(month);
-                var weeksInMonth = (int)Math.Ceiling((double)daysCount / DataConstants.YearStats.DaysInWeek);
-                var previousMonth = GetPreviousMonth(newMonth);
+                var daysCount = helper.DaysInMonth(month);
+                var weeksInMonth = helper.CalculateWeeksInMonth(daysCount);
+                var previousMonth = helper.GetPreviousMonth(newMonth);
 
                 GenerateWeeks(newMonth, previousMonth, currentYear, currentGame, weeksInMonth);
             }
         }
-
-        private Month GetPreviousMonth(Month newMonth)
-        {
-            if (newMonth.MonthOrder != 1)
-            {
-                var nextMonthOrder = newMonth.MonthOrder - 1;
-                return this.data.Months.FirstOrDefault(x => x.GameId == newMonth.GameId && x.MonthOrder == nextMonthOrder);
-            }
-            return null;
-        }
-
         public void GenerateWeeks(Month newMonth, Month previousMonth, Year newYear, Game currentGame, int weeksInMonth)
         {
             var weeksOrder = 1;
-            
 
             var dayOrder = 0;
-            var daysLeft = DaysInMonth(newMonth.MonthOrder);
+            var daysLeft = helper.DaysInMonth(newMonth.MonthOrder);
             var weekDays = -0;
 
             for (int weekIndex = 1; weekIndex <= weeksInMonth; weekIndex++)
             {
-                Week currentWeek = GetCurrentWeek(currentGame, previousMonth);
+                Week currentWeek = helper.GetCurrentWeek(currentGame, previousMonth);
                 if (newYear.Weeks.Count > 0)
                 {
                     weeksOrder = newYear.Weeks.OrderByDescending(x => x.WeekOrder).FirstOrDefault(x => x.YearId == newYear.Id).WeekOrder + 1;
@@ -116,24 +106,10 @@
                         break;
                     }
                 }
-                this.data.SaveChanges();                              
+                this.data.SaveChanges();
             }
             this.data.SaveChanges();
         }
-
-        private Week GetCurrentWeek(Game currentGame, Month previousMonth)
-        {
-            if (previousMonth != null)
-            {
-                var lastWeek = previousMonth.Weeks.Last();
-                if (lastWeek.Days.Count() < 7)
-                {
-                    return lastWeek;
-                }
-            }
-            return null;
-        }
-
         public void GenerateDays(Game currentGame, int dayOrder, int dayOfWeekIndex, Year currentYear, Month currentMonth, Week currentWeek)
         {
             var newDay = new Day
@@ -149,87 +125,34 @@
                 MonthId = currentMonth.Id,
                 Week = currentWeek,
                 WeekId = currentWeek.Id,
+                IsPlayed = false,
+                isCupDay = false,
+                isLeagueDay = false,
+                isEuroCupDay = false,
+                isMatchDay = false,
+                IsDrawDay = false
             };
 
             currentWeek.Days.Add(newDay);
             currentMonth.Days.Add(newDay);
             currentYear.Days.Add(newDay);
         }
-
-        private void ResetAllYears()
+        public async Task SetWeekPlan(Game currentGame, Year currentYear)
         {
-            this.data.Days.RemoveRange(this.data.Days.ToList());
-            this.data.Weeks.RemoveRange(this.data.Weeks.ToList());
-            this.data.Months.RemoveRange(this.data.Months.ToList());
-            this.data.Years.RemoveRange(this.data.Years.ToList());
+            var allWeeks = currentYear.Weeks;
 
-        }
-
-
-        private int DaysInMonth(int month)
-        {
-            switch (month)
+            foreach (var week in allWeeks)
             {
-                case 1:
-                    return DataConstants.YearStats.JanuaryDays;
-                case 2:
-                    return DataConstants.YearStats.FebruaryDays;
-                case 3:
-                    return DataConstants.YearStats.MarchDays;
-                case 4:
-                    return DataConstants.YearStats.AprilDays;
-                case 5:
-                    return DataConstants.YearStats.MayDays;
-                case 6:
-                    return DataConstants.YearStats.JuneDays;
-                case 7:
-                    return DataConstants.YearStats.JulyDays;
-                case 8:
-                    return DataConstants.YearStats.AugustDays;
-                case 9:
-                    return DataConstants.YearStats.SeptemberDays;
-                case 10:
-                    return DataConstants.YearStats.OctoberDays;
-                case 11:
-                    return DataConstants.YearStats.NovemberDays;
-                case 12:
-                    return DataConstants.YearStats.DecemberDays;
-                default:
-                    return 30;
-
+                helper.DayPlan(week);
             }
         }
-
-        public Task<List<Day>> GetAllDays(Game currentGame)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Day> GetCurrentDay(Game currentGame)
         {
             throw new NotImplementedException();
         }
-
-        public Month GetCurrentMonth()
+        public Task<List<Day>> GetAllDays(Game currentGame)
         {
             throw new NotImplementedException();
         }
-
-        public Year GetCurrentYear()
-        {
-            throw new NotImplementedException();
-        }
-
-        private string NameOfDay(int day)
-        {
-            if (day > 7)
-            {
-                day = day - 7;
-            }
-
-            return ((DaysEnum)day).ToString();
-        }
-
-
     }
 }

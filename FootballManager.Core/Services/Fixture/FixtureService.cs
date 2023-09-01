@@ -2,14 +2,18 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Services.Fixture;
+
     public class FixtureService : IFixtureService
     {
         private readonly FootballManagerDbContext data;
+        private readonly FixturesHelpers helpers;
         private Random rnd;
         public FixtureService(FootballManagerDbContext data)
         {
             this.rnd = new Random();
             this.data = data;
+            this.helpers = new FixturesHelpers(data);
         }
         public void GenerateLeagueFixtures(Game game)
         {
@@ -24,7 +28,6 @@
                 var numOfMatches = teams.Count / 2 * (teams.Count - 1);
                 int numFixt = 0;
                 var round = 1;
-                var dayCount = 0;
 
                 while (numFixt < numOfMatches)
                 {
@@ -34,7 +37,6 @@
                         var atId = teams[(teams.Count() - 1 - i)].Id;
                         var ht = this.data.VirtualTeams.FirstOrDefault(x => x.Id == htId);
                         var at = this.data.VirtualTeams.FirstOrDefault(x => x.Id == atId);
-                        var currentDay = leagueDays.Skip(dayCount).First();
 
                         var newFixt = new Fixture
                         {
@@ -50,18 +52,13 @@
                             LeagueId = currL.Id,
                             League = currL,
                             HomeTeamId = htId,
-                            AwayTeamId = atId,
-                            Day = currentDay,
-                            DayId = currentDay.Id
+                            AwayTeamId = atId
                         };
 
                         this.data.Fixtures.Add(newFixt);
                         numFixt++;
                     }
-
                     round++;
-                    dayCount++;
-
                     for (int i = teams.Count - 1; i > 1; i--)
                     {
                         VirtualTeam temp = teams[i - 1];
@@ -72,114 +69,52 @@
             }
             this.data.SaveChanges();
         }
-        public void GenerateEuroFixtures(Game game)
+
+        public void FillChampionsLeagueParticipants(Game game)
         {
             var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
-            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
-
             var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
-            var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
+            this.helpers.FillEuropeanCompetitions(championsCup,teamsInChampionsCup);
 
-            var currentDay = this.data.Days.OrderBy(x => x.DayOrder).FirstOrDefault(x => x.IsPlayed == false && x.GameId == game.Id && x.isEuroCupDay == true && x.Year.YearOrder == game.Year);
-
-            if (currentDay != null)
-            {
-                while (teamsInChampionsCup.Count > 0)
-                {
-                    var homeTeam = teamsInChampionsCup[rnd.Next(0, teamsInChampionsCup.Count - 1)];
-                    teamsInChampionsCup.Remove(homeTeam);
-                    var awayTeam = teamsInChampionsCup[rnd.Next(0, teamsInChampionsCup.Count - 1)];
-                    teamsInChampionsCup.Remove(awayTeam);
-
-                    var newFixt = new Fixture
-                    {
-                        Round = game.EuroCupRound,
-                        GameId = game.Id,
-                        HomeTeamId = homeTeam.Id,
-                        AwayTeamId = awayTeam.Id,
-                        HomeTeamGoal = 0,
-                        AwayTeamGoal = 0,
-                        HomeTeamName = homeTeam.Name,
-                        AwayTeamName = awayTeam.Name,
-                        EuropeanCup = championsCup,
-                        EuropeanCupId = championsCup.Id,
-                        CompetitionName = "Champions Cup",
-                        Day = currentDay,
-                        DayId = currentDay.Id,
-                        IsPlayed = false
-                    };
-
-                    this.data.Fixtures.Add(newFixt);
-                    this.data.SaveChanges();
-                }
-
-                while (teamsInEuroCup.Count > 0)
-                {
-                    var homeTeam = teamsInEuroCup[rnd.Next(0, teamsInEuroCup.Count - 1)];
-                    teamsInEuroCup.Remove(homeTeam);
-                    var awayTeam = teamsInEuroCup[rnd.Next(0, teamsInEuroCup.Count - 1)];
-                    teamsInEuroCup.Remove(awayTeam);
-
-                    var newFixt = new Fixture
-                    {
-                        Round = game.EuroCupRound,
-                        GameId = game.Id,
-                        HomeTeamId = homeTeam.Id,
-                        AwayTeamId = awayTeam.Id,
-                        HomeTeamGoal = 0,
-                        AwayTeamGoal = 0,
-                        HomeTeamName = homeTeam.Name,
-                        AwayTeamName = awayTeam.Name,
-                        CompetitionName = "Euro Cup",
-                        EuropeanCup = euroCup,
-                        EuropeanCupId = euroCup.Id,
-                        Day = currentDay,
-                        DayId = currentDay.Id,
-                        IsPlayed = false
-                    };
-
-                    this.data.Fixtures.Add(newFixt);
-                    this.data.SaveChanges();
-                }
-            }
         }
+        public void FillEuroCupParticipants(Game game)
+        {
+            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
+            var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
+            this.helpers.FillEuropeanCompetitions(euroCup, teamsInEuroCup);
+        }
+        
         public void GenerateCupFixtures(Game game)
         {
             var teamsInCup = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true && x.GameId == game.Id).ToList();
             var currentCup = this.data.Cups.First();
-            var currentDay = this.data.Days.OrderBy(x => x.DayOrder).FirstOrDefault(x => x.GameId == game.Id && x.IsPlayed == false && x.isCupDay && x.Year.YearOrder == game.Year);
 
-            if (currentDay != null)
+
+            while (teamsInCup.Count > 0)
             {
-                while (teamsInCup.Count > 0)
+                var homeTeam = teamsInCup[rnd.Next(0, teamsInCup.Count - 1)];
+                teamsInCup.Remove(homeTeam);
+                var awayTeam = teamsInCup[rnd.Next(0, teamsInCup.Count - 1)];
+                teamsInCup.Remove(awayTeam);
+
+                var newFixt = new Fixture
                 {
-                    var homeTeam = teamsInCup[rnd.Next(0, teamsInCup.Count - 1)];
-                    teamsInCup.Remove(homeTeam);
-                    var awayTeam = teamsInCup[rnd.Next(0, teamsInCup.Count - 1)];
-                    teamsInCup.Remove(awayTeam);
+                    Round = game.CupRound,
+                    GameId = game.Id,
+                    HomeTeamName = homeTeam.Name,
+                    AwayTeamName = awayTeam.Name,
+                    CompetitionName = "Cup",
+                    HomeTeamGoal = 0,
+                    AwayTeamGoal = 0,
+                    CupId = currentCup.Id,
+                    HomeTeamId = homeTeam.Id,
+                    AwayTeamId = awayTeam.Id,
+                    IsPlayed = false
+                };
 
-                    var newFixt = new Fixture
-                    {
-                        Round = game.CupRound,
-                        GameId = game.Id,
-                        HomeTeamName = homeTeam.Name,
-                        AwayTeamName = awayTeam.Name,
-                        CompetitionName = "Cup",
-                        HomeTeamGoal = 0,
-                        AwayTeamGoal = 0,
-                        CupId = currentCup.Id,
-                        HomeTeamId = homeTeam.Id,
-                        AwayTeamId = awayTeam.Id,
-                        Day = currentDay,
-                        DayId = currentDay.Id,
-                        IsPlayed = false
-                    };
-
-                    this.data.Fixtures.Add(newFixt);
-                    this.data.SaveChanges();
-                }
+                this.data.Fixtures.Add(newFixt);
+                this.data.SaveChanges();
             }
-
         }
         public void DeleteFixtures(Game game)
         {
@@ -277,5 +212,7 @@
             }
             this.data.SaveChanges();
         }
+
+
     }
 }
