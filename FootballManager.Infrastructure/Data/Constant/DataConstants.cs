@@ -100,11 +100,19 @@
             public const int DecemberDays = 31;
         }
 
-        public class EuropeanCups
+        public class ChampionsCup
         {
-            public const int ChampionsLeagueParticipants = 32;
-            public const int EuroCupParticipants = 32;
-
+            public const string Name = "Champions Cup";
+            public const int Rank = 1;
+            public const int Participants = 32;
+            public const int Rounds = 5;            
+        }
+        public class EuroCup
+        {
+            public const string Name = "Euro Cup";
+            public const int Rank = 2;
+            public const int Participants = 32;
+            public const int Rounds = 5;
         }
     }
 }

@@ -4,8 +4,7 @@
     public interface IFixtureService
     {
         void GenerateLeagueFixtures(Game game);
-        void FillChampionsLeagueParticipants(Game game);
-        void FillEuroCupParticipants(Game game);
+        
         void AddFixtureToDay(Game game);
         void ShuffleTeams(List<VirtualTeam> currl);
         void DeleteFixtures(Game game);

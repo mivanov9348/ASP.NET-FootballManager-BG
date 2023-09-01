@@ -20,18 +20,7 @@
             this.rnd = new Random();
         }
 
-        public void FillEuropeanCompetitions(EuropeanCup currentCup, List<VirtualTeam> teams)
-        {
-            for (int i = 0; i < currentCup.Participants; i++)
-            {
-                var randomTeam = teams[rnd.Next(0, teams.Count())];
-
-                randomTeam.IsEuroParticipant = true;
-                randomTeam.EuropeanCupId = currentCup.Id;
-                randomTeam.EuropeanCup = currentCup;
-            }
-            this.data.SaveChanges();
-        }
+       
 
 
 

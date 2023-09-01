@@ -15,7 +15,6 @@
                    .WithOne()
                    .HasForeignKey<GameOption>(x => x.UserId);
 
-
             builder.HasMany(x => x.Games)
                    .WithOne(x => x.GameOption)
                    .OnDelete(DeleteBehavior.Restrict);

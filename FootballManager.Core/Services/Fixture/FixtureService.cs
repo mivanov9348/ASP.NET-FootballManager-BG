@@ -68,22 +68,7 @@
                 }
             }
             this.data.SaveChanges();
-        }
-
-        public void FillChampionsLeagueParticipants(Game game)
-        {
-            var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
-            var teamsInChampionsCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 1 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
-            this.helpers.FillEuropeanCompetitions(championsCup,teamsInChampionsCup);
-
-        }
-        public void FillEuroCupParticipants(Game game)
-        {
-            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
-            var teamsInEuroCup = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCup.Rank == 2 && x.EuropeanCupId != null && x.GameId == game.Id).ToList();
-            this.helpers.FillEuropeanCompetitions(euroCup, teamsInEuroCup);
-        }
-        
+        }              
         public void GenerateCupFixtures(Game game)
         {
             var teamsInCup = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true && x.GameId == game.Id).ToList();
@@ -212,7 +197,5 @@
             }
             this.data.SaveChanges();
         }
-
-
     }
 }

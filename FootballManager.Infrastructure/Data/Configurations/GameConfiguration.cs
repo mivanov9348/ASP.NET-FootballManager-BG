@@ -55,6 +55,10 @@
                .WithOne(x => x.Game)
                .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasMany(x => x.EuropeanCups)
+                   .WithOne(x => x.Game)
+                   .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
