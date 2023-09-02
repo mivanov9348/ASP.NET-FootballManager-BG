@@ -144,14 +144,14 @@
             await SendMessageToHTML("Generating teams...");
             var teams = serviceAggregator.teamService.GenerateTeams(currentGame).ToList();
             //GeneratePlayersAndTeamOverall
-          // await SendMessageToHTML("Generating players...");
-          // teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
-          // await SendMessageToHTML("Generating free agents...");
-          // serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
-          // await SendMessageToHTML("Calculating players prices...");
-          // serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
-          // await SendMessageToHTML("Calculating players overall...");
-          // teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
+            // await SendMessageToHTML("Generating players...");
+            // teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
+            // await SendMessageToHTML("Generating free agents...");
+            // serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
+            // await SendMessageToHTML("Calculating players prices...");
+            // serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
+            // await SendMessageToHTML("Calculating players overall...");
+            // teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
             //CreateAndFillEuropeanCompetitions
             await SendMessageToHTML("Creating European Competitions...");
             serviceAggregator.euroCupService.CreateChampionsCup(currentGame, year);
@@ -159,22 +159,22 @@
             serviceAggregator.euroCupService.RemoveEuropeanParticipants(currentGame);
             serviceAggregator.euroCupService.FillChampionsCupParticipants(currentGame);
             serviceAggregator.euroCupService.FillEuroCupParticipants(currentGame);
-         
+            //GenerateCup               
+            await SendMessageToHTML("Generating Bulgaria Cup...");
+            serviceAggregator.cupService.GenerateCupParticipants(currentGame);
 
+
+            //GenerateLeagueFixtures
+            await SendMessageToHTML("Generating fixtures and starting the game...");
+            serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
 
             //AddFixtures      
             serviceAggregator.fixtureService.AddFixtureToDay(currentGame);
 
-            //GenerateCup               
-            await SendMessageToHTML("Generating cups...");
-            serviceAggregator.cupService.GenerateCupParticipants(currentGame);
-          
-            //GenerateEuroCup
-            await SendMessageToHTML("Generating european cups...");
-           
-            //GenerateLeagueFixtures
-            await SendMessageToHTML("Generating fixtures and starting the game...");
-            serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
+
+
+
+            
 
             //NewManagerNews
             await SendMessageToHTML("Writing news...");

@@ -56,15 +56,15 @@
     <div class="days">
         @foreach (var item in @Model.Days)
         {
-            @if (@item.isLeagueDay)
+            @if (@item.IsLeagueDay)
             {
                 competitionName = "League day";
             }
-            @if (@item.isCupDay)
+            @if (@item.IsCupDay)
             {
                 competitionName = "Cup day";
             }
-            @if (@item.isEuroCupDay)
+            @if (@item.IsEuroCupDay)
             {
                 competitionName = "Eurocup day";
             }

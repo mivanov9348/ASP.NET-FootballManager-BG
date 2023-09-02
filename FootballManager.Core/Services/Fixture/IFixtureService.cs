@@ -3,8 +3,7 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public interface IFixtureService
     {
-        void GenerateLeagueFixtures(Game game);
-        
+        void GenerateLeagueFixtures(Game game);        
         void AddFixtureToDay(Game game);
         void ShuffleTeams(List<VirtualTeam> currl);
         void DeleteFixtures(Game game);

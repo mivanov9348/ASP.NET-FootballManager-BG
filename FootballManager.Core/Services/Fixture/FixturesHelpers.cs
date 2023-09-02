@@ -2,12 +2,8 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     public class FixturesHelpers
     {
         private readonly FootballManagerDbContext data;
@@ -20,7 +16,10 @@
             this.rnd = new Random();
         }
 
-       
+        public Day GetLeagueDay(List<Day> currentLeagueDays)
+        {
+            return null;
+        }
 
 
 

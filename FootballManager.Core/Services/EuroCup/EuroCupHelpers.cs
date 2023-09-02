@@ -35,8 +35,9 @@
                 randomTeam.IsEuroParticipant = true;
                 randomTeam.EuropeanCupId = currentCup.Id;
                 randomTeam.EuropeanCup = currentCup;
+                this.data.SaveChanges();
             }
-            this.data.SaveChanges();
+          
         }
 
         public void GetGoalScorers(VirtualTeam currentTeam, int teamGoals, Fixture fixture)

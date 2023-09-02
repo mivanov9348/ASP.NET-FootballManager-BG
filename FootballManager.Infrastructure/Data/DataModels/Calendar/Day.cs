@@ -8,10 +8,10 @@ namespace FootballManager.Infrastructure.Data.DataModels.Calendar
         public string DayName { get; set; }
         public int DayOrder { get; set; }
         public int WeekDayOrder { get; set; }
-        public bool isMatchDay { get; set; }
-        public bool isEuroCupDay { get; set; }
-        public bool isCupDay { get; set; }
-        public bool isLeagueDay { get; set; }
+        public bool IsMatchDay { get; set; }
+        public bool IsEuroCupDay { get; set; }
+        public bool IsCupDay { get; set; }
+        public bool IsLeagueDay { get; set; }
         public bool IsDrawDay { get; set; }
         public bool IsPlayed { get; set; }
         public int YearId { get; set; }

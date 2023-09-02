@@ -18,11 +18,11 @@
         public void GenerateLeagueFixtures(Game game)
         {
             var allLeagues = this.data.Leagues.ToList();
-            var leagueDays = this.data.Days.Where(x => x.isLeagueDay == true && x.GameId == game.Id && x.Year.YearOrder == game.Year).ToList();
+            var leagueDays = this.data.Days.Where(x => x.IsLeagueDay == true && x.GameId == game.Id && x.Year.YearOrder == game.Year).ToList();
 
-            foreach (var item in allLeagues)
+            foreach (var league in allLeagues)
             {
-                var currL = this.data.Leagues.FirstOrDefault(x => x.Id == item.Id);
+                var currL = this.data.Leagues.FirstOrDefault(x => x.Id == league.Id);
                 var teams = this.data.VirtualTeams.Where(x => x.LeagueId == currL.Id && x.GameId == game.Id).ToList();
                 ShuffleTeams(teams);
                 var numOfMatches = teams.Count / 2 * (teams.Count - 1);
@@ -33,6 +33,7 @@
                 {
                     for (int i = 0; i < teams.Count() / 2; i += 1)
                     {
+
                         var htId = teams[i].Id;
                         var atId = teams[(teams.Count() - 1 - i)].Id;
                         var ht = this.data.VirtualTeams.FirstOrDefault(x => x.Id == htId);
@@ -46,7 +47,7 @@
                             AwayTeam = at,
                             HomeTeamName = ht.Name,
                             AwayTeamName = at.Name,
-                            CompetitionName = item.Name,
+                            CompetitionName = league.Name,
                             HomeTeamGoal = 0,
                             AwayTeamGoal = 0,
                             LeagueId = currL.Id,
@@ -164,7 +165,7 @@
             var cupFixtures = fixtureList.Where(x => x.League == null && x.Cup != null && x.EuropeanCup == null).ToList();
             var euroCupFixtures = fixtureList.Where(x => x.League == null && x.Cup == null && x.EuropeanCup != null).ToList();
 
-            foreach (var day in days.Where(x => x.isLeagueDay))
+            foreach (var day in days.Where(x => x.IsLeagueDay))
             {
                 round++;
 
@@ -175,7 +176,7 @@
             }
 
             round = 0;
-            foreach (var day in days.Where(x => x.isCupDay))
+            foreach (var day in days.Where(x => x.IsCupDay))
             {
                 round++;
 
@@ -186,7 +187,7 @@
             }
 
             round = 0;
-            foreach (var day in days.Where(x => x.isLeagueDay))
+            foreach (var day in days.Where(x => x.IsLeagueDay))
             {
                 round++;
 

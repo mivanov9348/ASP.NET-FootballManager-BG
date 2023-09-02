@@ -120,8 +120,5 @@
         }
         public async Task<List<Fixture>> GetEuroCupFixtures(Game CurrentGame, int euroCupRank) => await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.EuropeanCupId == euroCupRank).ToList());
 
-
-
-
     }
 }

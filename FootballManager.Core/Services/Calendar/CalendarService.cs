@@ -112,6 +112,7 @@
         }
         public void GenerateDays(Game currentGame, int dayOrder, int dayOfWeekIndex, Year currentYear, Month currentMonth, Week currentWeek)
         {
+
             var newDay = new Day
             {
                 DayOrder = dayOrder,
@@ -126,10 +127,10 @@
                 Week = currentWeek,
                 WeekId = currentWeek.Id,
                 IsPlayed = false,
-                isCupDay = false,
-                isLeagueDay = false,
-                isEuroCupDay = false,
-                isMatchDay = false,
+                IsCupDay = false,
+                IsLeagueDay = false,
+                IsEuroCupDay = false,
+                IsMatchDay = false,
                 IsDrawDay = false
             };
 
@@ -140,10 +141,50 @@
         public async Task SetWeekPlan(Game currentGame, Year currentYear)
         {
             var allWeeks = currentYear.Weeks;
+            var leagueWeeksCounter = 0;
+            var cupWeeksCounter = 7;
+            var euroCupWeeksCounter = 7;
 
             foreach (var week in allWeeks)
             {
-                helper.DayPlan(week);
+                var allWeekDays = week.Days;
+
+                foreach (var day in allWeekDays)
+                {
+                    if (day.WeekDayOrder == 7)
+                    {
+                        if ((leagueWeeksCounter == 0 || week.WeekOrder % 3 == 0) && leagueWeeksCounter < 15)
+                        {
+                            day.IsLeagueDay = true;
+                            day.IsMatchDay = true;
+                            leagueWeeksCounter++;
+                        }
+                    }
+                    if (day.WeekDayOrder == 3)
+                    {
+                        if (cupWeeksCounter == 7 || week.WeekOrder % 11 == 0)
+                        {
+                            day.IsCupDay = true;
+                            day.IsMatchDay = true;
+                            cupWeeksCounter++;
+                        }
+                    }
+                    if (day.WeekDayOrder == 4)
+                    {
+                        if (euroCupWeeksCounter == 7 || week.WeekOrder % 10 == 0)
+                        {
+                            day.IsEuroCupDay = true;
+                            day.IsMatchDay = true;
+                            euroCupWeeksCounter++;
+                        }
+                    }
+                    if (day.WeekDayOrder == 5)
+                    {
+                        day.IsDrawDay = true;
+                    }
+                }
+
+                this.data.SaveChanges();
             }
         }
         public Task<Day> GetCurrentDay(Game currentGame)

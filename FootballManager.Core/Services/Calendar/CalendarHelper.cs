@@ -19,34 +19,7 @@
 
         //DayHelpers
 
-        public async Task DayPlan(Week currentWeek)
-        {
-            foreach (var day in currentWeek.Days)
-            {
-                switch (day.WeekDayOrder)
-                {
-                    case 3:
-                        day.isCupDay = true;
-                        day.isMatchDay = true;
-                        break;
-                    case 4:
-                        day.isEuroCupDay = true;
-                        day.isMatchDay = true;
-                        break;
-                    case 5:
-                        day.IsDrawDay = true;
-                        break;
-                    case 7:
-                        day.isLeagueDay = true;
-                        day.isMatchDay = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            this.data.SaveChanges();
-        }
-
+       
         //WeekHelpers
         public int CalculateWeeksInMonth(int daysCount) => (int)Math.Ceiling((double)daysCount / DataConstants.YearStats.DaysInWeek);
 

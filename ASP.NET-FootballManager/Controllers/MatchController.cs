@@ -70,11 +70,11 @@
 
             if (currentFixture == null)
             {
-                if (currentDay.isCupDay)
+                if (currentDay.IsCupDay)
                 {
                     serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
-                if (currentDay.isEuroCupDay)
+                if (currentDay.IsEuroCupDay)
                 {
                     serviceAggregator.euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
@@ -114,17 +114,17 @@
             if (currentMatch.Minute > 90)
             {
                 serviceAggregator.matchService.EndMatch(currentMatch);
-                if (currentDay.isLeagueDay)
+                if (currentDay.IsLeagueDay)
                 {
                     serviceAggregator.leagueService.CheckWinner(currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture);
                     serviceAggregator.leagueService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
-                if (currentDay.isCupDay)
+                if (currentDay.IsCupDay)
                 {
                     serviceAggregator.cupService.CheckWinner(currentFixture);
                     serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);                  
                 }
-                if (currentDay.isEuroCupDay)
+                if (currentDay.IsEuroCupDay)
                 {
                     serviceAggregator.euroCupService.CheckWinner(currentFixture);
                     serviceAggregator.euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
