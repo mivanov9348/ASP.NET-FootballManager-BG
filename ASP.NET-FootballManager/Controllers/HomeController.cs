@@ -144,14 +144,14 @@
             await SendMessageToHTML("Generating teams...");
             var teams = serviceAggregator.teamService.GenerateTeams(currentGame).ToList();
             //GeneratePlayersAndTeamOverall
-            // await SendMessageToHTML("Generating players...");
-            // teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
-            // await SendMessageToHTML("Generating free agents...");
-            // serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
-            // await SendMessageToHTML("Calculating players prices...");
-            // serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
-            // await SendMessageToHTML("Calculating players overall...");
-            // teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
+            await SendMessageToHTML("Generating players...");
+            teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
+            await SendMessageToHTML("Generating free agents...");
+            serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
+            await SendMessageToHTML("Calculating players prices...");
+            serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
+            await SendMessageToHTML("Calculating players overall...");
+            teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
             //CreateAndFillEuropeanCompetitions
             await SendMessageToHTML("Creating European Competitions...");
             serviceAggregator.euroCupService.CreateChampionsCup(currentGame, year);
@@ -162,22 +162,12 @@
             //GenerateCup               
             await SendMessageToHTML("Generating Bulgaria Cup...");
             serviceAggregator.cupService.GenerateCupParticipants(currentGame);
-
-
             //GenerateLeagueFixtures
-            await SendMessageToHTML("Generating fixtures and starting the game...");
+            await SendMessageToHTML("Generating fixtures...");
             serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
-
-            //AddFixtures      
-            serviceAggregator.fixtureService.AddFixtureToDay(currentGame);
-
-
-
-
-            
-
+            serviceAggregator.fixtureService.AddLeagueFixtureToDay(currentGame);
             //NewManagerNews
-            await SendMessageToHTML("Writing news...");
+            await SendMessageToHTML("Writing the news and starting the game...");
             serviceAggregator.inboxService.CreateManagerNews(currentManager, currentGame);
         }
 

@@ -69,7 +69,7 @@
                 }
             }
             this.data.SaveChanges();
-        }              
+        }
         public void GenerateCupFixtures(Game game)
         {
             var teamsInCup = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true && x.GameId == game.Id).ToList();
@@ -155,17 +155,13 @@
             int round = allFixt.First().Round;
             return round;
         }
-        public void AddFixtureToDay(Game game)
+        public void AddLeagueFixtureToDay(Game game)
         {
-            var fixtureList = this.data.Fixtures.Where(x => x.GameId == game.Id);
-            var days = this.data.Days.Where(x => x.GameId == game.Id && x.Year.YearOrder == game.Year);
+            var leagueFixtures = this.data.Fixtures.Where(x => x.League != null && x.Cup == null && x.EuropeanCup == null).ToList();
+            var days = this.data.Days.Where(x => x.GameId == game.Id && x.Year.YearOrder == game.Year && x.IsLeagueDay == true);
+
             var round = 0;
-
-            var leagueFixtures = fixtureList.Where(x => x.League != null && x.Cup == null && x.EuropeanCup == null).ToList();
-            var cupFixtures = fixtureList.Where(x => x.League == null && x.Cup != null && x.EuropeanCup == null).ToList();
-            var euroCupFixtures = fixtureList.Where(x => x.League == null && x.Cup == null && x.EuropeanCup != null).ToList();
-
-            foreach (var day in days.Where(x => x.IsLeagueDay))
+            foreach (var day in days)
             {
                 round++;
 
@@ -174,28 +170,7 @@
                     league.DayId = day.Id;
                 }
             }
-
-            round = 0;
-            foreach (var day in days.Where(x => x.IsCupDay))
-            {
-                round++;
-
-                foreach (var cup in cupFixtures.Where(x => x.Round == round))
-                {
-                    cup.DayId = day.Id;
-                }
-            }
-
-            round = 0;
-            foreach (var day in days.Where(x => x.IsLeagueDay))
-            {
-                round++;
-
-                foreach (var euroCup in euroCupFixtures.Where(x => x.Round == round))
-                {
-                    euroCup.DayId = day.Id;
-                }
-            }
+            
             this.data.SaveChanges();
         }
     }

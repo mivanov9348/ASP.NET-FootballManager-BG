@@ -116,16 +116,27 @@
                 <th scope="col" style="width:100px">AG</th>
                 <th scope="col" style="width:250px">AT</th>
             </tr>
-            @foreach (var item in @Model.Fixtures)
+            @if (Model.Fixtures.Count<1)
             {
                 <tr>
-                    <td>@item.Round</td>
-                    <td>@item.HomeTeamName</td>
-                    <td>@item.HomeTeamGoal</td>
-                    <td>@item.AwayTeamGoal</td>
-                    <td>@item.AwayTeamName</td>
+                    <th colspan="5" style="color:white">THE FIXTURES WILL BE DRAW SOON!</th>
                 </tr>
+              
             }
+            else
+            {
+                @foreach (var item in @Model.Fixtures)
+                {
+                    <tr>
+                        <td>@item.Round</td>
+                        <td>@item.HomeTeamName</td>
+                        <td>@item.HomeTeamGoal</td>
+                        <td>@item.AwayTeamGoal</td>
+                        <td>@item.AwayTeamName</td>
+                    </tr>
+                }
+            }
+            
         </table>
 
     </div>

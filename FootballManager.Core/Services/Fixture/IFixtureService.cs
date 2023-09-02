@@ -4,7 +4,7 @@
     public interface IFixtureService
     {
         void GenerateLeagueFixtures(Game game);        
-        void AddFixtureToDay(Game game);
+        void AddLeagueFixtureToDay(Game game);
         void ShuffleTeams(List<VirtualTeam> currl);
         void DeleteFixtures(Game game);
         Task<List<Fixture>> GetFixture(int id, int round,Game CurrentGame);    
