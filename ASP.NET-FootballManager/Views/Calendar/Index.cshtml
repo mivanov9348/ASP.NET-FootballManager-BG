@@ -1,87 +1,224 @@
 ﻿@using FootballManager.Core.Models.Menu
 @model CalendarViewModel
 
+<!DOCTYPE html>
+<html lang="en">
 <style>
+    /* Reset some default styles */
+    body, p {
+        margin: 0;
+        padding: 0;
+    }
 
-     body {
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
         background-image: url("/Images/Wallpapers/Calendar.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
-        font-family: 'OLD SPORT 02 ATHLETIC NCV';
     }
 
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: -1;
-        }
-
-    .panel {
-        margin: 5px;
-        width: 150px;
-        border: 1px solid white;
-        background-color: color();
-        background-color: rgba(0, 0, 0, 0.7);
-        text-align:center;
+    .overlay {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: -1;
     }
 
+    .calendar {
+        position: relative;
+        padding: 20px;
+        color: white;
+    }
+
+    /* Header styles */
+    .year-label {
+        font-size: 40px;
+        text-align: center;
+    }
+
+    .divider {
+        border: none;
+        border-top: 1px solid white;
+        margin-top: 10px;
+    }
+
+    /* Day panel styles */
     .days {
-        margin-left: 200px;
         display: grid;
-        grid-template-columns: repeat(5, 200px);
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        margin-top: 20px;
     }
 
-    .competitionName{
-        color:red;
+    .day-panel {
+        border: 1px solid white;
+        background-color: rgba(0, 0, 0, 0.7);
+        text-align: center;
+        padding: 10px;
+        height: 80px;
     }
+
+    /* Competition type label styles */
+    .league-day .competition-label {
+        color: red;
+        font-weight: bolder;
+    }
+
+    .cup-day .competition-label {
+        color: yellow;
+        font-weight: bolder;
+    }
+
+    .eurocup-day .competition-label {
+        color: blue;
+        font-weight: bolder;
+    }
+
+    .played-day .competition-label {
+        color: rgb(255, 64, 64);
+    }
+
+    /* Day label styles */
+    .day-label {
+        color: white;
+        font-size: 20px;
+    }
+
+    .day-names {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        text-align: center;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .day-name {
+        color: white;
+    }
+
+    .overlay {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8); /* Increase opacity */
+        z-index: -1;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .nav-button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: white;
+    }
+
+        .nav-button:focus {
+            outline: none;
+        }
 
 </style>
-
-@{
-    var competitionName = "";
-    var color = "";
-}
-
 <partial name="~/Views/Shared/_SideBar.cshtml" />
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="/path/to/your/stylesheet.css">
+</head>
 <body>
-    <label style="color:white;font-size:40px;text-align:center;">Season @Model.Year</label>
-    <hr />
-    <div class="days">
-        @foreach (var item in @Model.Days)
-        {
-            @if (@item.IsLeagueDay)
-            {
-                competitionName = "League day";
-            }
-            @if (@item.IsCupDay)
-            {
-                competitionName = "Cup day";
-            }
-            @if (@item.IsEuroCupDay)
-            {
-                competitionName = "Eurocup day";
-            }
-            @if (@item.IsPlayed)
-            {
-                color = "rgb(255,64,64)";
-            }
-            else
-            {
-                color = "";
-            }
+    <form method="post">
+        <div class="overlay"></div>
+        <div class="calendar">
+            <header>
+                <div class="nav-buttons">
 
-            <div style="background-color:@color" class="panel">
-                <p style="color:green">Day: @item.DayOrder</p>
-                <p class="competitionName">@competitionName</p>
+                    <div class="month-info">
+                        <label class="year-label">Year @Model.Year</label>
+                        <br>
+                        <button class="nav-button" id="prevMonthButton" asp-action="PreviousMonth" asp-route-monthId="@Model.MonthId">&#9664;</button>
+                        <label class="month-name">@Model.MonthName</label>
+                        <button class="nav-button" id="nextMonthButton" asp-action="NextMonth" asp-route-monthId="@Model.MonthId">&#9654;</button>
+                    </div>
+
+                </div>
+                <hr class="divider">
+            </header>
+            <div class="day-names">
+                <div class="day-name">Monday</div>
+                <div class="day-name">Tuesday</div>
+                <div class="day-name">Wednesday</div>
+                <div class="day-name">Thursday</div>
+                <div class="day-name">Friday</div>
+                <div class="day-name">Saturday</div>
+                <div class="day-name">Sunday</div>
             </div>
-        }
-    </div>
-
+            <div class="days">
+                @foreach (var item in Model.Days)
+                {
+                    @if (item.IsLeagueDay)
+                    {
+                        <div class="day-panel league-day">
+                            <p class="day-label">@item.DayOrder</p>
+                            <p class="competition-label">League day</p>
+                        </div>
+                    }
+                    else if (item.IsCupDay)
+                    {
+                        <div class="day-panel cup-day">
+                            <p class="day-label">@item.DayOrder</p>
+                            <p class="competition-label">Cup day</p>
+                        </div>
+                    }
+                    else if (item.IsEuroCupDay)
+                    {
+                        <div class="day-panel eurocup-day">
+                            <p class="day-label">@item.DayOrder</p>
+                            <p class="competition-label">Eurocup day</p>
+                        </div>
+                    }
+                    else if (item.IsPlayed)
+                    {
+                        <div class="day-panel played-day">
+                            <p class="day-label">@item.DayOrder</p>
+                            <p class="competition-label">Played</p>
+                        </div>
+                    }
+                    else if (item.IsDrawDay)
+                    {
+                        <div class="day-panel eurocup-day">
+                            <p class="day-label">@item.IsDrawDay</p>
+                            <p class="competition-label">Draw Day</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="day-panel">
+                            <p class="day-label">@item.DayOrder</p>
+                        </div>
+                    }
+                    <p>@item.DayName</p>
+                }
+            </div>
+        </div>
+    </form>
 </body>
+
+</html>

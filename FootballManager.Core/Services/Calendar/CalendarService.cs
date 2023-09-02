@@ -191,9 +191,54 @@
         {
             throw new NotImplementedException();
         }
-        public Task<List<Day>> GetAllDays(Game currentGame)
+        public async Task<List<Day>> GetAllDaysInMonth(Month month)
         {
-            throw new NotImplementedException();
+            var days = this.data.Days.Where(x => x.MonthId == month.Id).ToList();
+            return days;
+        }
+
+        public Year GetCurrentYear(Game game)
+        {
+            return this.data.Years.FirstOrDefault(x => x.GameId == game.Id && x.YearOrder == game.Year);
+        }
+
+        public Month GetCurrentMonth(Year year, int monthId)
+        {
+            var yearMonths = this.data.Months.Where(x => x.YearId == year.Id);
+
+            if (monthId == 0 || monthId == null)
+            {
+                return yearMonths.FirstOrDefault(x => x.MonthOrder == 1);
+            }
+            return yearMonths.FirstOrDefault(x => x.Id == monthId);
+        }
+
+        public Month ReturnPreviousMonth(int monthId)
+        {
+            var currentMonth = this.data.Months.FirstOrDefault(x => x.Id == monthId);
+            var currentYear = this.data.Years.FirstOrDefault(x => x.Id == currentMonth.Id);
+            var currentYearMonths = this.data.Months.Where(x => x.YearId == currentYear.Id);
+
+            if (currentMonth.MonthOrder > 1 || currentMonth.MonthOrder < 13)
+            {
+                var monthOrder = currentMonth.MonthOrder - 1;
+                return currentYearMonths.FirstOrDefault(x => x.MonthOrder == monthOrder);
+            }
+            return currentMonth;
+        }
+
+        public Month NextMonth(int monthId)
+        {
+            var currentMonth = this.data.Months.FirstOrDefault(x => x.Id == monthId);
+            var currentYear = this.data.Years.FirstOrDefault(x => x.Id == currentMonth.YearId);
+            var currentYearMonths = this.data.Months.Where(x => x.YearId == currentYear.Id);
+
+            if (currentMonth.MonthOrder > 0 || currentMonth.MonthOrder < 12)
+            {
+                var monthOrder = currentMonth.MonthOrder + 1;
+                return currentYearMonths.FirstOrDefault(x => x.MonthOrder == monthOrder);
+            }
+            return currentMonth;
         }
     }
 }
