@@ -21,6 +21,8 @@
             this.constants = new DataConstants();
         }
 
+
+
         public Year GenerateYear(Game currentGame)
         {
             var newYear = new Year
@@ -89,7 +91,7 @@
                         GameId = currentGame.Id
                     };
                     newMonth.Weeks.Add(currentWeek);
-
+                    this.data.SaveChanges();
                     weekDays = 1;
                 }
 
@@ -216,10 +218,10 @@
         public Month ReturnPreviousMonth(int monthId)
         {
             var currentMonth = this.data.Months.FirstOrDefault(x => x.Id == monthId);
-            var currentYear = this.data.Years.FirstOrDefault(x => x.Id == currentMonth.Id);
-            var currentYearMonths = this.data.Months.Where(x => x.YearId == currentYear.Id);
+            var currentYear = this.data.Years.FirstOrDefault(x => x.Id == currentMonth.YearId);
+            var currentYearMonths = this.data.Months.Where(x => x.YearId == currentYear.Id).ToList();
 
-            if (currentMonth.MonthOrder > 1 || currentMonth.MonthOrder < 13)
+            if (currentMonth.MonthOrder > 1 && currentMonth.MonthOrder < 13)
             {
                 var monthOrder = currentMonth.MonthOrder - 1;
                 return currentYearMonths.FirstOrDefault(x => x.MonthOrder == monthOrder);
@@ -231,14 +233,30 @@
         {
             var currentMonth = this.data.Months.FirstOrDefault(x => x.Id == monthId);
             var currentYear = this.data.Years.FirstOrDefault(x => x.Id == currentMonth.YearId);
-            var currentYearMonths = this.data.Months.Where(x => x.YearId == currentYear.Id);
+            var currentYearMonths = this.data.Months.Where(x => x.YearId == currentYear.Id).ToList();
 
-            if (currentMonth.MonthOrder > 0 || currentMonth.MonthOrder < 12)
+            if (currentMonth.MonthOrder > 0 && currentMonth.MonthOrder < 12)
             {
                 var monthOrder = currentMonth.MonthOrder + 1;
                 return currentYearMonths.FirstOrDefault(x => x.MonthOrder == monthOrder);
             }
             return currentMonth;
+        }
+
+        public int GetStartOffsetDays(Month currentMonth)
+        {
+            var monthDays = this.data.Days.Where(x => x.MonthId == currentMonth.Id).ToList();
+            var firstDayWeekOrder = monthDays.First().WeekDayOrder; //1            
+            return firstDayWeekOrder;
+          
+        }
+
+        public int GetEndOffsetDays(Month currentMonth)
+        {
+            var monthDays = this.data.Days.Where(x => x.MonthId == currentMonth.Id).ToList();
+            var lastDayWeekOrder = monthDays.Last().WeekDayOrder; //1            
+            return lastDayWeekOrder+1;
+
         }
     }
 }

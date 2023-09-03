@@ -8,6 +8,8 @@
         void GenerateMonths(Game currentGame, Year currentYear);
         void GenerateWeeks(Month newMonth, Month previousMonth, Year newYear, Game currentGame, int weeksCount);
         void GenerateDays(Game currentGame, int dayOrder, int dayOfWeekIndex, Year currentYear, Month currentMonth, Week currentWeek);
+        int GetStartOffsetDays(Month currentMonth);
+        int GetEndOffsetDays(Month currentMonth);
         Year GetCurrentYear(Game game);
         Month GetCurrentMonth(Year year, int monthId);
         Month ReturnPreviousMonth(int monthId);

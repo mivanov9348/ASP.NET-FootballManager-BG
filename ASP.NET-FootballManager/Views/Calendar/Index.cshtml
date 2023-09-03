@@ -134,6 +134,13 @@
             outline: none;
         }
 
+    .day-image {
+        max-width: 100%; /* Ensures the image fits within the container */
+        max-height: 100%; /* Helps maintain the aspect ratio of the image */
+        display: block; /* Removes any inline spacing */
+        margin: auto; /* Centers the image within the container */
+    }
+
 </style>
 <partial name="~/Views/Shared/_SideBar.cshtml" />
 
@@ -171,6 +178,11 @@
                 <div class="day-name">Sunday</div>
             </div>
             <div class="days">
+                @for (var i = 1; i < Model.StartOffsetDays; i++)
+                {
+                    <div class="day-panel" style="background-color:dimgrey"></div>
+                }
+
                 @foreach (var item in Model.Days)
                 {
                     @if (item.IsLeagueDay)
@@ -179,6 +191,7 @@
                             <p class="day-label">@item.DayOrder</p>
                             <p class="competition-label">League day</p>
                         </div>
+
                     }
                     else if (item.IsCupDay)
                     {
@@ -204,7 +217,7 @@
                     else if (item.IsDrawDay)
                     {
                         <div class="day-panel eurocup-day">
-                            <p class="day-label">@item.IsDrawDay</p>
+                            <p class="day-label">@item.DayOrder</p>
                             <p class="competition-label">Draw Day</p>
                         </div>
                     }
@@ -214,7 +227,10 @@
                             <p class="day-label">@item.DayOrder</p>
                         </div>
                     }
-                    <p>@item.DayName</p>
+                }
+                @for (var i = Model.EndOffsetDays; i <= 7; i++)
+                {
+                    <div class="day-panel" style="background-color:dimgrey"></div>
                 }
             </div>
         </div>
