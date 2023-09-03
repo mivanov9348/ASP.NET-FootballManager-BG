@@ -77,7 +77,7 @@
     }
 
     .eurocup-day .competition-label {
-        color: blue;
+        color: ghostwhite;
         font-weight: bolder;
     }
 
@@ -134,11 +134,20 @@
             outline: none;
         }
 
-    .day-image {
-        max-width: 100%; /* Ensures the image fits within the container */
-        max-height: 100%; /* Helps maintain the aspect ratio of the image */
-        display: block; /* Removes any inline spacing */
-        margin: auto; /* Centers the image within the container */
+    .day-panel {
+        position: relative;
+    }
+
+    .day-image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Increase the alpha value */
+        background-size: cover;
+        background-repeat: no-repeat;
+        z-index: -1;
     }
 
 </style>
@@ -188,6 +197,7 @@
                     @if (item.IsLeagueDay)
                     {
                         <div class="day-panel league-day">
+                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgarianleague.jpg)"></div>
                             <p class="day-label">@item.DayOrder</p>
                             <p class="competition-label">League day</p>
                         </div>
@@ -196,6 +206,7 @@
                     else if (item.IsCupDay)
                     {
                         <div class="day-panel cup-day">
+                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgariancup.jpg)"></div>
                             <p class="day-label">@item.DayOrder</p>
                             <p class="competition-label">Cup day</p>
                         </div>
@@ -203,6 +214,7 @@
                     else if (item.IsEuroCupDay)
                     {
                         <div class="day-panel eurocup-day">
+                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/europeanleague.jpg)"></div>
                             <p class="day-label">@item.DayOrder</p>
                             <p class="competition-label">Eurocup day</p>
                         </div>
@@ -217,6 +229,7 @@
                     else if (item.IsDrawDay)
                     {
                         <div class="day-panel eurocup-day">
+                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/drawday.jpg)"></div>
                             <p class="day-label">@item.DayOrder</p>
                             <p class="competition-label">Draw Day</p>
                         </div>
