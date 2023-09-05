@@ -16,9 +16,9 @@
         public Team Team { get; set; }
         public int GameOptionId { get; set; }
         public GameOption GameOption { get; set; }
-        public int Season { get; set; }
-        public int Year { get; set; }
-        public int Day { get; set; }
+        public int CurrentYearOrder { get; set; }
+        public int CurrentMonthOrder { get; set; }
+        public int CurrentDayOrder { get; set; }
         public int LeagueRound { get; set; }
         public int EuroCupRound { get; set; }
         public int CupRound { get; set; }

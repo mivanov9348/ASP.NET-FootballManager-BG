@@ -18,7 +18,7 @@
         public void GenerateLeagueFixtures(Game game)
         {
             var allLeagues = this.data.Leagues.ToList();
-            var leagueDays = this.data.Days.Where(x => x.IsLeagueDay == true && x.GameId == game.Id && x.Year.YearOrder == game.Year).ToList();
+            var leagueDays = this.data.Days.Where(x => x.IsLeagueDay == true && x.GameId == game.Id && x.Year.YearOrder == game.CurrentYearOrder).ToList();
 
             foreach (var league in allLeagues)
             {
@@ -158,7 +158,7 @@
         public void AddLeagueFixtureToDay(Game game)
         {
             var leagueFixtures = this.data.Fixtures.Where(x => x.League != null && x.Cup == null && x.EuropeanCup == null).ToList();
-            var days = this.data.Days.Where(x => x.GameId == game.Id && x.Year.YearOrder == game.Year && x.IsLeagueDay == true);
+            var days = this.data.Days.Where(x => x.GameId == game.Id && x.Year.YearOrder == game.CurrentYearOrder && x.IsLeagueDay == true);
 
             var round = 0;
             foreach (var day in days)

@@ -4,6 +4,7 @@ using ASP.NET_FootballManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    partial class FootballManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230905083232_AddDayOrderInGame")]
+    partial class AddDayOrderInGame
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,12 +198,6 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("CurrentDayOrder")
                         .HasColumnType("int");
 
-                    b.Property<int>("CurrentMonthOrder")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CurrentYearOrder")
-                        .HasColumnType("int");
-
                     b.Property<int>("EuroCupRound")
                         .HasColumnType("int");
 
@@ -214,6 +210,9 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Property<int>("ManagerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Season")
+                        .HasColumnType("int");
+
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
@@ -223,6 +222,9 @@ namespace FootballManager.Infrastructure.Migrations
 
                     b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -29,19 +29,18 @@
 
             var newGame = new Game
             {
-                Manager = manager,
-                Season = 1,
-                Year = 1,
+                Manager = manager,             
+                CurrentYearOrder = 1,
                 CupRound = 1,
                 EuroCupRound = 1,
-                LeagueRound = 1,
-                Day = 1,
+                LeagueRound = 1,              
                 ManagerId = manager.Id,
                 Team = currentTeam,
                 TeamId = currentTeam.Id,
                 GameOption = currentGameOptions,
                 GameOptionId = currentGameOptions.Id,
-                UserId = userId
+                UserId = userId,
+                CurrentDayOrder = 1
             };
 
             currentGameOptions.Games.Add(newGame);
@@ -49,16 +48,11 @@
             this.data.SaveChanges();
             return newGame;
         }
-        public void NextDay(Game currentGame)
-        {
-            currentGame.Day += 1;
-            this.data.SaveChanges();
-        }
+        
         public void ResetGame(Game CurrentGame)
         {
-            CurrentGame.Day = 1;
-            CurrentGame.Year += 1;
-            CurrentGame.Season += 1;
+            CurrentGame.CurrentDayOrder = 1;
+            CurrentGame.CurrentYearOrder += 1;        
             CurrentGame.CupRound = 1;
             CurrentGame.LeagueRound = 1;
             CurrentGame.EuroCupRound = 1;

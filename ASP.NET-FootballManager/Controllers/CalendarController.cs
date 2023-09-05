@@ -1,8 +1,9 @@
 ﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-using FootballManager.Core.Models.Menu;
+using FootballManager.Core.Models.Calendar;
 using FootballManager.Core.Services;
 using FootballManager.Infrastructure.Data.DataModels.Calendar;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
 using System.Security.Claims;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
@@ -21,58 +22,38 @@ namespace ASP.NET_FootballManager.Controllers
         {
             CurrentUser();
             var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
-            var currentYear = serviceAggregator.calendarService.GetCurrentYear(currentGame);
-            var currentMonth = serviceAggregator.calendarService.GetCurrentMonth(currentYear, model.MonthId);
-            var monthDays = await serviceAggregator.calendarService.GetAllDaysInMonth(currentMonth);
-            var startOffsetDays = serviceAggregator.calendarService.GetStartOffsetDays(currentMonth);
-            var endOffsetDays = serviceAggregator.calendarService.GetEndOffsetDays(currentMonth);
+            var currentDate = serviceAggregator.calendarService.GetCurrentDate(currentGame);          
+            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(currentDate.month);
 
-            return View(new CalendarViewModel
-            {
-                MonthName = currentMonth.MonthName,
-                Days = monthDays,
-                Year = currentYear.YearOrder,
-                MonthId = currentMonth.Id,
-                StartOffsetDays = startOffsetDays,
-                EndOffsetDays = endOffsetDays,
-                CurrentDayOrder = 1
-            }) ;
+            return View("Index", newCalendarModel);
         }
 
         public async Task<IActionResult> PreviousMonth(CalendarViewModel model, int monthId)
         {
             var month = serviceAggregator.calendarService.ReturnPreviousMonth(monthId);
-            var monthDays = await serviceAggregator.calendarService.GetAllDaysInMonth(month);
-            var startOffsetDays = serviceAggregator.calendarService.GetStartOffsetDays(month);
-            var endOffsetDays = serviceAggregator.calendarService.GetEndOffsetDays(month);
+            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(month);
 
-            return View("Index", new CalendarViewModel
-            {
-                MonthName = month.MonthName,
-                Days = monthDays,
-                Year = month.Year.YearOrder,
-                MonthId = month.Id,
-                StartOffsetDays = startOffsetDays,
-                EndOffsetDays = endOffsetDays
-            });
+            return View("Index", newCalendarModel);
         }
 
         public async Task<IActionResult> NextMonth(CalendarViewModel model, int monthId)
         {
             var month = serviceAggregator.calendarService.NextMonth(monthId);
-            var monthDays = await serviceAggregator.calendarService.GetAllDaysInMonth(month);
-            var startOffsetDays = serviceAggregator.calendarService.GetStartOffsetDays(month);
-            var endOffsetDays = serviceAggregator.calendarService.GetEndOffsetDays(month);
+            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(month);
+           
+            return View("Index", newCalendarModel);
+        }
 
-            return View("Index", new CalendarViewModel
-            {
-                MonthName = month.MonthName,
-                Days = monthDays,
-                Year = month.Year.YearOrder,
-                MonthId = month.Id,
-                StartOffsetDays = startOffsetDays,   
-                EndOffsetDays = endOffsetDays                
-            });
+        public async Task<IActionResult> NextDay()
+        {
+            CurrentUser();
+            var currentGame = serviceAggregator.gameService.GetCurrentGame(userId);          
+            serviceAggregator.calendarService.NextDay(currentGame);
+            var currentDate = serviceAggregator.calendarService.GetCurrentDate(currentGame);
+            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(currentDate.month);
+        
+            return View("Index", newCalendarModel);
+           
         }
 
         private void CurrentUser()

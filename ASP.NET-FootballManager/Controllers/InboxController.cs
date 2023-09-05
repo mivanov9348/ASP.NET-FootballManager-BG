@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Inbox;
     using FootballManager.Core.Models.Menu;
     using FootballManager.Core.Services;
     using Microsoft.AspNetCore.Mvc;

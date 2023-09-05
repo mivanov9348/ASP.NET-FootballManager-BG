@@ -1,4 +1,4 @@
-﻿namespace FootballManager.Core.Models.Menu
+﻿namespace FootballManager.Core.Models.Team
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public class StandingsViewModel

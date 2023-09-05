@@ -5,10 +5,8 @@
     {
         Game CreateNewGame(Manager manager, string userId);
         Game GetCurrentGame(string userId);
-
         bool isExistGame(string UserId);
-        void NextDay(Game currentGame);
         void ResetGame(Game CurrentGame);
-                void ResetSave(string UserId);
+        void ResetSave(string UserId);
     }
 }

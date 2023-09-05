@@ -1,6 +1,7 @@
 ﻿namespace FootballManager.Core.Services.Calendar
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Calendar;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
     public interface ICalendarService
     {
@@ -10,13 +11,13 @@
         void GenerateDays(Game currentGame, int dayOrder, int dayOfWeekIndex, Year currentYear, Month currentMonth, Week currentWeek);
         int GetStartOffsetDays(Month currentMonth);
         int GetEndOffsetDays(Month currentMonth);
-        Year GetCurrentYear(Game game);
-        Month GetCurrentMonth(Year year, int monthId);
+        void NextDay(Game currentGame);
+        (Year year, Month month, Day day) GetCurrentDate(Game currentGame);
         Month ReturnPreviousMonth(int monthId);
         Month NextMonth(int monthId);
         Task SetWeekPlan(Game currentGame, Year currentYear);
-        Task<Day> GetCurrentDay(Game currentGame); 
-        Task<List<Day>> GetAllDaysInMonth(Month month);
+        List<Day> GetAllDaysInMonth(Month month);
+        CalendarViewModel GetCalendarViewModel(Month CurrentMonth);
 
 
     }

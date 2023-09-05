@@ -57,7 +57,7 @@
                 display: table;
                 border-collapse: collapse;
                 border-spacing: 0;
-                color: #999;
+                color: antiquewhite;
                 font-family: fantasy;
                 font-size: 16px;
                 text-decoration: none;
@@ -136,18 +136,44 @@
         src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url("http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff") format('woff');
     }
 
-    .Chat {
-        margin-top: -20px;
-        font-size: 15px;
-        color: red;
-        text-decoration: none;
-        font-weight: bolder;
-        border-radius: 10px 10px;
+
+    .nav-button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        color: white; /* Set the font color for the icon and text */
     }
 
-        .Chat:hover {
-            color: white;
+        .nav-button i {
+            margin-right: 10px;
         }
+
+    .hover-effect {
+        padding: 10px; /* Adjust padding for normal state */
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+
+        .hover-effect:hover {
+            padding: 4px; /* Adjust padding for hover state */
+            background-color: dimgray; /* Change to your desired hover background color */
+            height: 100%;
+        }
+
+        .hover-effect i {
+            margin-right: 10px;
+        }
+    /* Additional style for hr.solid-hr */
+    .solid-hr {
+        border-top: 3px solid blue; /* Adjust border color and thickness as needed */
+    }
 
 </style>
 
@@ -160,15 +186,9 @@
 <body>
     <div class="area"></div>
     <nav class="main-menu">
-        <p style="color:yellow;font-weight:bolder;margin-top:10px;font-size:20px">Football Manager</p>
-     
-        <div class="row" style="color:white">
-            <div class="col-12">
-                <ul id="serverDate" style="color:white"></ul>
-            </div>
-        </div>
-        <hr style="color:yellow;margin-left:-50px;margin-top:-10px" />
+        @await Html.PartialAsync("_ContinueButtonPartial")
         <ul>
+          
             <li>
                 <a asp-action="Index" asp-controller="Inbox">
                     <i class="fa fa-inbox" style="font-size:45px"></i>
@@ -178,15 +198,7 @@
                 </a>
             </li>
             <hr style="color:white;margin-left:-50px;" />
-            <li style="margin-left:10px">
-                <a asp-action="MatchDayPreview" asp-controller="Match">
-                    <i class="fas fa-futbol" style="font-size:40px"></i>
-                    <span class="nav-text">
-                        Next Match
-                    </span>
-                </a>
-            </li>
-            <hr style="color:white;margin-left:-50px;" />
+
             <li class="has-subnav">
                 <a asp-action="Index" asp-controller="Calendar">
                     <i class="fa fa-calendar" style="font-size:40px"></i>
@@ -240,7 +252,7 @@
                     </span>
                 </a>
             </li>
-             <hr style="color:white;margin-left:-50px;" />
+            <hr style="color:white;margin-left:-50px;" />
             <li>
                 <a asp-action="Index" asp-controller="Draw">
                     <i class="fa fa-exchange" style="font-size:40px"></i>
@@ -266,6 +278,6 @@
 
 </body>
 
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-    <script src="~/js/clock.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/clock.js"></script>

@@ -22,7 +22,6 @@
 
         //WeekHelpers
         internal int CalculateWeeksInMonth(int daysCount) => (int)Math.Ceiling((double)daysCount / DataConstants.YearStats.DaysInWeek);
-
         internal Week GetCurrentWeek(Game currentGame, Month previousMonth)
         {
             if (previousMonth != null)
@@ -35,7 +34,6 @@
             }
             return null;
         }
-
         //MonthHelpers      
         internal int DaysInMonth(int month)
         {
@@ -79,5 +77,6 @@
             return null;
         }
        
+
     }
 }

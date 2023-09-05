@@ -39,8 +39,8 @@
         }
         public async Task<List<Fixture>> GetFixturesByDay(Game CurrentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == CurrentGame.Day && x.GameId == CurrentGame.Id && 
-            x.Year.YearOrder == CurrentGame.Year);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == CurrentGame.CurrentDayOrder && x.GameId == CurrentGame.Id && 
+            x.Year.YearOrder == CurrentGame.CurrentYearOrder);
             if (currentDay == null)
             {
                 return null;
@@ -238,7 +238,7 @@
         }
         public async Task<List<Fixture>> GetResults(Game currentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.Day - 1 && x.GameId == currentGame.Id && x.Year.YearOrder == currentGame.Year);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.CurrentDayOrder - 1 && x.GameId == currentGame.Id && x.Year.YearOrder == currentGame.CurrentYearOrder);
             return await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.DayId == currentDay.Id).ToList());
         }
         public void DeleteMatches(Game CurrentGame)

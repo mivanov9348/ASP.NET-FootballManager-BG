@@ -1,4 +1,4 @@
-﻿namespace FootballManager.Core.Models.Menu
+﻿namespace FootballManager.Core.Models.Calendar
 {
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
 

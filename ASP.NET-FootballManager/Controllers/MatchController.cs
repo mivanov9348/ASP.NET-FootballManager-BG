@@ -33,8 +33,8 @@
             return View(new MatchDayViewModel
             {
                 DayFixtures = dayFixtures,
-                Day = CurrentGame.Day,
-                Year = CurrentGame.Year,
+                Day = CurrentGame.CurrentDayOrder,
+                Year = CurrentGame.CurrentYearOrder,
                 Round = round,
                 Leagues = await serviceAggregator.leagueService.GetAllLeagues(),
                 CurrentTeam = currentTeam
@@ -66,20 +66,19 @@
             var positions = await serviceAggregator.commonService.GetAllPositions();
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay = await serviceAggregator.calendarService.GetCurrentDay(CurrentGame);
+            var currentDay =  serviceAggregator.calendarService.GetCurrentDate(CurrentGame);
 
             if (currentFixture == null)
             {
-                if (currentDay.IsCupDay)
+                if (currentDay.day.IsCupDay)
                 {
                     serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
-                if (currentDay.IsEuroCupDay)
+                if (currentDay.day.IsEuroCupDay)
                 {
                     serviceAggregator.euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
-                serviceAggregator.inboxService.CupMatchesInfo(dayFixtures, CurrentGame);
-                serviceAggregator.gameService.NextDay(CurrentGame);
+                serviceAggregator.inboxService.CupMatchesInfo(dayFixtures, CurrentGame);               
                 return RedirectToAction("Results", "Match");
             }
 
@@ -107,29 +106,28 @@
             var currentMatch = await serviceAggregator.matchService.GetCurrentMatch(id);
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay = await serviceAggregator.calendarService.GetCurrentDay(CurrentGame);
+            var currentDay =  serviceAggregator.calendarService.GetCurrentDate(CurrentGame);
             var player = new Player();
 
             serviceAggregator.matchService.Time(currentMatch);
             if (currentMatch.Minute > 90)
             {
                 serviceAggregator.matchService.EndMatch(currentMatch);
-                if (currentDay.IsLeagueDay)
+                if (currentDay.day.IsLeagueDay)
                 {
                     serviceAggregator.leagueService.CheckWinner(currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture);
                     serviceAggregator.leagueService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
-                if (currentDay.IsCupDay)
+                if (currentDay.day.IsCupDay)
                 {
                     serviceAggregator.cupService.CheckWinner(currentFixture);
                     serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);                  
                 }
-                if (currentDay.IsEuroCupDay)
+                if (currentDay.day.IsEuroCupDay)
                 {
                     serviceAggregator.euroCupService.CheckWinner(currentFixture);
                     serviceAggregator.euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
-                serviceAggregator.gameService.NextDay(CurrentGame);
                 serviceAggregator.inboxService.MatchFinishedNews(CurrentGame, currentFixture);
                 return RedirectToAction("Results");
             }
@@ -160,8 +158,8 @@
             return View(new MatchDayViewModel
             {
                 DayFixtures = dayResults,
-                Day = CurrentGame.Day,
-                Year = CurrentGame.Year,
+                Day = CurrentGame.CurrentDayOrder,
+                Year = CurrentGame.CurrentYearOrder,
                 Round = round,
                 Leagues = await serviceAggregator.leagueService.GetAllLeagues()
             });

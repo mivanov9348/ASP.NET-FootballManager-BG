@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Inbox
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Core.Models.Menu;
+    using FootballManager.Core.Models.Inbox;
 
     public interface IInboxService
     {

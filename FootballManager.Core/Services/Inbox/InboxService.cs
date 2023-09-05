@@ -2,7 +2,7 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Core.Models.Menu;
+    using FootballManager.Core.Models.Inbox;
     using FootballManager.Infrastructure.Data.MessagesConstants;
     using System;
     using System.Numerics;
@@ -21,7 +21,7 @@
         public void CreateManagerNews(Manager currentManager, Game currentGame)
         {
             var messageReview = $"{currentGame.Team.Name} appoint {currentGame.Manager.FirstName} {currentGame.Manager.LastName} as manager!";
-            var fullMessage = $"Welcome to the new club! Season {currentGame.Season} started! Good luck!";
+            var fullMessage = $"Welcome to the new club! Season {currentGame.CurrentYearOrder} started! Good luck!";
             var messageTitle = "New Manager";
             var root = $"Managers/{currentManager.ImageId}.png";
             CreateInbox(currentGame, fullMessage, messageTitle, root);
@@ -42,7 +42,7 @@
         public void NewSeasonNews(Game currentGame)
         {
             var randomMessageFunc = inboxMessages.NewSeasonStart[rnd.Next(0, inboxMessages.NewSeasonStart.Count())];
-            string randomMessage = randomMessageFunc(currentGame.Team.Name, currentGame.Season);
+            string randomMessage = randomMessageFunc(currentGame.Team.Name, currentGame.CurrentYearOrder);
             string messageTitle = "Welcome to the New Season";
 
             CreateInbox(currentGame, randomMessage, messageTitle, null);
@@ -137,8 +137,8 @@
         {
             var newInbox = new Inbox
             {
-                Day = currentGame.Day,
-                Year = currentGame.Year,
+                Day = currentGame.CurrentDayOrder,
+                Year = currentGame.CurrentYearOrder,
                 Game = currentGame,
                 GameId = currentGame.Id,
                 MessageTitle = messageTitle,

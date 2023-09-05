@@ -3,10 +3,9 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Calendar;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
     using FootballManager.Infrastructure.Data.Enums;
-    using Microsoft.Net.Http.Headers;
-    using System;
     using System.Collections.Generic;
 
     public class CalendarService : ICalendarService
@@ -20,13 +19,22 @@
             helper = new CalendarHelper(data);
             this.constants = new DataConstants();
         }
+
+        public (Year year, Month month, Day day) GetCurrentDate(Game currentGame)
+        {
+            var currentYear = this.data.Years.FirstOrDefault(x => x.YearOrder == currentGame.CurrentYearOrder);
+            var currentMonth = this.data.Months.FirstOrDefault(x => x.YearId == currentYear.Id && x.MonthOrder == currentGame.CurrentMonthOrder);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.MonthId == currentMonth.Id && x.DayOrder == currentGame.CurrentDayOrder);
+
+            return (currentYear, currentMonth, currentDay);
+        }
         public Year GenerateYear(Game currentGame)
         {
             var newYear = new Year
             {
                 Game = currentGame,
                 GameId = currentGame.Id,
-                YearOrder = currentGame.Year,
+                YearOrder = currentGame.CurrentYearOrder,
             };
 
             this.data.Years.Add(newYear);
@@ -194,32 +202,13 @@
                 this.data.SaveChanges();
             }
         }
-        public Task<Day> GetCurrentDay(Game currentGame)
-        {
-            throw new NotImplementedException();
-        }
-        public async Task<List<Day>> GetAllDaysInMonth(Month month)
+     
+        public List<Day> GetAllDaysInMonth(Month month)
         {
             var days = this.data.Days.Where(x => x.MonthId == month.Id).ToList();
             return days;
-        }
-
-        public Year GetCurrentYear(Game game)
-        {
-            return this.data.Years.FirstOrDefault(x => x.GameId == game.Id && x.YearOrder == game.Year);
-        }
-
-        public Month GetCurrentMonth(Year year, int monthId)
-        {
-            var yearMonths = this.data.Months.Where(x => x.YearId == year.Id);
-
-            if (monthId == 0 || monthId == null)
-            {
-                return yearMonths.FirstOrDefault(x => x.MonthOrder == 1);
-            }
-            return yearMonths.FirstOrDefault(x => x.Id == monthId);
-        }
-
+        }       
+                
         public Month ReturnPreviousMonth(int monthId)
         {
             var currentMonth = this.data.Months.FirstOrDefault(x => x.Id == monthId);
@@ -253,15 +242,51 @@
             var monthDays = this.data.Days.Where(x => x.MonthId == currentMonth.Id).ToList();
             var firstDayWeekOrder = monthDays.First().WeekDayOrder; //1            
             return firstDayWeekOrder;
-
         }
-
         public int GetEndOffsetDays(Month currentMonth)
         {
             var monthDays = this.data.Days.Where(x => x.MonthId == currentMonth.Id).ToList();
             var lastDayWeekOrder = monthDays.Last().WeekDayOrder; //1            
             return lastDayWeekOrder + 1;
-
         }
+        public void NextDay(Game currentGame)
+        {
+            var currentDates = GetCurrentDate(currentGame);
+
+            var nextDay = currentDates.day.DayOrder += 1;
+            currentGame.CurrentDayOrder = nextDay;
+
+            var currentDay = GetCurrentDate(currentGame);
+
+            if (currentDay.month.MonthOrder < currentDates.month.MonthOrder)
+            {
+                currentGame.CurrentMonthOrder += 1;
+            }
+           
+            this.data.SaveChanges();
+        }
+
+        public CalendarViewModel GetCalendarViewModel(Month CurrentMonth)
+        {
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == CurrentMonth.GameId);
+            var monthDays =  GetAllDaysInMonth(CurrentMonth);
+            var startOffsetDays =GetStartOffsetDays(CurrentMonth);
+            var endOffsetDays = GetEndOffsetDays(CurrentMonth);
+
+            var newCalendarViewModel = new CalendarViewModel
+            {
+                MonthName = CurrentMonth.MonthName,
+                Days = monthDays,
+                Year = CurrentMonth.Year.YearOrder,
+                MonthId = CurrentMonth.Id,
+                StartOffsetDays = startOffsetDays,
+                EndOffsetDays = endOffsetDays,
+                CurrentDayOrder = currentGame.CurrentDayOrder
+            };
+
+            return newCalendarViewModel;
+        }
+
+       
     }
 }

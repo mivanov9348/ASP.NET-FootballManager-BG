@@ -1,4 +1,4 @@
-﻿namespace FootballManager.Core.Models.Menu
+﻿namespace FootballManager.Core.Models.Inbox
 {
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     public class InboxViewModel
@@ -8,7 +8,7 @@
         public int MessageId { get; set; }
         public string Type { get; set; }
         public string ImageUrl { get; set; }
-        public string MessageTitle { get; set; } 
+        public string MessageTitle { get; set; }
         public string FullMessage { get; set; }
         public int Year { get; set; }
         public int Day { get; set; }
