@@ -19,11 +19,11 @@
 
         //DayHelpers
 
-       
-        //WeekHelpers
-        public int CalculateWeeksInMonth(int daysCount) => (int)Math.Ceiling((double)daysCount / DataConstants.YearStats.DaysInWeek);
 
-        public Week GetCurrentWeek(Game currentGame, Month previousMonth)
+        //WeekHelpers
+        internal int CalculateWeeksInMonth(int daysCount) => (int)Math.Ceiling((double)daysCount / DataConstants.YearStats.DaysInWeek);
+
+        internal Week GetCurrentWeek(Game currentGame, Month previousMonth)
         {
             if (previousMonth != null)
             {
@@ -37,7 +37,7 @@
         }
 
         //MonthHelpers      
-        public int DaysInMonth(int month)
+        internal int DaysInMonth(int month)
         {
             switch (month)
             {
@@ -69,7 +69,7 @@
                     return 30;
             }
         }
-        public Month GetPreviousMonth(Month newMonth)
+        internal Month GetPreviousMonth(Month newMonth)
         {
             if (newMonth.MonthOrder != 1)
             {
@@ -78,5 +78,6 @@
             }
             return null;
         }
+       
     }
 }

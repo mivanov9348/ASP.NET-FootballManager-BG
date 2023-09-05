@@ -3,6 +3,7 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Menu;
+    using FootballManager.Infrastructure.Data.MessagesConstants;
     using System;
     using System.Numerics;
     using System.Text;
@@ -10,11 +11,11 @@
     {
         private Random rnd;
         private readonly FootballManagerDbContext data;
-        private readonly FootballManager.Infrastructure.Data.Constant.InboxMessages.Messages inboxMessages;
+        private readonly InboxMessages.Messages inboxMessages;
         public InboxService(FootballManagerDbContext data)
         {
             this.data = data;
-            this.inboxMessages = new FootballManager.Infrastructure.Data.Constant.InboxMessages.Messages();
+            this.inboxMessages = new InboxMessages.Messages();
             this.rnd = new Random();
         }
         public void CreateManagerNews(Manager currentManager, Game currentGame)

@@ -1,4 +1,4 @@
-﻿namespace FootballManager.Infrastructure.Data.Constant
+﻿namespace FootballManager.Infrastructure.Data.MessagesConstants
 {
     public class MatchMessages
     {

@@ -80,10 +80,10 @@
                 this.data.EuropeanCups.RemoveRange(this.data.EuropeanCups.Where(x => x.GameId == userGame.Id));
                 this.data.Games.RemoveRange(this.data.Games.Where(x => x.Id == userGame.Id));
                 this.data.Managers.RemoveRange(this.data.Managers.Where(x => x.Id == userManager.Id));
-                this.data.Days.RemoveRange(this.data.Days.ToList());
-                this.data.Weeks.RemoveRange(this.data.Weeks.ToList());
-                this.data.Months.RemoveRange(this.data.Months.ToList());
-                this.data.Years.RemoveRange(this.data.Years.ToList());
+                this.data.Days.RemoveRange(this.data.Days.Where(x => x.GameId == userGame.Id).ToList());
+                this.data.Weeks.RemoveRange(this.data.Weeks.Where(x => x.GameId == userGame.Id).ToList());
+                this.data.Months.RemoveRange(this.data.Months.Where(x => x.GameId == userGame.Id).ToList());
+                this.data.Years.RemoveRange(this.data.Years.Where(x => x.GameId == userGame.Id).ToList());
             }
             this.data.SaveChanges();
         }

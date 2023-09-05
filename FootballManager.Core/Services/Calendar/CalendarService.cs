@@ -3,8 +3,8 @@
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Infrastructure.Data.Constant;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
+    using FootballManager.Infrastructure.Data.Enums;
     using Microsoft.Net.Http.Headers;
     using System;
     using System.Collections.Generic;
@@ -20,9 +20,6 @@
             helper = new CalendarHelper(data);
             this.constants = new DataConstants();
         }
-
-
-
         public Year GenerateYear(Game currentGame)
         {
             var newYear = new Year
@@ -67,7 +64,6 @@
         public void GenerateWeeks(Month newMonth, Month previousMonth, Year newYear, Game currentGame, int weeksInMonth)
         {
             var weeksOrder = 1;
-
             var dayOrder = 0;
             var daysLeft = helper.DaysInMonth(newMonth.MonthOrder);
             var weekDays = -0;
@@ -107,6 +103,11 @@
                     {
                         break;
                     }
+
+                }
+                if (dayOrder < daysLeft && weeksInMonth == weekIndex)
+                {
+                    weeksInMonth++;
                 }
                 this.data.SaveChanges();
             }
@@ -149,6 +150,7 @@
 
             foreach (var week in allWeeks)
             {
+                var isDrawWeek = false;
                 var allWeekDays = week.Days;
 
                 foreach (var day in allWeekDays)
@@ -164,23 +166,26 @@
                     }
                     if (day.WeekDayOrder == 3)
                     {
-                        if (cupWeeksCounter == 7 || week.WeekOrder % 11 == 0)
+                        if (week.WeekOrder == 7 || week.WeekOrder % 11 == 0)
                         {
                             day.IsCupDay = true;
                             day.IsMatchDay = true;
+                            isDrawWeek = true;
                             cupWeeksCounter++;
                         }
                     }
                     if (day.WeekDayOrder == 4)
                     {
-                        if (euroCupWeeksCounter == 7 || week.WeekOrder % 10 == 0)
+                        if (week.WeekOrder == 7 || week.WeekOrder % 10 == 0)
                         {
                             day.IsEuroCupDay = true;
                             day.IsMatchDay = true;
+                            isDrawWeek = true;
                             euroCupWeeksCounter++;
                         }
                     }
-                    if (day.WeekDayOrder == 5)
+
+                    if (day.WeekDayOrder == 5 && isDrawWeek || day.WeekDayOrder == 5 && week.WeekOrder == 1)
                     {
                         day.IsDrawDay = true;
                     }
@@ -248,14 +253,14 @@
             var monthDays = this.data.Days.Where(x => x.MonthId == currentMonth.Id).ToList();
             var firstDayWeekOrder = monthDays.First().WeekDayOrder; //1            
             return firstDayWeekOrder;
-          
+
         }
 
         public int GetEndOffsetDays(Month currentMonth)
         {
             var monthDays = this.data.Days.Where(x => x.MonthId == currentMonth.Id).ToList();
             var lastDayWeekOrder = monthDays.Last().WeekDayOrder; //1            
-            return lastDayWeekOrder+1;
+            return lastDayWeekOrder + 1;
 
         }
     }

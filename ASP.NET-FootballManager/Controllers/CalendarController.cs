@@ -34,8 +34,9 @@ namespace ASP.NET_FootballManager.Controllers
                 Year = currentYear.YearOrder,
                 MonthId = currentMonth.Id,
                 StartOffsetDays = startOffsetDays,
-                EndOffsetDays = endOffsetDays
-            });
+                EndOffsetDays = endOffsetDays,
+                CurrentDayOrder = 1
+            }) ;
         }
 
         public async Task<IActionResult> PreviousMonth(CalendarViewModel model, int monthId)
@@ -70,7 +71,7 @@ namespace ASP.NET_FootballManager.Controllers
                 Year = month.Year.YearOrder,
                 MonthId = month.Id,
                 StartOffsetDays = startOffsetDays,   
-                EndOffsetDays = endOffsetDays
+                EndOffsetDays = endOffsetDays                
             });
         }
 

@@ -1,4 +1,4 @@
-﻿namespace FootballManager.Infrastructure.Data.Constant
+﻿namespace FootballManager.Infrastructure.Data.MessagesConstants
 {
     public class InboxMessages
     {
@@ -52,7 +52,7 @@
                     $"{teamName} is delighted to welcome {firstName} {lastName} to the squad. The {age}-year-old {position} was secured for {price} coins."
             };
 
-            public readonly  List<Func<string, int, string>> NewSeasonStart = new List<Func<string, int, string>>
+            public readonly List<Func<string, int, string>> NewSeasonStart = new List<Func<string, int, string>>
             {
                 (teamName, seasonNum) =>
                     $"{teamName} is gearing up for season {seasonNum}. The new season brings new challenges and opportunities.",

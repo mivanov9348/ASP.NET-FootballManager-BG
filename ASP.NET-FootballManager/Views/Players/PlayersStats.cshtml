@@ -78,6 +78,12 @@
         color: lightskyblue;
     }
 
+    .playerImage {
+        width: 30px; /* Adjust the size as needed */
+        height: 30px;
+        margin-right: 5px; /* Add spacing between the image and name */
+        border-radius: 50%; /* Make the image circular */
+    }
 </style>
 
 @{
@@ -156,7 +162,12 @@
                     var currStats = allStats.FirstOrDefault(x => x.PlayerId == player.Id);
                     <tr>
                         <th scope="row">@num</th>
-                        <td><a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">@player.FirstName @player.LastName</a></td>
+                        <td>
+                            <a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">
+                                <img src="~/Images/Faces/@player.ProfileImage" alt="Player Image" class="playerImage" />
+                                @player.FirstName @player.LastName
+                            </a>
+                        </td>
                         <td>@player.Position.Abbr</td>
                         <td>@player.Age</td>
                         <td>@player.Nation.Abbr</td>

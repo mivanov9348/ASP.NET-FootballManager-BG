@@ -138,17 +138,35 @@
         position: relative;
     }
 
+        .day-panel:hover {
+            border: 3px solid blue;
+        }
+
     .day-image-overlay {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Increase the alpha value */
+        background-color: rgba(0, 0, 0, 0.5); 
         background-size: cover;
         background-repeat: no-repeat;
         z-index: -1;
     }
+
+    .current-day {
+        border: 2px solid yellow;
+    }
+
+    .select {
+        text-decoration: none;
+        color: white;
+    }
+
+        .select:hover {
+            color: inherit;
+            text-decoration: none;
+        }
 
 </style>
 <partial name="~/Views/Shared/_SideBar.cshtml" />
@@ -192,54 +210,45 @@
                     <div class="day-panel" style="background-color:dimgrey"></div>
                 }
 
-                @foreach (var item in Model.Days)
+                @foreach (var day in Model.Days)
                 {
-                    @if (item.IsLeagueDay)
-                    {
-                        <div class="day-panel league-day">
-                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgarianleague.jpg)"></div>
-                            <p class="day-label">@item.DayOrder</p>
-                            <p class="competition-label">League day</p>
-                        </div>
+                    <div class="day-panel @(day.DayOrder == Model.CurrentDayOrder ? "current-day" : "")">
 
-                    }
-                    else if (item.IsCupDay)
-                    {
-                        <div class="day-panel cup-day">
-                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgariancup.jpg)"></div>
-                            <p class="day-label">@item.DayOrder</p>
-                            <p class="competition-label">Cup day</p>
-                        </div>
-                    }
-                    else if (item.IsEuroCupDay)
-                    {
-                        <div class="day-panel eurocup-day">
-                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/europeanleague.jpg)"></div>
-                            <p class="day-label">@item.DayOrder</p>
-                            <p class="competition-label">Eurocup day</p>
-                        </div>
-                    }
-                    else if (item.IsPlayed)
-                    {
-                        <div class="day-panel played-day">
-                            <p class="day-label">@item.DayOrder</p>
-                            <p class="competition-label">Played</p>
-                        </div>
-                    }
-                    else if (item.IsDrawDay)
-                    {
-                        <div class="day-panel eurocup-day">
+                        @if (day.IsLeagueDay)
+                        {
+                            <a class="select" asp-action="Standings" asp-controller="Teams">
+                                <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgarianleague.jpg)"></div>
+                                <p class="day-label">@day.DayOrder</p>
+                                <p class="competition-label">League day</p>
+                            </a>
+                        }
+                        else if (day.IsCupDay)
+                        {
+                            <a class="select" asp-action="CupsFixture" asp-controller="Fixtures">
+                                <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgariancup.jpg)"></div>
+                                <p class="day-label">@day.DayOrder</p>
+                                <p class="competition-label">Cup day</p>
+                            </a>
+                        }
+                        else if (day.IsEuroCupDay)
+                        {
+                            <a class="select" asp-action="CupFixture" asp-controller="Fixtures">
+                                <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/europeanleague.jpg)"></div>
+                                <p class="day-label">@day.DayOrder</p>
+                                <p class="competition-label">Eurocup day</p>
+                            </a>
+                        }
+                        else if (day.IsDrawDay)
+                        {
                             <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/drawday.jpg)"></div>
-                            <p class="day-label">@item.DayOrder</p>
+                            <p class="day-label">@day.DayOrder</p>
                             <p class="competition-label">Draw Day</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="day-panel">
-                            <p class="day-label">@item.DayOrder</p>
-                        </div>
-                    }
+                        }
+                        else
+                        {
+                            <p class="day-label">@day.DayOrder</p>
+                        }
+                    </div>
                 }
                 @for (var i = Model.EndOffsetDays; i <= 7; i++)
                 {

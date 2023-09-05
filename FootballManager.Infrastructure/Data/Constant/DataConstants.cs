@@ -23,43 +23,12 @@
             public const int mf = 4;
             public const int st = 2;
         }
-
         public class FreeAgentsEachClub
         {
             public const int gk = 20;
             public const int df = 40;
             public const int mf = 40;
             public const int st = 50;
-        }
-
-        public class InboxMessages
-        {
-            public (string messageReview, string fullMessage) MatchNews(string homeTeamName, string awayTeamName, int homeTeamGoal, int awayTeamGoal, int currentRound)
-            {
-                var messageReview = "";
-                var fullMessage = "";
-
-                if (homeTeamGoal > awayTeamGoal)
-                {
-                    messageReview = $"{homeTeamName} - {awayTeamName} {homeTeamGoal}:{awayTeamGoal} ";
-
-                    fullMessage = $"{homeTeamName} wins over {awayTeamName} with {homeTeamGoal}:{awayTeamGoal} in round {currentRound}.";
-                }
-                if (homeTeamGoal < awayTeamGoal)
-                {
-                    messageReview = $"{homeTeamName} - {awayTeamName} {homeTeamGoal}:{awayTeamGoal} ";
-
-                    fullMessage = $"{awayTeamName} wins over {homeTeamName} with {awayTeamGoal}:{homeTeamGoal} in round {currentRound}.";
-                }
-                if (homeTeamGoal == awayTeamGoal)
-                {
-                    messageReview = $"{homeTeamName} - {awayTeamName} {homeTeamGoal}:{awayTeamGoal}";
-
-                    fullMessage = $"{homeTeamName} finished draw with {awayTeamName} in round {currentRound}.";
-                }
-
-                return (messageReview, fullMessage);
-            }
         }
 
         public class Age
@@ -81,12 +50,11 @@
             public const int ThirdLevel = 3;
             public const int FourthLevel = 4;
         }
-
         public class YearStats
         {
             public const int MonthsCount = 12;
             public const int DaysInWeek = 7;
-            public const int JanuaryDays = 30;
+            public const int JanuaryDays = 31;
             public const int FebruaryDays = 28;
             public const int MarchDays = 31;
             public const int AprilDays = 30;
@@ -99,13 +67,12 @@
             public const int NovemberDays = 30;
             public const int DecemberDays = 31;
         }
-
         public class ChampionsCup
         {
             public const string Name = "Champions Cup";
             public const int Rank = 1;
             public const int Participants = 32;
-            public const int Rounds = 5;            
+            public const int Rounds = 5;
         }
         public class EuroCup
         {

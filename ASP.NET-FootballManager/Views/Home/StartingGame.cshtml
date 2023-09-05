@@ -12,8 +12,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background-image: url("/Images/Wallpapers/AddManager.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'OLD SPORT 02 ATHLETIC NCV';
         }
+
+            body::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: fit-content;
+                background-color: rgba(0, 0, 0, 0.1);
+                z-index: -1;
+            }
 
         .container {
             text-align: center;
@@ -59,6 +74,8 @@
 
         #messageDiv {
             margin-top: 10px;
+            color: white;
+            font-weight: bolder;
         }
     </style>
 </head>
