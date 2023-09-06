@@ -1,9 +1,8 @@
 ﻿namespace ASP.NET_FootballManager.Services.Team
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Data.Constant;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Core.Models.Team;
+    using FootballManager.Infrastructure.Data.DataModels;
+
     public class TeamService : ITeamService
     {
         private readonly FootballManagerDbContext data;
@@ -53,18 +52,7 @@
             team.Overall = Convert.ToInt32(overallSum) / teamPlayers.Count;
 
             this.data.SaveChanges();
-        }
-        public TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam)
-        {
-            return new TeamViewModel
-            {
-                Positions = this.data.Positions.ToList(),
-                Cities = this.data.Cities.ToList(),
-                Players = currPlayers,
-                CurrentTeam = currentTeam,
-                Nations = this.data.Nations.ToList()
-            };
-        }
+        }      
         public void ResetTeams(Game currentGame)
         {
             var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id);

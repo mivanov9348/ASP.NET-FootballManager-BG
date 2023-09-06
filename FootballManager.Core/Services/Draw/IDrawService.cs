@@ -2,8 +2,6 @@
 {
     using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Draw;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-
     public interface IDrawService
     {
         Draw CreateEliminationDraw(DrawViewModel model);
@@ -16,8 +14,6 @@
         void DeleteDraws();
         Draw GetDrawById(int id);
         List<VirtualTeam> GetRemainingTeams(Draw currentDraw);
-        DrawViewModel GetDrawViewModel(Draw currentDraw);
-        GroupDrawViewModel GetGroupDrawViewModel(Draw currentDraw);
 
     }
 }

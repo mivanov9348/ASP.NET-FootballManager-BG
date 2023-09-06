@@ -1,9 +1,8 @@
 ﻿namespace FootballManager.Core.Models.Player
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Menu;
     using FootballManager.Core.Models.Sorting;
     using FootballManager.Infrastructure.Data.DataModels;
-
     public class PlayersViewModel
     {
         public int SortBy { get; set; }
@@ -30,6 +29,7 @@
         public List<City> Cities { get; set; } = new List<City>();
         public List<PlayerAttribute> AllPlayerAttributes { get; set; } = new List<PlayerAttribute>();
         public List<PlayerStats> AllPlayerStats { get; set; } = new List<PlayerStats>();
+        public MenuViewModel MenuViewModel { get; set; }
 
 
 

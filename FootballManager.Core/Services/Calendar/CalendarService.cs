@@ -2,8 +2,8 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Calendar;
+    using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
     using FootballManager.Infrastructure.Data.Enums;
     using System.Collections.Generic;
@@ -13,11 +13,12 @@
         private readonly FootballManagerDbContext data;
         private readonly CalendarHelper helper;
         private readonly DataConstants constants;
+       
         public CalendarService(FootballManagerDbContext data)
         {
             this.data = data;
             helper = new CalendarHelper(data);
-            this.constants = new DataConstants();
+            this.constants = new DataConstants();          
         }
 
         public (Year year, Month month, Day day) GetCurrentDate(Game currentGame)
@@ -264,28 +265,7 @@
             }
            
             this.data.SaveChanges();
-        }
-
-        public CalendarViewModel GetCalendarViewModel(Month CurrentMonth)
-        {
-            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == CurrentMonth.GameId);
-            var monthDays =  GetAllDaysInMonth(CurrentMonth);
-            var startOffsetDays =GetStartOffsetDays(CurrentMonth);
-            var endOffsetDays = GetEndOffsetDays(CurrentMonth);
-
-            var newCalendarViewModel = new CalendarViewModel
-            {
-                MonthName = CurrentMonth.MonthName,
-                Days = monthDays,
-                Year = CurrentMonth.Year.YearOrder,
-                MonthId = CurrentMonth.Id,
-                StartOffsetDays = startOffsetDays,
-                EndOffsetDays = endOffsetDays,
-                CurrentDayOrder = currentGame.CurrentDayOrder
-            };
-
-            return newCalendarViewModel;
-        }
+        }     
 
        
     }

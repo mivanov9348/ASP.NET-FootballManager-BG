@@ -1,15 +1,9 @@
-﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-using FootballManager.Core.Models.Calendar;
-using FootballManager.Core.Services;
-using FootballManager.Infrastructure.Data.DataModels.Calendar;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
-using System;
-using System.Security.Claims;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-
-namespace ASP.NET_FootballManager.Controllers
+﻿namespace ASP.NET_FootballManager.Controllers
 {
+    using FootballManager.Core.Models.Calendar;
+    using FootballManager.Core.Services;
+    using Microsoft.AspNetCore.Mvc;   
+    using System.Security.Claims; 
     public class CalendarController : Controller
     {
         private readonly ServiceAggregator serviceAggregator;
@@ -31,7 +25,7 @@ namespace ASP.NET_FootballManager.Controllers
         public async Task<IActionResult> PreviousMonth(CalendarViewModel model, int monthId)
         {
             var month = serviceAggregator.calendarService.ReturnPreviousMonth(monthId);
-            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(month);
+            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(month);         
 
             return View("Index", newCalendarModel);
         }

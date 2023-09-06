@@ -1,6 +1,7 @@
 ﻿namespace FootballManager.Core.Models.Inbox
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Menu;
+    using FootballManager.Infrastructure.Data.DataModels;
     public class InboxViewModel
     {
         public List<Inbox> News { get; set; } = new List<Inbox>();
@@ -12,6 +13,7 @@
         public string FullMessage { get; set; }
         public int Year { get; set; }
         public int Day { get; set; }
+        public MenuViewModel MenuModel { get; set; }
 
     }
 }

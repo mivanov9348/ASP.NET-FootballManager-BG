@@ -1,8 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Game
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-
+    using FootballManager.Infrastructure.Data.DataModels;
     public class GameService : IGameService
     {
         private readonly FootballManagerDbContext data;
@@ -80,6 +79,14 @@
                 this.data.Years.RemoveRange(this.data.Years.Where(x => x.GameId == userGame.Id).ToList());
             }
             this.data.SaveChanges();
+        }
+
+        public (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) CurrentGameInfo(string userId)
+        {
+            var currentManager = this.data.Managers.FirstOrDefault(x => x.UserId == userId);
+            var currentGame = this.data.Games.FirstOrDefault(x => x.ManagerId == currentManager.Id);
+            var currentTeam = this.data.VirtualTeams.FirstOrDefault(x => x.GameId == currentGame.Id);
+            return (userId, currentManager, currentGame, currentTeam);
         }
     }
 }

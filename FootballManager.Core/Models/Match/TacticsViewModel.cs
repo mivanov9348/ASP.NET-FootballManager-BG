@@ -1,6 +1,6 @@
 ﻿namespace FootballManager.Core.Models.Match
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     public class TacticsViewModel
     {
         public int PlayerId { get; set; }

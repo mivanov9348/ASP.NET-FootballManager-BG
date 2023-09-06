@@ -1,10 +1,9 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
-{
+{   
     using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using System.Reflection.Emit;
-
+  
     public class PlayerAttributeConfiguration : IEntityTypeConfiguration<PlayerStats>
     {
         public void Configure(EntityTypeBuilder<PlayerStats> builder)

@@ -1,15 +1,12 @@
 ﻿namespace ASP.NET_FootballManager.Services.Match
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using FootballManager.Core.Models.Match;
     using FootballManager.Core.Services.PlayerProbability;
     using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Services.Player.PlayerStats;
-    using Microsoft.EntityFrameworkCore;
     using FootballManager.Infrastructure.Data.MessagesConstants;
 
     public class MatchService : IMatchService
@@ -28,7 +25,6 @@
             this.playerProbability = playerProbability;
             this.playerStats = playerStats;
         }
-
         public async Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
         {
             var currentTeam = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId && x.GameId == currentGame.Id);
@@ -48,7 +44,7 @@
             return await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.DayId == currentDay.Id).ToList());
 
         }
-        public async Task<List<Player>> GetStarting11(int? teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList());
+        public List<Player> GetStarting11(int? teamId) => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList();
         public (bool isValid, string error) ValidateTactics(VirtualTeam currentTeam)
         {
             var allStartingPlayers = this.data.Players.Where(x => x.TeamId == currentTeam.Id && x.IsStarting11 == true).ToList();
@@ -214,22 +210,7 @@
 
             match.Minute += rnd.Next(1, currentOptions.TimeInterval);
             this.data.SaveChanges();
-        }
-        public async Task<MatchViewModel> GetMatchModel(Match match, Fixture fixture, Player player)
-        {
-            return new MatchViewModel
-            {
-                CurrentMatch = match,
-                HomeTeam = fixture.HomeTeam,
-                AwayTeam = fixture.AwayTeam,
-                HomeTeamName = fixture.HomeTeamName,
-                AwayTeamName = fixture.AwayTeamName,
-                Positions = this.data.Positions.ToList(),
-                HomeTeamPlayers = await GetStarting11(fixture.HomeTeamId),
-                AwayTeamPlayers = await GetStarting11(fixture.AwayTeamId),
-                CurrentPlayerName = player.FirstName + " " + player.LastName
-            };
-        }
+        }     
         public void EndMatch(Match match)
         {
             match.isEnd = true;

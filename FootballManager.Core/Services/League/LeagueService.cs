@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.League
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Services;
     using FootballManager.Core.Services.Player.PlayerStats;
     using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Manager
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using ASP.NET_FootballManager.Models;
+    using FootballManager.Infrastructure.Data.DataModels;
     public interface IManagerService
     {
         Manager CreateNewManager(NewManagerViewModel ngvm,string userId);

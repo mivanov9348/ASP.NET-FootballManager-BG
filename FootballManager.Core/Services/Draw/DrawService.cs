@@ -4,10 +4,8 @@
     using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Draw;
     using System.Runtime.CompilerServices;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json.Linq;
-
     public class DrawService : IDrawService
     {
         private Random rnd;
@@ -91,21 +89,6 @@
         {
             throw new NotImplementedException();
         }
-        public DrawViewModel GetDrawViewModel(Draw currentDraw)
-        {
-            var remainingTeams = this.GetRemainingTeams(currentDraw);
-
-            var newViewModel = new DrawViewModel
-            {
-                Teams = currentDraw.Teams,
-                IsDrawStarted = currentDraw.IsDrawStarted,
-                AllFixtures = currentDraw.Fixtures,
-                CurrentDrawId = currentDraw.Id,
-                RemainingTeams = remainingTeams
-            };
-
-            return newViewModel;
-        }
 
         //Group Draw
         public Draw CreateGroupDraw(GroupDrawViewModel model, Game currentGame)
@@ -172,28 +155,7 @@
             }
             this.data.SaveChanges();
             return (team.Name, currentLeagueName);
-        }
-        public GroupDrawViewModel GetGroupDrawViewModel(Draw currentDraw)
-        {
-            var remainingTeams = this.GetRemainingTeams(currentDraw);
-            var allNations = this.data.Nations.ToList();
-            var allTeams = this.data.Teams.ToList();
-
-            var newViewModel = new GroupDrawViewModel
-            {
-                Teams = allTeams,
-                IsDrawStarted = currentDraw.IsDrawStarted,
-                DrawId = currentDraw.Id,
-                RemainingTeams = remainingTeams,
-                NumberOfGroups = currentDraw.NumOfGroups,
-                TeamsPerGroup = currentDraw.TeamsPergroup,
-                Leagues = currentDraw.Leagues,
-                Nations = allNations,
-
-            };
-
-            return newViewModel;
-        }
+        }        
 
         //Common
         public VirtualTeam DrawTeam(Draw currentDraw)

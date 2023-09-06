@@ -81,7 +81,7 @@
             display: table-cell;
             vertical-align: middle;
             width: 190px;
-            font-family: 'Titillium Web', sans-serif;
+            font-family:Constantia;
         }
 
         .main-menu > ul.logout {
@@ -188,7 +188,7 @@
     <nav class="main-menu">
         @await Html.PartialAsync("_ContinueButtonPartial")
         <ul>
-          
+
             <li>
                 <a asp-action="Index" asp-controller="Inbox">
                     <i class="fa fa-inbox" style="font-size:45px"></i>
@@ -197,7 +197,7 @@
                     </span>
                 </a>
             </li>
-            <hr style="color:white;margin-left:-50px;" />
+            <hr class="solid-hr" />
 
             <li class="has-subnav">
                 <a asp-action="Index" asp-controller="Calendar">
@@ -207,7 +207,7 @@
                     </span>
                 </a>
             </li>
-            <hr style="color:white;margin-left:-50px;" />
+            <hr class="solid-hr" />
             <li class="has-subnav">
                 <a asp-action="Standings" asp-controller="Teams">
                     <i class="fa fa-list fa-2x" style="font-size:40px"></i>
@@ -216,7 +216,7 @@
                     </span>
                 </a>
             </li>
-            <hr style="color:white;margin-left:-50px;" />
+            <hr class="solid-hr" />
             <li class="has-subnav">
                 <a asp-action="Index" asp-controller="Fixtures">
                     <i class="fa fa-calendar" style="font-size:40px"></i>
@@ -225,7 +225,7 @@
                     </span>
                 </a>
             </li>
-            <hr style="color:white;margin-left:-50px;" />
+            <hr class="solid-hr" />
             <li>
                 <a asp-action="TeamStats" asp-controller="Teams">
                     <i class="fa fa-bar-chart-o fa-2x" style="font-size:40px"></i>
@@ -234,7 +234,7 @@
                     </span>
                 </a>
             </li>
-            <hr style="color:white;margin-left:-50px;" />
+            <hr class="solid-hr" />
             <li>
                 <a asp-action="PlayersStats" asp-controller="Players">
                     <i class="fas fa-users" style="font-size:40px;margin-left:2px;"></i>
@@ -243,7 +243,7 @@
                     </span>
                 </a>
             </li>
-            <hr style="color:white;margin-left:-50px;" />
+            <hr class="solid-hr" />
             <li>
                 <a asp-action="Market" asp-controller="Transfer">
                     <i class="fa fa-exchange" style="font-size:40px"></i>
@@ -252,7 +252,7 @@
                     </span>
                 </a>
             </li>
-            <hr style="color:white;margin-left:-50px;" />
+            <hr class="solid-hr" />
             <li>
                 <a asp-action="Index" asp-controller="Draw">
                     <i class="fa fa-exchange" style="font-size:40px"></i>
@@ -262,7 +262,7 @@
                 </a>
             </li>
         </ul>
-        <hr style="color:white;margin-left:-50px;" />
+        <hr class="solid-hr" />
         <ul class="logout">
             <li>
                 <a asp-action="Index" asp-controller="Home">
@@ -273,11 +273,5 @@
                 </a>
             </li>
         </ul>
-
     </nav>
-
 </body>
-
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-<script src="~/js/clock.js"></script>

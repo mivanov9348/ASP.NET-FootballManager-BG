@@ -1,6 +1,5 @@
 ﻿namespace FootballManager.Core.Services.Attribute
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.DataModels;
 
     public interface IPlayerAttributeService

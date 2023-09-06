@@ -1,6 +1,5 @@
 ﻿namespace FootballManager.Core.Extensions
-{
-    using ASP.NET_FootballManager.Services.Common;
+{    
     using ASP.NET_FootballManager.Services.Cup;
     using ASP.NET_FootballManager.Services.EuroCup;
     using ASP.NET_FootballManager.Services.Fixture;
@@ -17,6 +16,7 @@
     using FootballManager.Core.Services.Calendar;
     using FootballManager.Core.Services.Draw;
     using FootballManager.Core.Services.GameOption;
+    using FootballManager.Core.Services.Model;
     using FootballManager.Core.Services.Player.PlayerData;
     using FootballManager.Core.Services.Player.PlayerGenerator;
     using FootballManager.Core.Services.Player.PlayerModel;
@@ -27,10 +27,8 @@
 
     public static class ServiceCollectionExtension
     {
-
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-        {
-            services.AddScoped<ICommonService, CommonService>();
+        {         
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IValidationService, ValidationService>();
             services.AddScoped<IGameService, GameService>();
@@ -52,6 +50,7 @@
             services.AddScoped<IPlayerStatsService, PlayerStatsService>();
             services.AddScoped<IDrawService,DrawService>();
             services.AddScoped<ICalendarService, CalendarService>();
+            services.AddScoped<IModelService, ModelService>();
             services.AddScoped<ServiceAggregator>();        
 
             return services;

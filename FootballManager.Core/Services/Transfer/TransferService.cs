@@ -2,7 +2,7 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Player;
     using System.Collections.Generic;
 
@@ -19,7 +19,7 @@
             var currentPlayer = this.data.Players.FirstOrDefault(x => x.Id == playerId);
             var budget = currentTeam.Budget - currentPlayer.Price;
 
-            currentTeam.Budget = Math.Round(budget,2);
+            currentTeam.Budget = Math.Round(budget, 2);
             currentPlayer.Team = currentTeam;
             currentPlayer.FreeAgent = false;
             currentPlayer.TeamId = currentTeam.Id;
@@ -80,11 +80,6 @@
         }
         public async Task<List<Player>> GetCurrentTeamPlayers(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId).ToList());
 
-        public TransferViewModel GetTransferViewModel(Player player)
-        {
-            throw new NotImplementedException();
-        }
-
         public string Sell(int playerId)
         {
             var currPl = this.data.Players.FirstOrDefault(x => x.Id == playerId);
@@ -95,7 +90,7 @@
             currPl.FreeAgent = true;
             currPl.Team = freeAgentsTeam;
             currPl.TeamId = freeAgentsTeam.Id;
-            currTeam.Budget = Math.Round(budget,2);
+            currTeam.Budget = Math.Round(budget, 2);
             this.data.SaveChanges();
 
             return $"{currPl.FirstName} {currPl.LastName} sold!";

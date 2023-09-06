@@ -1,14 +1,9 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Draw;
     using FootballManager.Core.Services;
-    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json.Linq;
-    using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
     using System.Security.Claims;
-
     public class DrawController : Controller
     {
         private ServiceAggregator serviceAggregator;
@@ -31,7 +26,7 @@
         public IActionResult GenerateEliminationDraw(DrawViewModel model)
         {
             var draw = this.serviceAggregator.drawService.CreateEliminationDraw(model);
-            var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(draw);
+            var drawViewModel = this.serviceAggregator.modelService.GetDrawViewModel(draw);
             return View("EliminationDraw", drawViewModel);
         }
         public IActionResult EliminationDraw(DrawViewModel model, int drawId)
@@ -51,7 +46,7 @@
                 currentDraw.IsDrawStarted = false;
             }
 
-            var drawViewModel = this.serviceAggregator.drawService.GetDrawViewModel(currentDraw);
+            var drawViewModel = this.serviceAggregator.modelService.GetDrawViewModel(currentDraw);
             return View("EliminationDraw", drawViewModel);
         }
        // public IActionResult FinalizeEliminationDraw(DrawViewModel model, int drawId)

@@ -1,8 +1,9 @@
 ﻿namespace FootballManager.Core.Services.Player.PlayerModel
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Player;
+    using FootballManager.Infrastructure.Data.DataModels;
+
     public class PlayerModelService : IPlayerModelService
     {
         private readonly FootballManagerDbContext data;

@@ -1,4 +1,4 @@
-﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+﻿using FootballManager.Infrastructure.Data.DataModels;
 
 namespace FootballManager.Core.Services.Player.PlayerGenerator
 {

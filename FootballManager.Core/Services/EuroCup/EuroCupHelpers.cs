@@ -2,7 +2,7 @@
 {
     using ASP.NET_FootballManager.Data.Constant;
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,8 +18,6 @@
             this.data = data;
             this.rnd = new Random();
         }
-
-
         public void FillEuropeanCompetitions(EuropeanCup currentCup)
         {
             var allTeams = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCupId == null && x.GameId == currentCup.GameId).ToList();

@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+namespace FootballManager.Infrastructure.Data.DataModels
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class EuropeanCup
     {
         public int Id { get; set; }

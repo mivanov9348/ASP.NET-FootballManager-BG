@@ -1,11 +1,10 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.League;
     using FootballManager.Core.Services;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
-
     public class FixturesController : Controller
     {
         private readonly ServiceAggregator serviceAggregator;
@@ -16,11 +15,12 @@
 
         public async Task<IActionResult> Index(FixturesViewModel fvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var allLeagues = await serviceAggregator.leagueService.GetAllLeagues();
             var currentFixtures = await serviceAggregator.fixtureService.GetFixture(fvm.LeagueId, fvm.CurrentRound, CurrentGame);
             var rounds = await serviceAggregator.fixtureService.GetAllRounds(fvm.LeagueId);
             var currentLeague = await serviceAggregator.leagueService.GetLeague(fvm.LeagueId);
+            var menuModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
 
             return View(new FixturesViewModel
             {
@@ -28,7 +28,8 @@
                 Fixtures = currentFixtures,
                 AllRounds = rounds,
                 LeagueId = fvm.LeagueId,
-                CurrentLeagueName = currentLeague.Name.ToUpper()
+                CurrentLeagueName = currentLeague.Name.ToUpper(),
+                MenuViewModel = menuModel
             });
         }
         public async Task<IActionResult> CupsFixture(FixturesViewModel fvm, int id)

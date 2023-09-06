@@ -1,6 +1,5 @@
 ﻿namespace FootballManager.Core.Services.Player.PlayerStats
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using Infrastructure.Data.DataModels;
     public interface IPlayerStatsService
     {

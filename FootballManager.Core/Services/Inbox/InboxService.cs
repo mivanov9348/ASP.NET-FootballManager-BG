@@ -1,11 +1,10 @@
 ﻿namespace ASP.NET_FootballManager.Services.Inbox
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Core.Models.Inbox;
+    using FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Menu;
     using FootballManager.Infrastructure.Data.MessagesConstants;
     using System;
-    using System.Numerics;
     using System.Text;
     public class InboxService : IInboxService
     {
@@ -76,7 +75,7 @@
             CreateInbox(CurrentGame, fullMessage, messageTitle, null);
 
         }
-        public async Task<List<Inbox>> GetInboxMessages(int gameId) => await Task.Run(() => this.data.Inboxes.Where(x => x.GameId == gameId).ToList());
+        public List<Inbox> GetInboxMessages(int gameId) => this.data.Inboxes.Where(x => x.GameId == gameId).ToList();
         public async Task<Inbox> GetFullMessage(int id, Game CurrentGame)
         {
             if (id == 0)
@@ -117,22 +116,7 @@
 
             CreateInbox(CurrentGame, fullMessage, messageTitle, null);
 
-        }
-
-        public async Task<InboxViewModel> GetInboxViewModel(Inbox currentMessage, int gameId)
-        {
-            var currentInboxMessages = await GetInboxMessages(gameId);
-            var newInboxViewModel = new InboxViewModel
-            {
-                News = currentInboxMessages.OrderByDescending(x => x.Id).ToList(),
-                CurrentNews = currentMessage,
-                Year = currentMessage.Year,
-                Day = currentMessage.Day
-
-            };
-            return newInboxViewModel;
-        }
-
+        }        
         public void CreateInbox(Game currentGame, string fullMessage, string messageTitle, string imageRoot)
         {
             var newInbox = new Inbox
@@ -148,6 +132,20 @@
 
             this.data.Inboxes.Add(newInbox);
             this.data.SaveChanges();
+        }
+        private MenuViewModel GetMenuViewModel(Game currentGame)
+        {
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.CurrentDayOrder);
+            var isGameDay = currentDay.IsLeagueDay || currentDay.IsCupDay;
+
+            return new MenuViewModel
+            {
+                CurrentDay = currentGame.CurrentDayOrder,
+                CurrentMonth = currentGame.CurrentMonthOrder,
+                CurrentYear = currentGame.CurrentYearOrder,
+                IsDrawDay = currentDay.IsDrawDay,
+                IsGameDay = isGameDay
+            };
         }
     }
 }

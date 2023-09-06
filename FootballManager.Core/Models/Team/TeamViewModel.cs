@@ -1,6 +1,5 @@
 ﻿namespace FootballManager.Core.Models.Team
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Services.Attribute;
     using FootballManager.Infrastructure.Data.DataModels;
 

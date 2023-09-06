@@ -1,6 +1,6 @@
 ﻿namespace FootballManager.Core.Services.Calendar
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Calendar;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
     public interface ICalendarService
@@ -17,7 +17,6 @@
         Month NextMonth(int monthId);
         Task SetWeekPlan(Game currentGame, Year currentYear);
         List<Day> GetAllDaysInMonth(Month month);
-        CalendarViewModel GetCalendarViewModel(Month CurrentMonth);
 
 
     }

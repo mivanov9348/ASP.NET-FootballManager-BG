@@ -1,5 +1,4 @@
 ﻿@using FootballManager.Core.Models.Menu;
-
 @model MenuViewModel
 
 <hr class="solid-hr" />
@@ -37,5 +36,6 @@ else
         </button>
     </form>
 }
-<p>Year: 1, Month: 1, Day: 1</p>
+<hr class="solid-hr" />
+<p style="color:white;font-size:15px">Year: @Model.CurrentYear, Month: @Model.CurrentMonth, Day: @Model.CurrentDay</p>
 <hr class="solid-hr" />

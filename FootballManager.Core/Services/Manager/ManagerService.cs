@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Manager
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using ASP.NET_FootballManager.Models;
 
     public class ManagerService : IManagerService
@@ -11,14 +11,12 @@
         {
             this.data = data;
         }
-
         public void AddImageToManager(NewManagerViewModel model, string userId)
         {
             var currentManager = GetCurrentManager(userId);
             currentManager.ImageId = model.ImageId;
             this.data.SaveChanges();
         }
-
         public Manager CreateNewManager(NewManagerViewModel ngvm, string userId)
         {
             var currentManager = GetCurrentManager(userId);

@@ -1,6 +1,5 @@
 ﻿namespace FootballManager.Core.Models.Player
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Sorting;
     using FootballManager.Infrastructure.Data.DataModels;
     using System.ComponentModel.DataAnnotations;

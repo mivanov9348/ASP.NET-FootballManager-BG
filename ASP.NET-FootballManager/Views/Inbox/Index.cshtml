@@ -1,6 +1,6 @@
 ﻿@using FootballManager.Core.Models.Inbox;
 @model InboxViewModel
-<partial name="~/Views/Shared/_SideBar.cshtml" />
+<partial name="~/Views/Shared/_SideBar.cshtml" for="@Model.MenuModel" />
 
 <style>
 
@@ -10,12 +10,12 @@
         background-repeat: no-repeat;
         background-attachment: fixed;
         font-family: 'OLD SPORT 02 ATHLETIC NCV';
-        display: flex; /* Use flexbox to center the inbox container */
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
-        margin: 0; /* Remove default body margin */
-        padding: 0; /* Remove default body padding */
-        position: relative; /* Set the position to allow absolute positioning */
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        margin: 0; 
+        padding: 0;
+        position: relative; 
     }
 
         body::before {
@@ -137,7 +137,6 @@
 </head>
 <body>
     <form method="post">
-
         <h2 class="title">Inbox</h2>
         <hr />
         <div class="inbox-container">

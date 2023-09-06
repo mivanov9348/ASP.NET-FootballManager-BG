@@ -1,6 +1,5 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
-{
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+{  
     using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;

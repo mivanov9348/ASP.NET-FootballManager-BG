@@ -1,9 +1,7 @@
 ﻿namespace FootballManager.Infrastructure.Data.DataModels
-{
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+{   
     using Microsoft.AspNetCore.Identity;
     using System.ComponentModel.DataAnnotations;
-
     public class GameOption
     {
         public int Id { get; set; }

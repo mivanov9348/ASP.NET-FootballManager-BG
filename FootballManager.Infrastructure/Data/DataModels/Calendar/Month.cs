@@ -1,12 +1,10 @@
-﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FootballManager.Infrastructure.Data.DataModels.Calendar
+﻿namespace FootballManager.Infrastructure.Data.DataModels.Calendar
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
     public class Month
     {
         public int Id { get; set; }

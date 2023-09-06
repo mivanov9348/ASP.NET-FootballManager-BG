@@ -2,8 +2,8 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Services.EuroCup;
+    using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
     using System.Collections.Generic;
 

@@ -1,7 +1,6 @@
-﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-
-namespace FootballManager.Infrastructure.Data.DataModels.Calendar
+﻿namespace FootballManager.Infrastructure.Data.DataModels.Calendar
 {
+    using FootballManager.Infrastructure.Data.DataModels;
     public  class Week
     {
         public int Id { get; set; }

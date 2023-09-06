@@ -1,30 +1,27 @@
-﻿using ASP.NET_FootballManager.Services.Common;
-using ASP.NET_FootballManager.Services.Cup;
-using ASP.NET_FootballManager.Services.EuroCup;
-using ASP.NET_FootballManager.Services.Fixture;
-using ASP.NET_FootballManager.Services.Game;
-using ASP.NET_FootballManager.Services.Inbox;
-using ASP.NET_FootballManager.Services.League;
-using ASP.NET_FootballManager.Services.Manager;
-using ASP.NET_FootballManager.Services.Match;
-using ASP.NET_FootballManager.Services.Team;
-using ASP.NET_FootballManager.Services.Transfer;
-using ASP.NET_FootballManager.Services.Validation;
-using FootballManager.Core.Services.Calendar;
-using FootballManager.Core.Services.Draw;
-using FootballManager.Core.Services.GameOption;
-using FootballManager.Core.Services.Player.PlayerData;
-using FootballManager.Core.Services.Player.PlayerGenerator;
-using FootballManager.Core.Services.Player.PlayerModel;
-using FootballManager.Core.Services.Player.PlayerSorter;
-using FootballManager.Core.Services.Player.PlayerStats;
-
-namespace FootballManager.Core.Services
+﻿namespace FootballManager.Core.Services
 {
-  
+    using ASP.NET_FootballManager.Services.Cup;
+    using ASP.NET_FootballManager.Services.EuroCup;
+    using ASP.NET_FootballManager.Services.Fixture;
+    using ASP.NET_FootballManager.Services.Game;
+    using ASP.NET_FootballManager.Services.Inbox;
+    using ASP.NET_FootballManager.Services.League;
+    using ASP.NET_FootballManager.Services.Manager;
+    using ASP.NET_FootballManager.Services.Match;
+    using ASP.NET_FootballManager.Services.Team;
+    using ASP.NET_FootballManager.Services.Transfer;
+    using ASP.NET_FootballManager.Services.Validation;
+    using FootballManager.Core.Services.Calendar;
+    using FootballManager.Core.Services.Draw;
+    using FootballManager.Core.Services.GameOption;
+    using FootballManager.Core.Services.Model;
+    using FootballManager.Core.Services.Player.PlayerData;
+    using FootballManager.Core.Services.Player.PlayerGenerator;
+    using FootballManager.Core.Services.Player.PlayerModel;
+    using FootballManager.Core.Services.Player.PlayerSorter;
+    using FootballManager.Core.Services.Player.PlayerStats;
     public class ServiceAggregator
     {
-        public readonly ICommonService commonService;
         public readonly IValidationService validationService;
         public readonly IManagerService managerService;
         public readonly IGameService gameService;
@@ -44,11 +41,10 @@ namespace FootballManager.Core.Services
         public readonly IPlayerStatsService playerStatsService;
         public readonly IDrawService drawService;
         public readonly ICalendarService calendarService;
-
+        public readonly IModelService modelService;
         public ServiceAggregator(
             IGameService gameService,
             IManagerService managerService,
-            ICommonService commonService,
             IValidationService validationService,
             ITeamService teamService,
             IInboxService inboxService,
@@ -65,11 +61,11 @@ namespace FootballManager.Core.Services
             IPlayerSorterService playerSorterService,
             IPlayerStatsService playerStatsService,
             IDrawService drawService,
-            ICalendarService calendarService
+            ICalendarService calendarService,
+            IModelService modelService
             )
         {
             this.managerService = managerService;
-            this.commonService = commonService;
             this.validationService = validationService;
             this.gameService = gameService;
             this.teamService = teamService;
@@ -90,6 +86,7 @@ namespace FootballManager.Core.Services
             this.playerModelService = playerModelService;
             this.drawService = drawService;
             this.calendarService = calendarService;
+            this.modelService = modelService;
         }
     }
 }

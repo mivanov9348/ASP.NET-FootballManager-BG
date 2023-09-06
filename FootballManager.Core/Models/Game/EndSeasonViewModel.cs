@@ -1,7 +1,7 @@
 ﻿namespace FootballManager.Core.Models.Game
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-        public class EndSeasonViewModel
+    using FootballManager.Infrastructure.Data.DataModels;
+    public class EndSeasonViewModel
     {
         public List<VirtualTeam> Teams { get; set; } = new List<VirtualTeam>();
         public List<League> Leagues { get; set; } = new List<League>();

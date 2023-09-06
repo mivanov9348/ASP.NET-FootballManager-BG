@@ -1,8 +1,6 @@
-﻿using FootballManager.Infrastructure.Data.DataModels;
-using FootballManager.Infrastructure.Data.DataModels.Calendar;
-
-namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+﻿namespace FootballManager.Infrastructure.Data.DataModels
 {
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;
     public class Fixture
     {
         public int Id { get; set; }

@@ -1,8 +1,7 @@
 ﻿namespace FootballManager.Infrastructure.Seeding.SeedingModels
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-
+    using FootballManager.Infrastructure.Data.DataModels;
     public class NationsSeeder : ISeeder
     {
         public NationsSeeder()

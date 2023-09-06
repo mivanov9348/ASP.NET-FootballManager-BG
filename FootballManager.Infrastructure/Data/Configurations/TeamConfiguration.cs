@@ -1,9 +1,8 @@
-﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace FootballManager.Infrastructure.Data.Configurations
+﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
+    using FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     public class TeamConfiguration : IEntityTypeConfiguration<Team>
     {
         public void Configure(EntityTypeBuilder<Team> builder)

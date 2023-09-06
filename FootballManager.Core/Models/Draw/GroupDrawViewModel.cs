@@ -1,11 +1,6 @@
 ﻿namespace FootballManager.Core.Models.Draw
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using FootballManager.Infrastructure.Data.DataModels;
     public class GroupDrawViewModel
     {
         public int DrawId { get; set; }

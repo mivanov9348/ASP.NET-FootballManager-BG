@@ -1,6 +1,8 @@
 ﻿namespace FootballManager.Core.Models.Team
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Menu;
+
     public class StandingsViewModel
     {
         public int LeagueId { get; set; }
@@ -8,6 +10,7 @@
         public List<VirtualTeam> VirtualTeams { get; set; } = new List<VirtualTeam>();
         public List<League> Leagues { get; set; } = new List<League>();
 
+        public MenuViewModel MenuViewModel { get; set; }
 
 
 

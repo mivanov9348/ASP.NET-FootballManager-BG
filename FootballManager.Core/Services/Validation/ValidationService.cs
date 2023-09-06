@@ -1,8 +1,8 @@
 ﻿namespace ASP.NET_FootballManager.Services.Validation
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using ASP.NET_FootballManager.Models;
+    using FootballManager.Infrastructure.Data.DataModels;
     using System.Text;
     public class ValidationService : IValidationService
     {
