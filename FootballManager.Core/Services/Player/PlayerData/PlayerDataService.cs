@@ -45,5 +45,7 @@
             }
             this.data.SaveChanges();
         }
+
+        public List<Position> GetAllPositions() => this.data.Positions.ToList();
     }
 }

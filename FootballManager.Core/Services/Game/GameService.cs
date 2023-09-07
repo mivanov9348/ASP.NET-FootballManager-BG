@@ -2,6 +2,8 @@
 {
     using ASP.NET_FootballManager.Data;
     using FootballManager.Infrastructure.Data.DataModels;
+    using System.Collections.Generic;
+
     public class GameService : IGameService
     {
         private readonly FootballManagerDbContext data;
@@ -88,5 +90,9 @@
             var currentTeam = this.data.VirtualTeams.FirstOrDefault(x => x.GameId == currentGame.Id);
             return (userId, currentManager, currentGame, currentTeam);
         }
+
+        public List<Nation> GetAllNations()=>this.data.Nations.ToList();
+
+        public List<City> GetAllCities() => this.data.Cities.ToList();
     }
 }

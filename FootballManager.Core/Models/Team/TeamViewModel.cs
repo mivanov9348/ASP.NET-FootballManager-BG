@@ -1,5 +1,6 @@
 ﻿namespace FootballManager.Core.Models.Team
 {
+    using FootballManager.Core.Models.Menu;
     using FootballManager.Core.Services.Attribute;
     using FootballManager.Infrastructure.Data.DataModels;
 
@@ -15,8 +16,8 @@
         public List<City> Cities { get; set; } = new List<City>();
         public List<League> Leagues { get; set; } = new List<League>();
         public List<PlayerAttribute> PlayerAttributes { get; set; } = new List<PlayerAttribute>();
-
         public List<PlayerStats> PlayerStats { get; set; } = new List<PlayerStats>();
+        public MenuViewModel MenuViewModel { get; set; }
 
     }
 }

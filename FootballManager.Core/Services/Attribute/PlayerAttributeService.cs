@@ -2,6 +2,7 @@
 {
     using ASP.NET_FootballManager.Data;
     using FootballManager.Infrastructure.Data.DataModels;
+    using System.Collections.Generic;
 
     public class PlayerAttributeService : IPlayerAttributeService
     {
@@ -179,12 +180,10 @@
                     default:
                         break;
                 }
-
-
-
-
             }
             this.data.SaveChanges();
         }
+
+        public List<PlayerAttribute> GetAllPlayerAttributes() => this.data.PlayerAttributes.ToList();
     }
 }

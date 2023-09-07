@@ -5,6 +5,8 @@
     using ASP.NET_FootballManager.Data.Database.ImportDto;
     using FootballManager.Infrastructure.Data.DataModels;
     using Newtonsoft.Json;
+    using System.Collections.Generic;
+
     public class PlayerStatsService : IPlayerStatsService
     {
         private Random rnd;
@@ -152,5 +154,7 @@
             this.data.SaveChanges();
             return newPlayerStats;
         }
+
+        public List<PlayerStats> GetAllPlayerStats() => this.data.PlayerStats.ToList();
     }
 }

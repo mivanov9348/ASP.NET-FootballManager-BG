@@ -1,7 +1,6 @@
 ﻿@using FootballManager.Core.Models.Player
 @model TransferViewModel
 
-<partial name="~/Views/Shared/_SideBar.cshtml" />
 
 <style>
 
@@ -89,6 +88,7 @@
         }
 
 </style>
+<partial name="~/Views/Shared/_SideBar.cshtml" for="@Model.MenuViewModel" />
 
 <form method="get">
     <body>

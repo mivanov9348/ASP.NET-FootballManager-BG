@@ -49,7 +49,7 @@
 
             return View(new MatchViewModel
             {
-                Positions = ,
+                Positions = serviceAggregator.playerDataService.GetAllPositions(),
                 HomeTeamName = currentFixture.HomeTeamName,
                 AwayTeamName = currentFixture.AwayTeamName,
                 CurrentFixture = currentFixture,
@@ -62,10 +62,10 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var clubStartingEleven = await serviceAggregator.playerDataService.GetStartingEleven(currentTeam.Id);
             var clubSubstitutes = await serviceAggregator.playerDataService.GetSubstitutes(currentTeam.Id);
-            var positions = ;
+            var positions = serviceAggregator.playerDataService.GetAllPositions();
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay =  serviceAggregator.calendarService.GetCurrentDate(CurrentGame);
+            var currentDay = serviceAggregator.calendarService.GetCurrentDate(CurrentGame);
 
             if (currentFixture == null)
             {
@@ -77,7 +77,7 @@
                 {
                     serviceAggregator.euroCupService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
-                serviceAggregator.inboxService.CupMatchesInfo(dayFixtures, CurrentGame);               
+                serviceAggregator.inboxService.CupMatchesInfo(dayFixtures, CurrentGame);
                 return RedirectToAction("Results", "Match");
             }
 
@@ -91,21 +91,21 @@
         }
         public async Task<IActionResult> Match(MatchViewModel mvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var homeTeamPlayers = await serviceAggregator.matchService.GetStarting11(currentFixture.HomeTeamId);
+            var homeTeamPlayers = serviceAggregator.matchService.GetStarting11(currentFixture.HomeTeamId);
             var currentMatch = serviceAggregator.matchService.CreateMatch(currentFixture, CurrentGame);
-            var newModel = await serviceAggregator.matchService.GetMatchModel(currentMatch, currentFixture, homeTeamPlayers.OrderBy(x => x.PositionId).First());
+            var newModel = serviceAggregator.modelService.GetMatchModel(currentMatch, currentFixture, homeTeamPlayers.OrderBy(x => x.PositionId).First());
             return View(newModel);
         }
         public async Task<IActionResult> GetAction(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentMatch = await serviceAggregator.matchService.GetCurrentMatch(id);
             var dayFixtures = await serviceAggregator.matchService.GetFixturesByDay(CurrentGame);
             var currentFixture = await serviceAggregator.matchService.GetCurrentFixture(dayFixtures, CurrentGame);
-            var currentDay =  serviceAggregator.calendarService.GetCurrentDate(CurrentGame);
+            var currentDay = serviceAggregator.calendarService.GetCurrentDate(CurrentGame);
             var player = new Player();
 
             serviceAggregator.matchService.Time(currentMatch);
@@ -120,7 +120,7 @@
                 if (currentDay.day.IsCupDay)
                 {
                     serviceAggregator.cupService.CheckWinner(currentFixture);
-                    serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);                  
+                    serviceAggregator.cupService.CalculateOtherMatches(dayFixtures, currentFixture);
                 }
                 if (currentDay.day.IsEuroCupDay)
                 {
@@ -144,7 +144,7 @@
                 serviceAggregator.matchService.PlayerAction(awayTeam, player, currentMatch);
             }
 
-            var newModel = await serviceAggregator.modelService.GetMatchModel(currentMatch, currentFixture, player);
+            var newModel =  serviceAggregator.modelService.GetMatchModel(currentMatch, currentFixture, player);
 
             return View("Match", newModel);
         }
@@ -165,7 +165,7 @@
         }
         public IActionResult ValidTactics(MatchViewModel mvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             (bool isValid, string error) = serviceAggregator.matchService.ValidateTactics(currentTeam);
             if (isValid)
             {

@@ -17,6 +17,8 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             pvm = serviceAggregator.playerSorterService.SortingPlayers(pvm.PlayerSorting, id, CurrentGame,1);
+            var menuModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
+            pvm.MenuViewModel = menuModel;
             return View(pvm);
         }
 
@@ -24,8 +26,7 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currentPlayer = await serviceAggregator.playerDataService.GetPlayerById(id);
-
-            var model = this.serviceAggregator.playerModelService.PlayerDetailsViewModel(currentPlayer, CurrentGame);
+            var model = this.serviceAggregator.modelService.GetPlayerDetailsViewModel(currentPlayer, CurrentGame);
 
             return View(model);
         }
@@ -33,6 +34,8 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             pvm = serviceAggregator.playerSorterService.SortingPlayers(pvm.PlayerSorting, 1, CurrentGame, pageNum);
+            var menuModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
+            pvm.MenuViewModel = menuModel;
             return View("PlayersStats",pvm);
         }
 

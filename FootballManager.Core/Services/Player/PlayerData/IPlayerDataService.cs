@@ -10,6 +10,7 @@
         Task<List<Player>> GetStartingEleven(int teamId);
         Task<List<Player>> GetSubstitutes(int teamId);
         void RemovePlayers(VirtualTeam freeAgentsTeam);
+        List<Position> GetAllPositions();
 
     }
 }

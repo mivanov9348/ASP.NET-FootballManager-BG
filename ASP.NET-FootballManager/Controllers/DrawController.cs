@@ -91,7 +91,7 @@
             var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
             var currentDraw = this.serviceAggregator.drawService.CreateGroupDraw(model, currentGame);
             var remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
-            var currentModel = this.serviceAggregator.drawService.GetGroupDrawViewModel(currentDraw);
+            var currentModel = this.serviceAggregator.modelService.GetGroupDrawViewModel(currentDraw);
 
             return View(currentModel);
         }
@@ -116,7 +116,7 @@
                 currentDraw.IsDrawStarted = false;
             }
 
-            var groupDrawViewModel = this.serviceAggregator.drawService.GetGroupDrawViewModel(currentDraw);
+            var groupDrawViewModel = this.serviceAggregator.modelService.GetGroupDrawViewModel(currentDraw);
             groupDrawViewModel.DrawedTeamName = drawedTeamName;
             groupDrawViewModel.DrawedGroupName = drawedleagueName;
             return View("GroupDraw", groupDrawViewModel);

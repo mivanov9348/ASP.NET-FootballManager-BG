@@ -1,5 +1,6 @@
 ﻿namespace FootballManager.Core.Models.Player
 {
+    using FootballManager.Core.Models.Menu;
     using FootballManager.Core.Models.Sorting;
     using FootballManager.Infrastructure.Data.DataModels;
     using System.ComponentModel.DataAnnotations;
@@ -48,7 +49,7 @@
         public List<Position> Positions { get; set; } = new List<Position>();
         public List<City> Cities { get; set; } = new List<City>();
         public List<PlayerAttribute> PlayerAttributes { get; set; } = new List<PlayerAttribute>();
-
+        public MenuViewModel MenuViewModel { get; set; }
 
     }
 }

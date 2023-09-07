@@ -11,5 +11,6 @@
         void CalculatingPlayersPrice(Game CurrentGame);
         PlayerStats CreatePlayerStats(Player player);
         PlayerStats GetPlayerStatsByPlayer(Player player);
+        List<PlayerStats> GetAllPlayerStats();
     }
 }

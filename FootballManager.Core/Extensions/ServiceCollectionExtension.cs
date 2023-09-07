@@ -19,7 +19,6 @@
     using FootballManager.Core.Services.Model;
     using FootballManager.Core.Services.Player.PlayerData;
     using FootballManager.Core.Services.Player.PlayerGenerator;
-    using FootballManager.Core.Services.Player.PlayerModel;
     using FootballManager.Core.Services.Player.PlayerSorter;
     using FootballManager.Core.Services.Player.PlayerStats;
     using FootballManager.Core.Services.PlayerProbability;
@@ -44,8 +43,7 @@
             services.AddScoped<IPlayerProbability, PlayerProbability>();
             services.AddScoped<IGameOptionService, GameOptionService>();           
             services.AddScoped<IPlayerDataService,PlayerDataService>();
-            services.AddScoped<IPlayerGeneratorService, PlayerGeneratorService>();
-            services.AddScoped<IPlayerModelService, PlayerModelService>();
+            services.AddScoped<IPlayerGeneratorService, PlayerGeneratorService>();          
             services.AddScoped<IPlayerSorterService, PlayerSorterService>();
             services.AddScoped<IPlayerStatsService, PlayerStatsService>();
             services.AddScoped<IDrawService,DrawService>();

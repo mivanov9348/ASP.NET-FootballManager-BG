@@ -11,13 +11,13 @@
     using ASP.NET_FootballManager.Services.Team;
     using ASP.NET_FootballManager.Services.Transfer;
     using ASP.NET_FootballManager.Services.Validation;
+    using FootballManager.Core.Services.Attribute;
     using FootballManager.Core.Services.Calendar;
     using FootballManager.Core.Services.Draw;
     using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.Model;
     using FootballManager.Core.Services.Player.PlayerData;
     using FootballManager.Core.Services.Player.PlayerGenerator;
-    using FootballManager.Core.Services.Player.PlayerModel;
     using FootballManager.Core.Services.Player.PlayerSorter;
     using FootballManager.Core.Services.Player.PlayerStats;
     public class ServiceAggregator
@@ -35,13 +35,13 @@
         public readonly ITransferService transferService;
         public readonly IGameOptionService gameOptionsService;
         public readonly IPlayerDataService playerDataService;
-        public readonly IPlayerGeneratorService playerGeneratorService;
-        public readonly IPlayerModelService playerModelService;
+        public readonly IPlayerGeneratorService playerGeneratorService;        
         public readonly IPlayerSorterService playerSorterService;
         public readonly IPlayerStatsService playerStatsService;
         public readonly IDrawService drawService;
         public readonly ICalendarService calendarService;
         public readonly IModelService modelService;
+        public readonly IPlayerAttributeService attributeService;
         public ServiceAggregator(
             IGameService gameService,
             IManagerService managerService,
@@ -57,12 +57,12 @@
             IGameOptionService gameOptionsService,
             IPlayerDataService playerDataService,
             IPlayerGeneratorService playerGeneratorService,
-            IPlayerModelService playerModelService,
             IPlayerSorterService playerSorterService,
             IPlayerStatsService playerStatsService,
             IDrawService drawService,
             ICalendarService calendarService,
-            IModelService modelService
+            IModelService modelService,
+            IPlayerAttributeService attributeService
             )
         {
             this.managerService = managerService;
@@ -83,10 +83,10 @@
             this.playerStatsService = playerStatsService;
             this.playerSorterService = playerSorterService;
             this.playerDataService = playerDataService;
-            this.playerModelService = playerModelService;
             this.drawService = drawService;
             this.calendarService = calendarService;
             this.modelService = modelService;
+            this.attributeService = attributeService;
         }
     }
 }

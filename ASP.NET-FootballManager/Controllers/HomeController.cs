@@ -52,7 +52,7 @@
 
             return View(new NewManagerViewModel
             {
-                Nations = await serviceAggregator.commonService.GetAllNations(),
+                Nations =  serviceAggregator.gameService.GetAllNations(),
                 Teams = await serviceAggregator.teamService.GetAllPlayableTeams()
             });
         }

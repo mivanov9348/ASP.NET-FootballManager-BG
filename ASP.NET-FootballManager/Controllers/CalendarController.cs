@@ -17,7 +17,7 @@
             CurrentUser();
             var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
             var currentDate = serviceAggregator.calendarService.GetCurrentDate(currentGame);          
-            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(currentDate.month);
+            var newCalendarModel = serviceAggregator.modelService.GetCalendarViewModel(currentDate.month);
 
             return View("Index", newCalendarModel);
         }
@@ -25,7 +25,7 @@
         public async Task<IActionResult> PreviousMonth(CalendarViewModel model, int monthId)
         {
             var month = serviceAggregator.calendarService.ReturnPreviousMonth(monthId);
-            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(month);         
+            var newCalendarModel = serviceAggregator.modelService.GetCalendarViewModel(month);         
 
             return View("Index", newCalendarModel);
         }
@@ -33,7 +33,7 @@
         public async Task<IActionResult> NextMonth(CalendarViewModel model, int monthId)
         {
             var month = serviceAggregator.calendarService.NextMonth(monthId);
-            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(month);
+            var newCalendarModel = serviceAggregator.modelService.GetCalendarViewModel(month);
            
             return View("Index", newCalendarModel);
         }
@@ -44,7 +44,7 @@
             var currentGame = serviceAggregator.gameService.GetCurrentGame(userId);          
             serviceAggregator.calendarService.NextDay(currentGame);
             var currentDate = serviceAggregator.calendarService.GetCurrentDate(currentGame);
-            var newCalendarModel = serviceAggregator.calendarService.GetCalendarViewModel(currentDate.month);
+            var newCalendarModel = serviceAggregator.modelService.GetCalendarViewModel(currentDate.month);
         
             return View("Index", newCalendarModel);
            

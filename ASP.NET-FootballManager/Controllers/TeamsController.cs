@@ -15,7 +15,7 @@
         public async Task<IActionResult> Standings(StandingsViewModel svm)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
+            var menuViewModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
             if (svm.LeagueId == 0)
             {
                 svm.Leagues = await serviceAggregator.leagueService.GetAllLeagues();
@@ -26,27 +26,15 @@
                 svm.Leagues = await serviceAggregator.leagueService.GetAllLeagues();
                 svm.VirtualTeams = await serviceAggregator.leagueService.GetStandingsByLeague(svm.LeagueId, CurrentGame);
             }
-
+            svm.MenuViewModel = menuViewModel;
             return View(svm);
         }
         public async Task<IActionResult> TeamStats()
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var originalTeam = await serviceAggregator.teamService.GetOriginalTeam(currentTeam, CurrentGame);
+            var model = serviceAggregator.modelService.GetTeamViewModel(currentTeam);
 
-            return View(new TeamViewModel
-            {
-                Team = originalTeam,
-                CurrentTeam = currentTeam,
-                Players = await serviceAggregator.playerDataService.GetPlayersByTeam(currentTeam.Id),
-                Nations = await serviceAggregator.commonService.GetAllNations(),
-                Teams = await serviceAggregator.teamService.GetAllVirtualTeams(CurrentGame),
-                Cities = await serviceAggregator.commonService.GetAllCities(),
-                Positions = await serviceAggregator.commonService.GetAllPositions(),
-                Leagues = await serviceAggregator.leagueService.GetAllLeagues(),
-                PlayerAttributes = await serviceAggregator.commonService.GetAllPlayersAttribute(),
-                PlayerStats = await serviceAggregator.commonService.GetAllPlayersStats()
-            });
+            return View(model);
         }
 
 

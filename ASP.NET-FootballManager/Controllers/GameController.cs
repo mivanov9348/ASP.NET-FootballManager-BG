@@ -3,9 +3,9 @@
     using Data.Constant;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;  
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Game;
     using FootballManager.Core.Services;
+    using FootballManager.Infrastructure.Data.DataModels;
 
     public class GameController : Controller
     {       
@@ -16,7 +16,7 @@
         }
         public async Task<IActionResult> SeasonStats(EndSeasonViewModel esvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var goalScorer = await serviceAggregator.playerDataService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
             var teams = await serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
             var league = await serviceAggregator.leagueService.GetLeague(esvm.LeagueId);
@@ -42,7 +42,7 @@
         }
         public async Task<IActionResult> NewSeason()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) =  serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) =  serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             await serviceAggregator.leagueService.PromotedRelegated(CurrentGame);
             serviceAggregator.gameService.ResetGame(CurrentGame);
@@ -65,7 +65,7 @@
         }
         public async Task<IActionResult> EndSeason(EndSeasonViewModel esvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var teams = await serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
 
             return View(new EndSeasonViewModel

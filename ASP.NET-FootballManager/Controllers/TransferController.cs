@@ -1,5 +1,5 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
-{    
+{
     using FootballManager.Core.Models.Player;
     using FootballManager.Core.Services;
     using FootballManager.Infrastructure.Data.DataModels;
@@ -17,31 +17,36 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             var allFreeAgents = await serviceAggregator.transferService.GetAllFreeAgents(CurrentGame.Id, 0, CurrentGame, 0);
+            var menuViewModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
+
             return View(new TransferViewModel
             {
                 FreeAgents = allFreeAgents,
                 CurrentTeamPlayers = await serviceAggregator.transferService.GetCurrentTeamPlayers(currentTeam.Id),
-                Nations = await serviceAggregator.commonService.GetAllNations(),
-                Positions = await serviceAggregator.commonService.GetAllPositions(),
+                Nations = serviceAggregator.gameService.GetAllNations(),
+                Positions = serviceAggregator.playerDataService.GetAllPositions(),
                 CurrentTeam = currentTeam,
-                PlayerAttributes = await serviceAggregator.commonService.GetAllPlayersAttribute(),
-                PositionOrder = allFreeAgents.First().Position.Order
+                PlayerAttributes = serviceAggregator.attributeService.GetAllPlayerAttributes(),
+                PositionOrder = allFreeAgents.First().Position.Order,
+                MenuViewModel = menuViewModel
             });
         }
         public async Task<IActionResult> SortPlayers(string text, int id, int positionOrder)
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var allFreeAgents = await serviceAggregator.transferService.GetAllFreeAgents(CurrentGame.Id, id, CurrentGame, positionOrder);
+            var menuViewModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
 
             return View("Market", new TransferViewModel
             {
                 FreeAgents = allFreeAgents,
                 CurrentTeamPlayers = await serviceAggregator.transferService.GetCurrentTeamPlayers(currentTeam.Id),
-                Nations = await serviceAggregator.commonService.GetAllNations(),
-                Positions = await serviceAggregator.commonService.GetAllPositions(),
-                PlayerAttributes = await serviceAggregator.commonService.GetAllPlayersAttribute(),
+                Nations = serviceAggregator.gameService.GetAllNations(),
+                Positions = serviceAggregator.playerDataService.GetAllPositions(),
+                PlayerAttributes = serviceAggregator.attributeService.GetAllPlayerAttributes(),
                 CurrentTeam = currentTeam,
-                PositionOrder = positionOrder
+                PositionOrder = positionOrder,
+                MenuViewModel = menuViewModel
             });
         }
         public async Task<IActionResult> Buy(int id)
@@ -49,6 +54,7 @@
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             bool isValid = serviceAggregator.validationService.BuyValidator(id, currentTeam);
             var currPl = await serviceAggregator.playerDataService.GetPlayerById(id);
+            var menuViewModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
 
             if (isValid)
             {
@@ -64,8 +70,9 @@
                 {
                     CurrentTeam = currentTeam,
                     PlayerToBuy = currPl,
-                    Nations = await serviceAggregator.commonService.GetAllNations(),
-                    Positions = await serviceAggregator.commonService.GetAllPositions()
+                    Nations = serviceAggregator.gameService.GetAllNations(),
+                    Positions = serviceAggregator.playerDataService.GetAllPositions(),
+                    MenuViewModel = menuViewModel
                 });
             }
         }
@@ -73,12 +80,15 @@
         {
             (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currPl = await serviceAggregator.playerDataService.GetPlayerById(id);
+            var menuViewModel = serviceAggregator.modelService.GetMenuViewModel(CurrentGame);
+
             return View(new TransferViewModel
             {
                 CurrentTeam = currentTeam,
                 PlayerToBuy = currPl,
-                Nations = await serviceAggregator.commonService.GetAllNations(),
-                Positions = await serviceAggregator.commonService.GetAllPositions()
+                Nations = serviceAggregator.gameService.GetAllNations(),
+                Positions = serviceAggregator.playerDataService.GetAllPositions(),
+                MenuViewModel = menuViewModel
             });
         }
         public async Task<IActionResult> Sell(int id)
@@ -98,14 +108,14 @@
                 ViewData["error"] = "You cannot be with less than 11 players!";
             }
 
-            var model = serviceAggregator.modelService.GetTeamViewModel(currPlayers, currentTeam);
+            var model = serviceAggregator.modelService.GetTeamViewModel(currentTeam);
             return View("TeamSquad", model);
         }
         public async Task<IActionResult> TeamSquad()
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var currPlayers = await serviceAggregator.playerDataService.GetPlayersByTeam(currentTeam.Id);
-            var model = serviceAggregator.modelService.GetTeamViewModel(currPlayers.OrderBy(x => x.PositionId).ToList(), currentTeam);
+            var model = serviceAggregator.modelService.GetTeamViewModel(currentTeam);
 
             return View(model);
         }

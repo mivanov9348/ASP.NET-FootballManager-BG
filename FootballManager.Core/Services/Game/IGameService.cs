@@ -10,5 +10,7 @@
         bool isExistGame(string UserId);
         void ResetGame(Game CurrentGame);
         void ResetSave(string UserId);
+        List<Nation> GetAllNations();
+        List<City> GetAllCities();
     }
 }

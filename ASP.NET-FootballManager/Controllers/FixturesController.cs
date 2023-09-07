@@ -34,7 +34,7 @@
         }
         public async Task<IActionResult> CupsFixture(FixturesViewModel fvm, int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var allLeagues = await serviceAggregator.leagueService.GetAllLeagues();
             var currentFixtures = new List<Fixture>();
             string CupName = "";
@@ -67,7 +67,7 @@
         }
         public async Task<IActionResult> ChooseRound(int id, FixturesViewModel fvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.commonService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var allLeagues = await serviceAggregator.leagueService.GetAllLeagues();
             var currentFixtures = await serviceAggregator.fixtureService.GetFixture(fvm.LeagueId, id, CurrentGame);
             var rounds = await serviceAggregator.fixtureService.GetAllRounds(fvm.LeagueId);
