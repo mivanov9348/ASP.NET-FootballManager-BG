@@ -32,6 +32,7 @@
             {
                 Manager = manager,             
                 CurrentYearOrder = 1,
+                CurrentMonthOrder = 1,                
                 CupRound = 1,
                 EuroCupRound = 1,
                 LeagueRound = 1,              

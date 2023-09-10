@@ -11,7 +11,7 @@
         void GenerateDays(Game currentGame, int dayOrder, int dayOfWeekIndex, Year currentYear, Month currentMonth, Week currentWeek);
         int GetStartOffsetDays(Month currentMonth);
         int GetEndOffsetDays(Month currentMonth);
-        void NextDay(Game currentGame);
+        void ContinueToNextDay(Game currentGame);
         (Year year, Month month, Day day) GetCurrentDate(Game currentGame);
         Month ReturnPreviousMonth(int monthId);
         Month NextMonth(int monthId);

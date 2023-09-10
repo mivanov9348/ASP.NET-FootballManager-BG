@@ -2,15 +2,15 @@
 {
     using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Draw;
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;
+
     public interface IDrawService
     {
-        Draw CreateEliminationDraw(DrawViewModel model);
+        (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) GetCurrentDrawDay(Game currentGame);
+        Draw CreateEliminationDraw(Game currentGame,DrawViewModel model);
         Draw CreateGroupDraw(GroupDrawViewModel model, Game currentGame);
         VirtualTeam DrawTeam(Draw currentDraw);
-        void FillEliminationTable(Draw currentDraw, VirtualTeam team);
         (string,string) FillGroupTable(Draw currentDraw,VirtualTeam team);
-     //   void AutoCompleteElimination(Draw currentDraw);
-        void AutoCompleteGroup(Draw currentDraw);
         void DeleteDraws();
         Draw GetDrawById(int id);
         List<VirtualTeam> GetRemainingTeams(Draw currentDraw);

@@ -132,20 +132,6 @@
 
             this.data.Inboxes.Add(newInbox);
             this.data.SaveChanges();
-        }
-        private MenuViewModel GetMenuViewModel(Game currentGame)
-        {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.CurrentDayOrder);
-            var isGameDay = currentDay.IsLeagueDay || currentDay.IsCupDay;
-
-            return new MenuViewModel
-            {
-                CurrentDay = currentGame.CurrentDayOrder,
-                CurrentMonth = currentGame.CurrentMonthOrder,
-                CurrentYear = currentGame.CurrentYearOrder,
-                IsDrawDay = currentDay.IsDrawDay,
-                IsGameDay = isGameDay
-            };
-        }
+        }        
     }
 }

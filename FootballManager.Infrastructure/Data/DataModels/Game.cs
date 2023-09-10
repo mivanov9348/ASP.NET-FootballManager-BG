@@ -28,7 +28,9 @@
         public List<Year> Years { get; set; } = new List<Year>();
         public List<Month> Months { get; set; } = new List<Month>();
         public List<Week> Weeks { get; set; } = new List<Week>();
-        public List<Day> Days { get; set; } = new List<Day>();   
+        public List<Day> Days { get; set; } = new List<Day>();
+        public List<Draw> Draws { get; set; } = new List<Draw>();
+
         public ICollection<Match> Matches { get; set; } = new HashSet<Match>();
     }
 }

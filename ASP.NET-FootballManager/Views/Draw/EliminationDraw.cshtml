@@ -123,13 +123,13 @@
             }
 
         </div>
+        <hr />
         @if (Model.IsDrawStarted)
         {
-            <hr />
-            <input type="submit" value="Draw" class="drawButton" asp-action="Draw" asp-route-drawId="@Model.CurrentDrawId" />
-            <input type="submit" value="Finalize" class="FinalizeButton" asp-action="FinalizeEliminationDraw" asp-route-drawId="@Model.CurrentDrawId" />
-            <input type="submit" value="Reset" class="resetButton" asp-action="ResetEliminationDraw" />
-
+            <input type="submit" value="Draw Теам" class="drawButton" asp-action="EliminationDraw" asp-route-drawId="@Model.CurrentDrawId" />
+        }
+        else{
+            <input type="submit" value="To Main Menu" class="drawButton" asp-action="Index" asp-controller="Inbox" asp-route-drawId="@Model.CurrentDrawId" />
         }
         <table>
             <tr>

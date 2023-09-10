@@ -123,11 +123,16 @@
                 CurrentPlayerName = player.FirstName + " " + player.LastName
             };
         }
-              
+
         public MenuViewModel GetMenuViewModel(Game currentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.CurrentDayOrder);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.CurrentDayOrder
+                                                               && x.GameId == currentGame.Id
+                                                               && x.Month.MonthOrder == currentGame.CurrentMonthOrder
+                                                               && x.Year.YearOrder == currentGame.CurrentYearOrder);
+
             var isGameDay = currentDay.IsLeagueDay || currentDay.IsCupDay;
+            (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = drawService.GetCurrentDrawDay(currentGame);
 
             return new MenuViewModel
             {
@@ -135,7 +140,12 @@
                 CurrentMonth = currentGame.CurrentMonthOrder,
                 CurrentYear = currentGame.CurrentYearOrder,
                 IsDrawDay = currentDay.IsDrawDay,
-                IsGameDay = isGameDay
+                IsGameDay = isGameDay,
+                IsLeagueDay = currentDay.IsLeagueDay,
+                IsPlayed = currentDay.IsPlayed,
+                IsChampionsCupDraw = isChampionsCupDraw,
+                IsCupDraw = isCupDraw,
+                IsEuropeanCupDraw = isEuropeanCupDraw,
             };
         }
 
@@ -200,6 +210,6 @@
             };
         }
 
-       
+
     }
 }

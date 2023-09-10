@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballManager.Infrastructure.Migrations
 {
     [DbContext(typeof(FootballManagerDbContext))]
-    [Migration("20230905083232_AddDayOrderInGame")]
-    partial class AddDayOrderInGame
+    [Migration("20230909081417_AddDb")]
+    partial class AddDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,674 +23,6 @@ namespace FootballManager.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("NationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NationId");
-
-                    b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Participants")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rounds")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NationId");
-
-                    b.ToTable("Cups");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Participants")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rank")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rounds")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("EuropeanCups");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AwayTeamGoal")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AwayTeamId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AwayTeamName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompetitionName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CupId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DayId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DrawId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EuropeanCupId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HomeTeamGoal")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("HomeTeamId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("HomeTeamName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPlayed")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("LeagueId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Round")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WinnerTeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AwayTeamId");
-
-                    b.HasIndex("CupId");
-
-                    b.HasIndex("DayId");
-
-                    b.HasIndex("DrawId");
-
-                    b.HasIndex("EuropeanCupId");
-
-                    b.HasIndex("HomeTeamId");
-
-                    b.HasIndex("LeagueId");
-
-                    b.ToTable("Fixtures");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CupRound")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CurrentDayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EuroCupRound")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameOptionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LeagueRound")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Season")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameOptionId");
-
-                    b.HasIndex("ManagerId");
-
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Inbox", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Day")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FullMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MessageTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NewsImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("Inboxes");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("DrawId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("NationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Rounds")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DrawId");
-
-                    b.HasIndex("NationId");
-
-                    b.ToTable("Leagues");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("BornDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CurrentTeamId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("ImageId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CurrentTeamId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Managers");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Match", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CurrentFixtureId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Minute")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SituationText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Turn")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isEnd")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CurrentFixtureId");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("Matches");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CreatedOn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sender")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Abbr")
-                        .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Nations");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("FreeAgent")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsStarting11")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("LeagueId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NationId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Overall")
-                        .HasColumnType("float");
-
-                    b.Property<int>("PlayerAttributesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PlayerStatsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PositionId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ProfileImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("NationId");
-
-                    b.HasIndex("PositionId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Players");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Position", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Abbr")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Positions");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CupId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EuropeanCupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCupParticipant")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEuroParticipant")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPlayable")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("LeagueId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int?>("NationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("CupId");
-
-                    b.HasIndex("EuropeanCupId");
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("NationId");
-
-                    b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<double>("Budget")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ChampionsCup")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cups")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Draws")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EuroCups")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EuropeanCupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GoalAgainst")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GoalDifference")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GoalScored")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCupParticipant")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEuroParticipant")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPlayable")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("LeagueId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Loses")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ManagerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Matches")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Overall")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Titles")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Wins")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isDrawed")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CupId");
-
-                    b.HasIndex("EuropeanCupId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("ManagerId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("VirtualTeams");
-                });
 
             modelBuilder.Entity("DrawVirtualTeam", b =>
                 {
@@ -843,6 +175,57 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("Years");
                 });
 
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("NationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NationId");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Cup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Participants")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rounds")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NationId");
+
+                    b.ToTable("Cups");
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Draw", b =>
                 {
                     b.Property<int>("Id")
@@ -850,6 +233,9 @@ namespace FootballManager.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDrawStarted")
                         .HasColumnType("bit");
@@ -862,7 +248,176 @@ namespace FootballManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GameId");
+
                     b.ToTable("Draws");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Participants")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rank")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rounds")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("EuropeanCups");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AwayTeamGoal")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AwayTeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AwayTeamName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompetitionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DayId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DrawId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EuropeanCupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HomeTeamGoal")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HomeTeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HomeTeamName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPlayed")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LeagueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Round")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WinnerTeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AwayTeamId");
+
+                    b.HasIndex("CupId");
+
+                    b.HasIndex("DayId");
+
+                    b.HasIndex("DrawId");
+
+                    b.HasIndex("EuropeanCupId");
+
+                    b.HasIndex("HomeTeamId");
+
+                    b.HasIndex("LeagueId");
+
+                    b.ToTable("Fixtures");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CupRound")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrentDayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrentMonthOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrentYearOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EuroCupRound")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameOptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LeagueRound")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ManagerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameOptionId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
@@ -915,6 +470,272 @@ namespace FootballManager.Infrastructure.Migrations
                     b.HasIndex("UserId1");
 
                     b.ToTable("GameOptions");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Inbox", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MessageTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewsImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Inboxes");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.League", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("DrawId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Rounds")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrawId");
+
+                    b.HasIndex("NationId");
+
+                    b.ToTable("Leagues");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Manager", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("BornDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CurrentTeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrentTeamId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Managers");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Match", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CurrentFixtureId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Minute")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SituationText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Turn")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isEnd")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrentFixtureId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Matches");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Nation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Abbr")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Nations");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Player", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("FreeAgent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsStarting11")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LeagueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NationId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Overall")
+                        .HasColumnType("float");
+
+                    b.Property<int>("PlayerAttributesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerStatsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ProfileImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("LeagueId");
+
+                    b.HasIndex("NationId");
+
+                    b.HasIndex("PositionId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerAttribute", b =>
@@ -1040,6 +861,190 @@ namespace FootballManager.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("PlayerStats");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Position", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Abbr")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EuropeanCupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCupParticipant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEuroParticipant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPlayable")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LeagueId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("NationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CupId");
+
+                    b.HasIndex("EuropeanCupId");
+
+                    b.HasIndex("LeagueId");
+
+                    b.HasIndex("NationId");
+
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<double>("Budget")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ChampionsCup")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cups")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Draws")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EuroCups")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EuropeanCupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalAgainst")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalDifference")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalScored")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCupParticipant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEuroParticipant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPlayable")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LeagueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Loses")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Matches")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Overall")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Titles")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Wins")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDrawed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CupId");
+
+                    b.HasIndex("EuropeanCupId");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("LeagueId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("VirtualTeams");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1259,329 +1264,6 @@ namespace FootballManager.Infrastructure.Migrations
                     b.ToTable("MonthWeek");
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
-                        .WithMany("Cities")
-                        .HasForeignKey("NationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Nation");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
-                        .WithMany("Cups")
-                        .HasForeignKey("NationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Nation");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
-                        .WithMany("EuropeanCups")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "AwayTeam")
-                        .WithMany("AwayMatches")
-                        .HasForeignKey("AwayTeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
-                        .WithMany("Fixtures")
-                        .HasForeignKey("CupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Day", "Day")
-                        .WithMany("Fixtures")
-                        .HasForeignKey("DayId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", "Draw")
-                        .WithMany("Fixtures")
-                        .HasForeignKey("DrawId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
-                        .WithMany("Fixtures")
-                        .HasForeignKey("EuropeanCupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "HomeTeam")
-                        .WithMany("HomeMatches")
-                        .HasForeignKey("HomeTeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
-                        .WithMany("Fixtures")
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("AwayTeam");
-
-                    b.Navigation("Cup");
-
-                    b.Navigation("Day");
-
-                    b.Navigation("Draw");
-
-                    b.Navigation("EuropeanCup");
-
-                    b.Navigation("HomeTeam");
-
-                    b.Navigation("League");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
-                {
-                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.GameOption", "GameOption")
-                        .WithMany("Games")
-                        .HasForeignKey("GameOptionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", "Manager")
-                        .WithMany("Games")
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", "Team")
-                        .WithMany("Games")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithOne()
-                        .HasForeignKey("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
-
-                    b.Navigation("GameOption");
-
-                    b.Navigation("Manager");
-
-                    b.Navigation("Team");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Inbox", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
-                        .WithMany("Inboxes")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", b =>
-                {
-                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", "Draw")
-                        .WithMany("Leagues")
-                        .HasForeignKey("DrawId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
-                        .WithMany("Leagues")
-                        .HasForeignKey("NationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Draw");
-
-                    b.Navigation("Nation");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", "CurrentTeam")
-                        .WithMany("Managers")
-                        .HasForeignKey("CurrentTeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithOne()
-                        .HasForeignKey("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
-
-                    b.Navigation("CurrentTeam");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Match", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", "CurrentFixture")
-                        .WithMany("Matches")
-                        .HasForeignKey("CurrentFixtureId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
-                        .WithMany("Matches")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CurrentFixture");
-
-                    b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", "City")
-                        .WithMany("Players")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
-                        .WithMany("Players")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
-                        .WithMany("Players")
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
-                        .WithMany("Players")
-                        .HasForeignKey("NationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Position", "Position")
-                        .WithMany("Players")
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "Team")
-                        .WithMany("Players")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("City");
-
-                    b.Navigation("Game");
-
-                    b.Navigation("League");
-
-                    b.Navigation("Nation");
-
-                    b.Navigation("Position");
-
-                    b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", "City")
-                        .WithMany("Teams")
-                        .HasForeignKey("CityId");
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
-                        .WithMany("Teams")
-                        .HasForeignKey("CupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
-                        .WithMany("Teams")
-                        .HasForeignKey("EuropeanCupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
-                        .WithMany("Teams")
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
-                        .WithMany("Teams")
-                        .HasForeignKey("NationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("City");
-
-                    b.Navigation("Cup");
-
-                    b.Navigation("EuropeanCup");
-
-                    b.Navigation("League");
-
-                    b.Navigation("Nation");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
-                {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("CupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("EuropeanCupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", "League")
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", null)
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("ManagerId");
-
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", "Team")
-                        .WithMany("VirtualTeams")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Cup");
-
-                    b.Navigation("EuropeanCup");
-
-                    b.Navigation("Game");
-
-                    b.Navigation("League");
-
-                    b.Navigation("Team");
-                });
-
             modelBuilder.Entity("DrawVirtualTeam", b =>
                 {
                     b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", null)
@@ -1590,7 +1272,7 @@ namespace FootballManager.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", null)
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.VirtualTeam", null)
                         .WithMany()
                         .HasForeignKey("TeamsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1599,7 +1281,7 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Day", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Days")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1634,7 +1316,7 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Month", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Months")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1652,7 +1334,7 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Week", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Weeks")
                         .HasForeignKey("GameId");
 
@@ -1669,12 +1351,147 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Year", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
                         .WithMany("Years")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.City", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
+                        .WithMany("Cities")
+                        .HasForeignKey("NationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Nation");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Cup", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
+                        .WithMany("Cups")
+                        .HasForeignKey("NationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Nation");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Draw", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("Draws")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("EuropeanCups")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "AwayTeam")
+                        .WithMany("AwayMatches")
+                        .HasForeignKey("AwayTeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("CupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Calendar.Day", "Day")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("DayId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", "Draw")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("DrawId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("EuropeanCupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "HomeTeam")
+                        .WithMany("HomeMatches")
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.League", "League")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AwayTeam");
+
+                    b.Navigation("Cup");
+
+                    b.Navigation("Day");
+
+                    b.Navigation("Draw");
+
+                    b.Navigation("EuropeanCup");
+
+                    b.Navigation("HomeTeam");
+
+                    b.Navigation("League");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Game", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.GameOption", "GameOption")
+                        .WithMany("Games")
+                        .HasForeignKey("GameOptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Manager", "Manager")
+                        .WithMany("Games")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Team", "Team")
+                        .WithMany("Games")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.Game", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("GameOption");
+
+                    b.Navigation("Manager");
+
+                    b.Navigation("Team");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
@@ -1692,9 +1509,128 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Inbox", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("Inboxes")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.League", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Draw", "Draw")
+                        .WithMany("Leagues")
+                        .HasForeignKey("DrawId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
+                        .WithMany("Leagues")
+                        .HasForeignKey("NationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Draw");
+
+                    b.Navigation("Nation");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Manager", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Team", "CurrentTeam")
+                        .WithMany("Managers")
+                        .HasForeignKey("CurrentTeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.Manager", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("CurrentTeam");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Match", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Fixture", "CurrentFixture")
+                        .WithMany("Matches")
+                        .HasForeignKey("CurrentFixtureId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("Matches")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CurrentFixture");
+
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Player", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.City", "City")
+                        .WithMany("Players")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("Players")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.League", "League")
+                        .WithMany("Players")
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
+                        .WithMany("Players")
+                        .HasForeignKey("NationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Position", "Position")
+                        .WithMany("Players")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.VirtualTeam", "Team")
+                        .WithMany("Players")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("City");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("League");
+
+                    b.Navigation("Nation");
+
+                    b.Navigation("Position");
+
+                    b.Navigation("Team");
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerAttribute", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", "Player")
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Player", "Player")
                         .WithOne("PlayerAttributes")
                         .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.PlayerAttribute", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1705,13 +1641,93 @@ namespace FootballManager.Infrastructure.Migrations
 
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.PlayerStats", b =>
                 {
-                    b.HasOne("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", "Player")
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Player", "Player")
                         .WithOne("PlayerStats")
                         .HasForeignKey("FootballManager.Infrastructure.Data.DataModels.PlayerStats", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Team", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.City", "City")
+                        .WithMany("Teams")
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
+                        .WithMany("Teams")
+                        .HasForeignKey("CupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
+                        .WithMany("Teams")
+                        .HasForeignKey("EuropeanCupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.League", "League")
+                        .WithMany("Teams")
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Nation", "Nation")
+                        .WithMany("Teams")
+                        .HasForeignKey("NationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("City");
+
+                    b.Navigation("Cup");
+
+                    b.Navigation("EuropeanCup");
+
+                    b.Navigation("League");
+
+                    b.Navigation("Nation");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
+                {
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Cup", "Cup")
+                        .WithMany("VirtualTeams")
+                        .HasForeignKey("CupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.EuropeanCup", "EuropeanCup")
+                        .WithMany("VirtualTeams")
+                        .HasForeignKey("EuropeanCupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Game", "Game")
+                        .WithMany("VirtualTeams")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.League", "League")
+                        .WithMany("VirtualTeams")
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Manager", null)
+                        .WithMany("VirtualTeams")
+                        .HasForeignKey("ManagerId");
+
+                    b.HasOne("FootballManager.Infrastructure.Data.DataModels.Team", "Team")
+                        .WithMany("VirtualTeams")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Cup");
+
+                    b.Navigation("EuropeanCup");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("League");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1780,118 +1796,6 @@ namespace FootballManager.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.City", b =>
-                {
-                    b.Navigation("Players");
-
-                    b.Navigation("Teams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Cup", b =>
-                {
-                    b.Navigation("Fixtures");
-
-                    b.Navigation("Teams");
-
-                    b.Navigation("VirtualTeams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
-                {
-                    b.Navigation("Fixtures");
-
-                    b.Navigation("Teams");
-
-                    b.Navigation("VirtualTeams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
-                {
-                    b.Navigation("Matches");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Game", b =>
-                {
-                    b.Navigation("Days");
-
-                    b.Navigation("EuropeanCups");
-
-                    b.Navigation("Inboxes");
-
-                    b.Navigation("Matches");
-
-                    b.Navigation("Months");
-
-                    b.Navigation("Players");
-
-                    b.Navigation("VirtualTeams");
-
-                    b.Navigation("Weeks");
-
-                    b.Navigation("Years");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.League", b =>
-                {
-                    b.Navigation("Fixtures");
-
-                    b.Navigation("Players");
-
-                    b.Navigation("Teams");
-
-                    b.Navigation("VirtualTeams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Manager", b =>
-                {
-                    b.Navigation("Games");
-
-                    b.Navigation("VirtualTeams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Nation", b =>
-                {
-                    b.Navigation("Cities");
-
-                    b.Navigation("Cups");
-
-                    b.Navigation("Leagues");
-
-                    b.Navigation("Players");
-
-                    b.Navigation("Teams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Player", b =>
-                {
-                    b.Navigation("PlayerAttributes");
-
-                    b.Navigation("PlayerStats");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Position", b =>
-                {
-                    b.Navigation("Players");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.Team", b =>
-                {
-                    b.Navigation("Games");
-
-                    b.Navigation("Managers");
-
-                    b.Navigation("VirtualTeams");
-                });
-
-            modelBuilder.Entity("ASP.NET_FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
-                {
-                    b.Navigation("AwayMatches");
-
-                    b.Navigation("HomeMatches");
-
-                    b.Navigation("Players");
-                });
-
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Calendar.Day", b =>
                 {
                     b.Navigation("Fixtures");
@@ -1916,6 +1820,22 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Weeks");
                 });
 
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.City", b =>
+                {
+                    b.Navigation("Players");
+
+                    b.Navigation("Teams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Cup", b =>
+                {
+                    b.Navigation("Fixtures");
+
+                    b.Navigation("Teams");
+
+                    b.Navigation("VirtualTeams");
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Draw", b =>
                 {
                     b.Navigation("Fixtures");
@@ -1923,9 +1843,107 @@ namespace FootballManager.Infrastructure.Migrations
                     b.Navigation("Leagues");
                 });
 
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.EuropeanCup", b =>
+                {
+                    b.Navigation("Fixtures");
+
+                    b.Navigation("Teams");
+
+                    b.Navigation("VirtualTeams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Fixture", b =>
+                {
+                    b.Navigation("Matches");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Game", b =>
+                {
+                    b.Navigation("Days");
+
+                    b.Navigation("Draws");
+
+                    b.Navigation("EuropeanCups");
+
+                    b.Navigation("Inboxes");
+
+                    b.Navigation("Matches");
+
+                    b.Navigation("Months");
+
+                    b.Navigation("Players");
+
+                    b.Navigation("VirtualTeams");
+
+                    b.Navigation("Weeks");
+
+                    b.Navigation("Years");
+                });
+
             modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.GameOption", b =>
                 {
                     b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.League", b =>
+                {
+                    b.Navigation("Fixtures");
+
+                    b.Navigation("Players");
+
+                    b.Navigation("Teams");
+
+                    b.Navigation("VirtualTeams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Manager", b =>
+                {
+                    b.Navigation("Games");
+
+                    b.Navigation("VirtualTeams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Nation", b =>
+                {
+                    b.Navigation("Cities");
+
+                    b.Navigation("Cups");
+
+                    b.Navigation("Leagues");
+
+                    b.Navigation("Players");
+
+                    b.Navigation("Teams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Player", b =>
+                {
+                    b.Navigation("PlayerAttributes");
+
+                    b.Navigation("PlayerStats");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Position", b =>
+                {
+                    b.Navigation("Players");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.Team", b =>
+                {
+                    b.Navigation("Games");
+
+                    b.Navigation("Managers");
+
+                    b.Navigation("VirtualTeams");
+                });
+
+            modelBuilder.Entity("FootballManager.Infrastructure.Data.DataModels.VirtualTeam", b =>
+                {
+                    b.Navigation("AwayMatches");
+
+                    b.Navigation("HomeMatches");
+
+                    b.Navigation("Players");
                 });
 #pragma warning restore 612, 618
         }

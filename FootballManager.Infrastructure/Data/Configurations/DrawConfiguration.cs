@@ -15,6 +15,10 @@ namespace FootballManager.Infrastructure.Data.Configurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.HasOne(x => x.Game)
+                   .WithMany(x => x.Draws)
+                   .HasForeignKey(x => x.GameId);
+
             builder.HasMany(x => x.Fixtures)
                    .WithOne(x => x.Draw)
                    .OnDelete(DeleteBehavior.Restrict);

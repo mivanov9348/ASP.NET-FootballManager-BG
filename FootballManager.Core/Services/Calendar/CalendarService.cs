@@ -13,12 +13,12 @@
         private readonly FootballManagerDbContext data;
         private readonly CalendarHelper helper;
         private readonly DataConstants constants;
-       
+
         public CalendarService(FootballManagerDbContext data)
         {
             this.data = data;
             helper = new CalendarHelper(data);
-            this.constants = new DataConstants();          
+            this.constants = new DataConstants();
         }
 
         public (Year year, Month month, Day day) GetCurrentDate(Game currentGame)
@@ -203,13 +203,13 @@
                 this.data.SaveChanges();
             }
         }
-     
+
         public List<Day> GetAllDaysInMonth(Month month)
         {
             var days = this.data.Days.Where(x => x.MonthId == month.Id).ToList();
             return days;
-        }       
-                
+        }
+
         public Month ReturnPreviousMonth(int monthId)
         {
             var currentMonth = this.data.Months.FirstOrDefault(x => x.Id == monthId);
@@ -250,23 +250,40 @@
             var lastDayWeekOrder = monthDays.Last().WeekDayOrder; //1            
             return lastDayWeekOrder + 1;
         }
-        public void NextDay(Game currentGame)
+        public void ContinueToNextDay(Game currentGame)
         {
             var currentDates = GetCurrentDate(currentGame);
+            var stop = false;           
+            var lastDayInMonth = this.data.Days.Where(x => x.MonthId == currentDates.month.Id).OrderByDescending(x => x.DayOrder).First();
 
-            var nextDay = currentDates.day.DayOrder += 1;
-            currentGame.CurrentDayOrder = nextDay;
-
-            var currentDay = GetCurrentDate(currentGame);
-
-            if (currentDay.month.MonthOrder < currentDates.month.MonthOrder)
+            while (!stop)
             {
-                currentGame.CurrentMonthOrder += 1;
+                var DayInMonthOrder = currentDates.day.DayOrder;
+
+                if (DayInMonthOrder == lastDayInMonth.DayOrder)
+                {
+                    var nextMonth = currentDates.month.MonthOrder + 1;
+                    var currentMonth = this.data.Months.FirstOrDefault(x => x.MonthOrder == nextMonth && x.GameId == currentGame.Id && x.YearId == currentDates.year.Id);
+                    currentGame.CurrentMonthOrder = currentMonth.MonthOrder;
+                    this.data.SaveChanges();
+                }
+                currentDates = GetCurrentDate(currentGame);
+                var nextDayOrder = currentDates.day.DayOrder + 1;
+                var nextDay = this.data.Days.FirstOrDefault(x => x.MonthId == currentDates.month.Id && x.DayOrder == nextDayOrder);
+
+                currentGame.CurrentDayOrder = nextDay.DayOrder;
+
+                if (nextDay.IsLeagueDay || nextDay.IsDrawDay || nextDay.IsCupDay)
+                {
+                    stop = true;
+                   
+                }
+
+                this.data.SaveChanges();
             }
            
-            this.data.SaveChanges();
-        }     
+        }
 
-       
+
     }
 }

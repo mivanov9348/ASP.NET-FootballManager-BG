@@ -58,6 +58,10 @@
                    .WithOne(x => x.Game)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasMany(x => x.Draws)
+                   .WithOne(x => x.Game)
+                   .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

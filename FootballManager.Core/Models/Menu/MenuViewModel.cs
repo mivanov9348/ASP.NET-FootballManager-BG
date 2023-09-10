@@ -6,6 +6,12 @@
         public int CurrentMonth { get; set; }
         public int CurrentDay { get; set; }
         public bool IsDrawDay { get; set; }
+        public bool IsChampionsCupDraw { get; set; }
+        public bool IsEuropeanCupDraw { get; set; }
+        public bool IsCupDraw { get; set; }
+        public bool IsLeagueDay { get; set; }
         public bool IsGameDay { get; set; }
+        public bool IsPlayed { get; set; }
+       
     }
 }

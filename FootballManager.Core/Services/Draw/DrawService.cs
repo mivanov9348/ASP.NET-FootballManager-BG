@@ -6,85 +6,58 @@
     using System.Runtime.CompilerServices;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json.Linq;
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;
+    using System.Security.Cryptography.X509Certificates;
+    using FootballManager.Core.Services.Calendar;
+    using ASP.NET_FootballManager.Data.Constant;
+
     public class DrawService : IDrawService
     {
         private Random rnd;
         private FootballManagerDbContext data;
-        public DrawService(FootballManagerDbContext data)
+        private ICalendarService calendarService;
+        private readonly DrawHelper helper;
+
+        public DrawService(FootballManagerDbContext data, ICalendarService calendarService)
         {
             this.rnd = new Random();
             this.data = data;
+            this.calendarService = calendarService;
+            this.helper = new DrawHelper(data);
         }
 
         //Elimination Draw
-        public Draw CreateEliminationDraw(DrawViewModel model)
+        public Draw CreateEliminationDraw(Game currentGame, DrawViewModel model)
         {
-            DeleteDraws();
+            var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id).ToList();
+            var draw = new Draw();
 
-            var allTeams = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true || x.IsEuroParticipant == true).ToList();
-            var teams = new List<VirtualTeam>();
-            var fixtures = new List<Fixture>();
-
-            for (int i = 0; i < model.NumberOfTeams; i++)
+            if (model.IsChampionsCupDraw)
             {
-                var team = allTeams[rnd.Next(0, allTeams.Count)];
-                while (IsExist(team, teams))
-                {
-                    team = allTeams[rnd.Next(0, allTeams.Count)];
-                }
-                teams.Add(team);
+                allTeams = allTeams.Where(x => x.IsEuroParticipant && x.isDrawed == false).ToList();
+                var championsCupTeams = helper.FillTeams(allTeams, model);
+                var championsCupFixtures = helper.FillFixtures(allTeams, model);
+                draw = helper.CreateDraw(currentGame, championsCupTeams, championsCupFixtures);
+            }
+            if (model.IsEuropeanCupDraw)
+            {
+                allTeams = allTeams.Where(x => x.IsEuroParticipant && x.isDrawed == false).ToList();
+                var europeanCupTeams = helper.FillTeams(allTeams, model);
+                var europeanCupFixtures = helper.FillFixtures(allTeams, model);
+                draw = helper.CreateDraw(currentGame, europeanCupTeams, europeanCupFixtures);
+
+            }
+            if (model.IsCupDraw)
+            {
+                allTeams = allTeams.Where(x => x.isDrawed == false && x.IsCupParticipant).ToList();
+                var CupTeams = helper.FillTeams(allTeams, model);
+                var CupFixtures = helper.FillFixtures(allTeams, model);
+                draw = helper.CreateDraw(currentGame, CupTeams, CupFixtures);
             }
 
-            for (int i = 0; i < model.NumberOfTeams / 2; i++)
-            {
-                var newFixture = new Fixture();
-                fixtures.Add(newFixture);
-            }
-            this.data.Fixtures.AddRange(fixtures);
-
-            var newDraw = new Draw
-            {
-                Teams = teams,
-
-                Fixtures = fixtures,
-                IsDrawStarted = true
-            };
-
-            this.data.Draws.Add(newDraw);
-            this.data.SaveChanges();
-            return newDraw;
+            return draw;
         }
-        public void AutomaticFill(Draw currentDraw)
-        {
-            var remainingTeams = this.GetRemainingTeams(currentDraw);
-
-            while (remainingTeams.Count > 0)
-            {
-                remainingTeams = this.GetRemainingTeams(currentDraw);
-                var randomDrawTeam = remainingTeams[rnd.Next(0, remainingTeams.Count)];
-
-                foreach (var fixture in currentDraw.Fixtures)
-                {
-                    if (fixture.HomeTeamId == null)
-                    {
-                        fixture.HomeTeamId = randomDrawTeam.Id;
-                        fixture.HomeTeamName = randomDrawTeam.Name;
-                        this.data.SaveChanges();
-                        break;
-                    }
-                    else if (fixture.AwayTeamId == null)
-                    {
-                        fixture.AwayTeamId = randomDrawTeam.Id;
-                        fixture.AwayTeamName = randomDrawTeam.Name;
-                        this.data.SaveChanges();
-                        break;
-                    }
-                }
-                randomDrawTeam.isDrawed = true;
-                remainingTeams = this.GetRemainingTeams(currentDraw);
-            }
-            this.data.SaveChanges();
-        }
+        
         public void FillEliminationTable(Draw currentDraw, VirtualTeam team)
         {
             throw new NotImplementedException();
@@ -102,7 +75,7 @@
             for (int i = 0; i < numOfTeams; i++)
             {
                 var team = allTeams[rnd.Next(0, allTeams.Count)];
-                while (IsExist(team, teams))
+                while (helper.IsExist(team, teams))
                 {
                     team = allTeams[rnd.Next(0, allTeams.Count)];
                 }
@@ -135,10 +108,7 @@
             this.data.SaveChanges();
             return newDraw;
         }
-        public void AutoCompleteGroup(Draw currentDraw)
-        {
-
-        }
+      
         public (string, string) FillGroupTable(Draw currentDraw, VirtualTeam team)
         {
             var allDrawLeagues = this.data.Leagues.Where(x => x.DrawId == currentDraw.Id).ToList();
@@ -155,7 +125,7 @@
             }
             this.data.SaveChanges();
             return (team.Name, currentLeagueName);
-        }        
+        }
 
         //Common
         public VirtualTeam DrawTeam(Draw currentDraw)
@@ -169,7 +139,7 @@
         public Draw GetDrawById(int id) => this.data.Draws
       .Include(draw => draw.Teams)
       .Include(draw => draw.Fixtures)
-      .FirstOrDefault(x => x.Id == id);      
+      .FirstOrDefault(x => x.Id == id);
         public List<VirtualTeam> GetRemainingTeams(Draw currentDraw)
         {
             var currentDrawTeams = currentDraw.Teams;
@@ -191,19 +161,18 @@
             this.data.Draws.RemoveRange(allDraws);
             this.data.SaveChanges();
         }
-        private bool IsExist(VirtualTeam team, List<VirtualTeam> teams)
+
+        public (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) GetCurrentDrawDay(Game currentGame)
         {
-            if (teams.Contains(team))
-            {
-                return true;
-            }
+            var europeanTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsEuroParticipant != false).ToList();
+            var bulgarianCupTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsCupParticipant != false).ToList();
 
-            return false;
+            var areChampionsCupNotDrawedTeams = europeanTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false);
+            var areEuropeanCupNotDrawedTeams = europeanTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false);
+            var areCupNotDrawedTeams = bulgarianCupTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false);
+
+            return (areChampionsCupNotDrawedTeams, areEuropeanCupNotDrawedTeams, areCupNotDrawedTeams);
         }
-
-      
-
-
     }
 }
 

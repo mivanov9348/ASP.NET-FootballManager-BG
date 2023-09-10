@@ -42,7 +42,7 @@
         {
             CurrentUser();
             var currentGame = serviceAggregator.gameService.GetCurrentGame(userId);          
-            serviceAggregator.calendarService.NextDay(currentGame);
+            serviceAggregator.calendarService.ContinueToNextDay(currentGame);
             var currentDate = serviceAggregator.calendarService.GetCurrentDate(currentGame);
             var newCalendarModel = serviceAggregator.modelService.GetCalendarViewModel(currentDate.month);
         

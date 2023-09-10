@@ -49,21 +49,6 @@ namespace FootballManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Draws",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NumOfGroups = table.Column<int>(type: "int", nullable: true),
-                    TeamsPergroup = table.Column<int>(type: "int", nullable: true),
-                    IsDrawStarted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Draws", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -290,6 +275,47 @@ namespace FootballManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Days",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DayOrder = table.Column<int>(type: "int", nullable: false),
+                    WeekDayOrder = table.Column<int>(type: "int", nullable: false),
+                    IsMatchDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsEuroCupDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsCupDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsLeagueDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsDrawDay = table.Column<bool>(type: "bit", nullable: false),
+                    IsPlayed = table.Column<bool>(type: "bit", nullable: false),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    MonthId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    WeekId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Days", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Draws",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NumOfGroups = table.Column<int>(type: "int", nullable: true),
+                    TeamsPergroup = table.Column<int>(type: "int", nullable: true),
+                    IsDrawStarted = table.Column<bool>(type: "bit", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Draws", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Leagues",
                 columns: table => new
                 {
@@ -316,31 +342,6 @@ namespace FootballManager.Infrastructure.Migrations
                         principalTable: "Nations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Days",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DayOrder = table.Column<int>(type: "int", nullable: false),
-                    WeekDayOrder = table.Column<int>(type: "int", nullable: false),
-                    isMatchDay = table.Column<bool>(type: "bit", nullable: false),
-                    isEuroCupDay = table.Column<bool>(type: "bit", nullable: false),
-                    isCupDay = table.Column<bool>(type: "bit", nullable: false),
-                    isLeagueDay = table.Column<bool>(type: "bit", nullable: false),
-                    IsDrawDay = table.Column<bool>(type: "bit", nullable: false),
-                    IsPlayed = table.Column<bool>(type: "bit", nullable: false),
-                    YearId = table.Column<int>(type: "int", nullable: false),
-                    MonthId = table.Column<int>(type: "int", nullable: false),
-                    GameId = table.Column<int>(type: "int", nullable: false),
-                    WeekId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Days", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -477,9 +478,9 @@ namespace FootballManager.Infrastructure.Migrations
                     ManagerId = table.Column<int>(type: "int", nullable: false),
                     TeamId = table.Column<int>(type: "int", nullable: false),
                     GameOptionId = table.Column<int>(type: "int", nullable: false),
-                    Season = table.Column<int>(type: "int", nullable: false),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    Day = table.Column<int>(type: "int", nullable: false),
+                    CurrentYearOrder = table.Column<int>(type: "int", nullable: false),
+                    CurrentMonthOrder = table.Column<int>(type: "int", nullable: false),
+                    CurrentDayOrder = table.Column<int>(type: "int", nullable: false),
                     LeagueRound = table.Column<int>(type: "int", nullable: false),
                     EuroCupRound = table.Column<int>(type: "int", nullable: false),
                     CupRound = table.Column<int>(type: "int", nullable: false)
@@ -1014,6 +1015,11 @@ namespace FootballManager.Infrastructure.Migrations
                 column: "YearId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Draws_GameId",
+                table: "Draws",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DrawVirtualTeam_TeamsId",
                 table: "DrawVirtualTeam",
                 column: "TeamsId");
@@ -1296,6 +1302,14 @@ namespace FootballManager.Infrastructure.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_Draws_Games_GameId",
+                table: "Draws",
+                column: "GameId",
+                principalTable: "Games",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_DrawVirtualTeam_VirtualTeams_TeamsId",
                 table: "DrawVirtualTeam",
                 column: "TeamsId",
@@ -1353,6 +1367,10 @@ namespace FootballManager.Infrastructure.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Teams_Nations_NationId",
                 table: "Teams");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Draws_Games_GameId",
+                table: "Draws");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_EuropeanCups_Games_GameId",
