@@ -22,31 +22,34 @@
             CurrentUser();
             var currentGame = serviceAggregator.gameService.GetCurrentGame(userId);
             (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = serviceAggregator.drawService.GetCurrentDrawDay(currentGame);
+            var currentEuropeanCups = serviceAggregator.euroCupService.GetYearEuropeanCups(currentGame);
             var newDrawModel = new DrawViewModel();
 
             if (isChampionsCupDraw)
             {
+                var championsCup = currentEuropeanCups.FirstOrDefault(x => x.Rank == 1);
                 newDrawModel.IsChampionsCupDraw = isChampionsCupDraw;
                 newDrawModel.NumberOfTeams = DataConstants.ChampionsCup.Participants;
-                var draw = serviceAggregator.drawService.CreateEliminationDraw(currentGame, newDrawModel);
+                var draw = serviceAggregator.drawService.CreateContinentalCupEliminationDraw(currentGame, newDrawModel, championsCup);
                 var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
-                drawModel.IsChampionsCupDraw = false;
                 return View("EliminationDraw", drawModel);
             }
             if (isEuropeanCupDraw)
             {
+                var EuroCup = currentEuropeanCups.FirstOrDefault(x => x.Rank == 2);
                 newDrawModel.IsEuropeanCupDraw = isEuropeanCupDraw;
                 newDrawModel.NumberOfTeams = DataConstants.EuroCup.Participants;
-                var draw = serviceAggregator.drawService.CreateEliminationDraw(currentGame, newDrawModel);
+                var draw = serviceAggregator.drawService.CreateContinentalCupEliminationDraw(currentGame, newDrawModel, EuroCup);
                 var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
                 drawModel.IsEuropeanCupDraw = false;
                 return View("EliminationDraw", drawModel);
             }
             if (isCupDraw)
             {
+                var cup = serviceAggregator.cupService.GetCurrentCup(currentGame);
                 newDrawModel.IsCupDraw = isCupDraw;
-                newDrawModel.NumberOfTeams = DataConstants.Cup.Participants;
-                var draw = serviceAggregator.drawService.CreateEliminationDraw(currentGame, newDrawModel);
+                newDrawModel.NumberOfTeams = DataConstants.BulgarianCup.Participants;
+                var draw = serviceAggregator.drawService.CreateNationalCupEliminationDraw(currentGame, newDrawModel, cup);
                 var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
                 drawModel.IsCupDraw = false;
                 return View("EliminationDraw");
@@ -55,8 +58,6 @@
             return RedirectToAction("Index", "Inbox");
         }
 
-    
-        
         public IActionResult EliminationDraw(DrawViewModel model, int drawId)
         {
             var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
@@ -65,27 +66,29 @@
             if (remainingTeams.Count > 0)
             {
                 var drawedTeam = this.serviceAggregator.drawService.DrawTeam(currentDraw);
-               // this.serviceAggregator.drawService.FillEliminationTable(currentDraw, drawedTeam);
+                this.serviceAggregator.drawService.FillEliminationFixtures(currentDraw, drawedTeam);
                 remainingTeams = this.serviceAggregator.drawService.GetRemainingTeams(currentDraw);
             }
 
             if (remainingTeams.Count == 0)
             {
-                currentDraw.IsDrawStarted = false;               
+                currentDraw.IsDrawStarted = false;
             }
 
             var drawViewModel = this.serviceAggregator.modelService.GetDrawViewModel(currentDraw);
             return View("EliminationDraw", drawViewModel);
         }
-
-        public IActionResult ResetEliminationDraw(GroupDrawViewModel model)
+        public IActionResult SaveDraw(int drawId)
         {
-            this.serviceAggregator.drawService.DeleteDraws();
-            return View("EliminationDraw", new DrawViewModel
-            {
-                IsDrawStarted = false
-            });
+            // CurrentUser();
+            // var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
+            // var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
+
+
+
+            return RedirectToAction("Index", "Inbox");
         }
+
 
         //Group Draw
 

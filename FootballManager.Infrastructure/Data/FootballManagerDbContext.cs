@@ -27,7 +27,7 @@
         public DbSet<Inbox> Inboxes { get; set; }
         public DbSet<Fixture> Fixtures { get; set; }
         public DbSet<Match> Matches { get; set; }
-        public DbSet<EuropeanCup> EuropeanCups { get; set; }
+        public DbSet<ContinentalCup> ContinentalCups { get; set; }
         public DbSet<Cup> Cups { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<GameOption> GameOptions { get; set; }

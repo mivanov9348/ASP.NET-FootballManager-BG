@@ -27,6 +27,11 @@ namespace FootballManager.Infrastructure.Data.Configurations
                    .WithOne(x => x.Draw)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasMany(x => x.ContinentalCups)
+                   .WithMany(x => x.Draws);
+
+            builder.HasMany(x => x.DomesticCups)
+           .WithMany(x => x.Draws);
         }
     }
 }

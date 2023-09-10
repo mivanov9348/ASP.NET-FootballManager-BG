@@ -18,7 +18,7 @@
         public int? CupId { get; set; }
         public Cup Cup { get; set; }        
         public int? EuropeanCupId { get; set; }
-        public EuropeanCup EuropeanCup { get; set; }
+        public ContinentalCup EuropeanCup { get; set; }
         public int? DrawId { get; set; }
         public Draw Draw { get; set; }
         public virtual VirtualTeam HomeTeam { get; set; }

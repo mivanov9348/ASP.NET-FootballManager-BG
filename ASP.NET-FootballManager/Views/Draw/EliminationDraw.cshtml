@@ -95,26 +95,14 @@
 
         .FinalizeButton {
             background-color: blue;
-            color:white;
+            color: white;
         }
     </style>
 </head>
 <body>
     <form method="post">
         <h1 class="title">Elimination Draw</h1>
-        @if (!Model.IsDrawStarted)
-        {
-            <hr />
-            <select id="groupSelect" asp-for="@Model.NumberOfTeams">
-                <option value="">Teams</option>
-                <option value="4">4</option>
-                <option value="8">8</option>
-                <option value="16">16</option>
-                <option value="32">32</option>
-            </select>
-            <input type="submit" value="Generate" asp-action="GenerateEliminationDraw" />
-            <hr />
-        }
+
 
         <div class="teams-list">
             @foreach (var item in @Model.RemainingTeams)
@@ -128,8 +116,9 @@
         {
             <input type="submit" value="Draw Теам" class="drawButton" asp-action="EliminationDraw" asp-route-drawId="@Model.CurrentDrawId" />
         }
-        else{
-            <input type="submit" value="To Main Menu" class="drawButton" asp-action="Index" asp-controller="Inbox" asp-route-drawId="@Model.CurrentDrawId" />
+        else
+        {
+            <input type="submit" value="To Main Menu" class="drawButton" asp-action="SaveDraw" asp-route-drawId="@Model.CurrentDrawId" />
         }
         <table>
             <tr>

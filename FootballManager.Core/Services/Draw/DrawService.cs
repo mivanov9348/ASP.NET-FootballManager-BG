@@ -3,14 +3,8 @@
     using ASP.NET_FootballManager.Data;
     using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Draw;
-    using System.Runtime.CompilerServices;
     using Microsoft.EntityFrameworkCore;
-    using Newtonsoft.Json.Linq;
-    using FootballManager.Infrastructure.Data.DataModels.Calendar;
-    using System.Security.Cryptography.X509Certificates;
     using FootballManager.Core.Services.Calendar;
-    using ASP.NET_FootballManager.Data.Constant;
-
     public class DrawService : IDrawService
     {
         private Random rnd;
@@ -27,40 +21,53 @@
         }
 
         //Elimination Draw
-        public Draw CreateEliminationDraw(Game currentGame, DrawViewModel model)
+        public Draw CreateContinentalCupEliminationDraw(Game currentGame, DrawViewModel model, ContinentalCup currentCup)
         {
-            var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id).ToList();
+            var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id &&  x.IsEuroParticipant && x.isDrawed == false).ToList();
+            var currentDay = calendarService.GetCurrentDate(currentGame);
+
             var draw = new Draw();
 
-            if (model.IsChampionsCupDraw)
-            {
-                allTeams = allTeams.Where(x => x.IsEuroParticipant && x.isDrawed == false).ToList();
-                var championsCupTeams = helper.FillTeams(allTeams, model);
-                var championsCupFixtures = helper.FillFixtures(allTeams, model);
-                draw = helper.CreateDraw(currentGame, championsCupTeams, championsCupFixtures);
-            }
-            if (model.IsEuropeanCupDraw)
-            {
-                allTeams = allTeams.Where(x => x.IsEuroParticipant && x.isDrawed == false).ToList();
-                var europeanCupTeams = helper.FillTeams(allTeams, model);
-                var europeanCupFixtures = helper.FillFixtures(allTeams, model);
-                draw = helper.CreateDraw(currentGame, europeanCupTeams, europeanCupFixtures);
-
-            }
-            if (model.IsCupDraw)
-            {
-                allTeams = allTeams.Where(x => x.isDrawed == false && x.IsCupParticipant).ToList();
-                var CupTeams = helper.FillTeams(allTeams, model);
-                var CupFixtures = helper.FillFixtures(allTeams, model);
-                draw = helper.CreateDraw(currentGame, CupTeams, CupFixtures);
-            }
+            var currentCupTeams = helper.FillTeams(allTeams, model);
+            var currentCupFixtures = helper.FillFixtures(allTeams, model);
+            draw = helper.CreateDraw(currentGame, currentCupTeams, currentCupFixtures);
 
             return draw;
         }
-        
-        public void FillEliminationTable(Draw currentDraw, VirtualTeam team)
+        public Draw CreateNationalCupEliminationDraw(Game currentGame, DrawViewModel model, Cup currentCup)
         {
-            throw new NotImplementedException();
+            var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsCupParticipant && x.isDrawed == false).ToList();
+            var currentDay = calendarService.GetCurrentDate(currentGame);
+
+            var draw = new Draw();
+
+            var currentCupTeams = helper.FillTeams(allTeams, model);
+            var currentCupFixtures = helper.FillFixtures(allTeams, model);
+            draw = helper.CreateDraw(currentGame, currentCupTeams, currentCupFixtures);
+            return draw;
+        }
+
+        public void FillEliminationFixtures(Draw currentDraw, VirtualTeam team)
+        {
+            foreach (var fixture in currentDraw.Fixtures)
+            {
+                if (fixture.HomeTeamId == null)
+                {
+                    fixture.HomeTeamName = team.Name;
+                    fixture.HomeTeam = team;
+                    fixture.HomeTeamId = team.Id;
+                    this.data.SaveChanges();
+                    break;
+                }
+                else if (fixture.AwayTeamId == null)
+                {
+                    fixture.AwayTeamName = team.Name;
+                    fixture.AwayTeam = team;
+                    fixture.AwayTeamId = team.Id;
+                    this.data.SaveChanges();
+                    break;
+                }
+            }
         }
 
         //Group Draw
@@ -108,7 +115,7 @@
             this.data.SaveChanges();
             return newDraw;
         }
-      
+
         public (string, string) FillGroupTable(Draw currentDraw, VirtualTeam team)
         {
             var allDrawLeagues = this.data.Leagues.Where(x => x.DrawId == currentDraw.Id).ToList();
@@ -131,15 +138,13 @@
         public VirtualTeam DrawTeam(Draw currentDraw)
         {
             var remainingTeams = this.GetRemainingTeams(currentDraw);
-            var randomDrawTeam = new VirtualTeam();
-            randomDrawTeam = remainingTeams[rnd.Next(0, remainingTeams.Count)];
-
+            var randomDrawTeam = remainingTeams[rnd.Next(0, remainingTeams.Count)];
             return randomDrawTeam;
         }
         public Draw GetDrawById(int id) => this.data.Draws
-      .Include(draw => draw.Teams)
-      .Include(draw => draw.Fixtures)
-      .FirstOrDefault(x => x.Id == id);
+                                           .Include(draw => draw.Teams)
+                                           .Include(draw => draw.Fixtures)
+                                           .FirstOrDefault(x => x.Id == id);
         public List<VirtualTeam> GetRemainingTeams(Draw currentDraw)
         {
             var currentDrawTeams = currentDraw.Teams;
@@ -167,12 +172,17 @@
             var europeanTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsEuroParticipant != false).ToList();
             var bulgarianCupTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsCupParticipant != false).ToList();
 
-            var areChampionsCupNotDrawedTeams = europeanTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false);
-            var areEuropeanCupNotDrawedTeams = europeanTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false);
+            var championsCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 1);
+            var europeanCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 2);
+
+            var areChampionsCupNotDrawedTeams = europeanTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false && x.EuropeanCup.Id == championsCup.Id);
+            var areEuropeanCupNotDrawedTeams = europeanTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false && x.EuropeanCup.Id == europeanCup.Id);
             var areCupNotDrawedTeams = bulgarianCupTeams.Any(x => x.GameId == currentGame.Id && x.isDrawed == false);
 
             return (areChampionsCupNotDrawedTeams, areEuropeanCupNotDrawedTeams, areCupNotDrawedTeams);
         }
+
+       
     }
 }
 

@@ -7,13 +7,15 @@
     public interface IDrawService
     {
         (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) GetCurrentDrawDay(Game currentGame);
-        Draw CreateEliminationDraw(Game currentGame,DrawViewModel model);
+        Draw CreateContinentalCupEliminationDraw(Game currentGame,DrawViewModel model, ContinentalCup currentCup);
+        Draw CreateNationalCupEliminationDraw(Game currentGame, DrawViewModel model, Cup currentCup);
+
         Draw CreateGroupDraw(GroupDrawViewModel model, Game currentGame);
         VirtualTeam DrawTeam(Draw currentDraw);
         (string,string) FillGroupTable(Draw currentDraw,VirtualTeam team);
         void DeleteDraws();
         Draw GetDrawById(int id);
         List<VirtualTeam> GetRemainingTeams(Draw currentDraw);
-
+        void FillEliminationFixtures(Draw currentDraw, VirtualTeam drawedTeam);
     }
 }

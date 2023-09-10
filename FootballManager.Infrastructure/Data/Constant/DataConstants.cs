@@ -81,9 +81,9 @@
             public const int Participants = 32;
             public const int Rounds = 5;
         }
-        public class Cup
+        public class BulgarianCup
         {
-            public const string Name = "Cup";         
+            public const string Name = "Bulgarian Cup";         
             public const int Participants = 64;
             public const int Rounds = 6;
         }

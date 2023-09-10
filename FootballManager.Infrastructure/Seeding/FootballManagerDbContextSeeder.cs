@@ -32,7 +32,6 @@ namespace FootballManager.Infrastructure.Seeding
                               new NationsSeeder(),
                               new CitiesSeeder(),
                               new LeaguesSeeder(),                            
-                              new CupsSeeder(),
                               new PositionsSeeder(),
                               new TeamsSeeder()
                           };

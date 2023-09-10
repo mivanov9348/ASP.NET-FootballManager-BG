@@ -3,16 +3,15 @@
     using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    public class EuropeanCupConfiguration : IEntityTypeConfiguration<EuropeanCup>
+    public class ContinentalCupConfiguration : IEntityTypeConfiguration<ContinentalCup>
     {
-        public void Configure(EntityTypeBuilder<EuropeanCup> builder)
+        public void Configure(EntityTypeBuilder<ContinentalCup> builder)
         {
             builder.HasKey(x => x.Id);
 
             builder.HasOne(x => x.Game)
                    .WithMany(x => x.EuropeanCups)
                    .HasForeignKey(x => x.GameId);
-
 
             builder.HasMany(x => x.Teams)
                    .WithOne(x => x.EuropeanCup)
@@ -25,6 +24,9 @@
             builder.HasMany(x => x.VirtualTeams)
                    .WithOne(x => x.EuropeanCup)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.Draws)
+                    .WithMany(x => x.ContinentalCups);
         }
     }
 }

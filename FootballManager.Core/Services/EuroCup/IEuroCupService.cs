@@ -12,10 +12,11 @@
         void FillEuroCupParticipants(Game game);
         void CheckWinner(Fixture currentFixture);
         void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture);
-        Task<EuropeanCup> GetEuropeanCup(int cupId);
-        Task<List<EuropeanCup>> AllEuroCups();
+        Task<ContinentalCup> GetEuropeanCup(int cupId);
+        Task<List<ContinentalCup>> AllEuroCups();
         Task<VirtualTeam> GetChampionsCupWinner(Game game);
         Task<VirtualTeam> GetEuroCupWinner(Game game);
         Task<List<Fixture>> GetEuroCupFixtures(Game CurrentGame, int euroCupRank);
+        List<ContinentalCup> GetYearEuropeanCups(Game currentGame);
     }
 }

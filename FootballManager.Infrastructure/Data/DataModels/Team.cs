@@ -20,7 +20,7 @@
         public int? CupId { get; set; }
         public Cup Cup { get; set; }
         public int? EuropeanCupId { get; set; }
-        public EuropeanCup EuropeanCup { get; set; }
+        public ContinentalCup EuropeanCup { get; set; }
         public bool IsEuroParticipant { get; set; }
         public bool IsCupParticipant { get; set; }
         public bool IsPlayable { get; set; }

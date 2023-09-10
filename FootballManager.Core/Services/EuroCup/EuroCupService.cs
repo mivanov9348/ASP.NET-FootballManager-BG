@@ -28,7 +28,7 @@
         }
         public void CreateChampionsCup(Game game, Year year)
         {
-            var newChampionsLeague = new EuropeanCup
+            var newChampionsLeague = new ContinentalCup
             {
                 Name = DataConstants.ChampionsCup.Name,
                 Rank = DataConstants.ChampionsCup.Rank,
@@ -38,12 +38,12 @@
                 Rounds = DataConstants.ChampionsCup.Rounds,
                 Year = year.YearOrder
             };
-            this.data.EuropeanCups.Add(newChampionsLeague);
+            this.data.ContinentalCups.Add(newChampionsLeague);
             this.data.SaveChanges();
         }
         public void CreateEuroCup(Game game, Year year)
         {
-            var newEuroCup = new EuropeanCup
+            var newEuroCup = new ContinentalCup
             {
                 Name = DataConstants.EuroCup.Name,
                 Rank = DataConstants.EuroCup.Rank,
@@ -53,17 +53,17 @@
                 Rounds = DataConstants.EuroCup.Rounds,
                 Year = year.YearOrder
             };
-            this.data.EuropeanCups.Add(newEuroCup);
+            this.data.ContinentalCups.Add(newEuroCup);
             this.data.SaveChanges();
         }
         public void FillChampionsCupParticipants(Game game)
         {
-            var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
+            var championsCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 1);
             this.helpers.FillEuropeanCompetitions(championsCup);
         }
         public void FillEuroCupParticipants(Game game)
         {
-            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
+            var euroCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 2);
             this.helpers.FillEuropeanCompetitions(euroCup);
         }
         public void CalculateOtherMatches(List<Fixture> dayFixtures, Fixture currentFixture)
@@ -99,11 +99,11 @@
             this.data.SaveChanges();
         }
 
-        public async Task<List<EuropeanCup>> AllEuroCups() => await Task.Run(() => this.data.EuropeanCups.ToList());
-        public async Task<EuropeanCup> GetEuropeanCup(int cupId) => await Task.Run(() => this.data.EuropeanCups.FirstOrDefault(x => x.Id == cupId));
+        public async Task<List<ContinentalCup>> AllEuroCups() => await Task.Run(() => this.data.ContinentalCups.ToList());
+        public async Task<ContinentalCup> GetEuropeanCup(int cupId) => await Task.Run(() => this.data.ContinentalCups.FirstOrDefault(x => x.Id == cupId));
         public async Task<VirtualTeam> GetChampionsCupWinner(Game game)
         {
-            var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
+            var championsCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 1);
             var finalMatch = this.data.Fixtures.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == game.Id && x.EuropeanCupId == championsCup.Id);
             var winner = this.data.VirtualTeams.FirstOrDefault(x => x.Id == finalMatch.WinnerTeamId);
             winner.ChampionsCup += 1;
@@ -112,7 +112,7 @@
         }
         public async Task<VirtualTeam> GetEuroCupWinner(Game game)
         {
-            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
+            var euroCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 2);
             var finalMatch = this.data.Fixtures.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == game.Id && x.EuropeanCupId == euroCup.Id);
             var winner = this.data.VirtualTeams.FirstOrDefault(x => x.Id == finalMatch.WinnerTeamId);
             winner.EuroCups += 1;
@@ -120,5 +120,13 @@
         }
         public async Task<List<Fixture>> GetEuroCupFixtures(Game CurrentGame, int euroCupRank) => await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.EuropeanCupId == euroCupRank).ToList());
 
+        public List<ContinentalCup> GetYearEuropeanCups(Game currentGame)
+        {
+            var currentYear = this.data.Years.FirstOrDefault(x => x.YearOrder == currentGame.CurrentYearOrder && x.GameId == currentGame.Id);
+            return this.data.ContinentalCups.Where(x => x.Year == currentYear.YearOrder).ToList();
+        
+        
+        
+        }
     }
 }

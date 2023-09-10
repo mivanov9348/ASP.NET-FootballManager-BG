@@ -21,7 +21,7 @@
             var teams = await serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
             var league = await serviceAggregator.leagueService.GetLeague(esvm.LeagueId);
             var euroCup = await serviceAggregator.euroCupService.GetEuropeanCup(esvm.EuroCupId);
-            var cup = await serviceAggregator.cupService.GetCurrentCup();
+            var cup =  serviceAggregator.cupService.GetCurrentCup(CurrentGame);
             var cupWinner = await serviceAggregator.cupService.GetWinner(CurrentGame);
             var championsCupWinner = await serviceAggregator.euroCupService.GetChampionsCupWinner(CurrentGame);
             var euroCupWinner = await serviceAggregator.euroCupService.GetEuroCupWinner(CurrentGame);

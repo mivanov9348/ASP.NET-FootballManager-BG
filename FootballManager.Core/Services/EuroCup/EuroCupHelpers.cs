@@ -18,7 +18,7 @@
             this.data = data;
             this.rnd = new Random();
         }
-        public void FillEuropeanCompetitions(EuropeanCup currentCup)
+        public void FillEuropeanCompetitions(ContinentalCup currentCup)
         {
             var allTeams = this.data.VirtualTeams.Where(x => x.IsEuroParticipant == true && x.EuropeanCupId == null && x.GameId == currentCup.GameId).ToList();
             var euroBgTeams = this.data.VirtualTeams.Where(x => x.GameId == currentCup.GameId && x.League.Nation.Name == "Bulgaria" && x.IsEuroParticipant == true).ToList();

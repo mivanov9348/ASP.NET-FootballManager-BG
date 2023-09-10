@@ -154,8 +154,8 @@
         public async Task PromotedRelegated(Game CurrentGame)
         {
             var leagues = this.data.Leagues.ToList();
-            var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
-            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
+            var championsCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 1);
+            var euroCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 2);
 
             foreach (var league in leagues)
             {

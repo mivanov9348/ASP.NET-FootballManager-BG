@@ -18,14 +18,14 @@
         }
 
         internal Draw CreateDraw(Game currentGame, List<VirtualTeam> currentCupTeams, List<Fixture> currentFixtures)
-        {
+        {            
             var newDraw = new Draw
             {
                 Teams = currentCupTeams,
                 Game = currentGame,
                 GameId = currentGame.Id,
                 Fixtures = currentFixtures,
-                IsDrawStarted = true
+                IsDrawStarted = true                
             };
 
             this.data.Draws.Add(newDraw);

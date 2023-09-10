@@ -1,6 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Services.Cup
 {
     using ASP.NET_FootballManager.Data;
+    using ASP.NET_FootballManager.Data.Constant;
     using FootballManager.Infrastructure.Data.DataModels;
     using System.Collections.Generic;
 
@@ -13,11 +14,29 @@
             this.data = data;
             this.rnd = new Random();
         }
-        public void GenerateCupParticipants(Game curentGame)
+        public void CreateCups(Game currentGame)
         {
-            RemoveAllTeamsFromCup(curentGame);
-            var currentCup = this.data.Cups.First();
-            var teamsParticipants = this.data.VirtualTeams.Where(x => x.League.Nation.Name == "Bulgaria" && x.GameId == curentGame.Id).ToList();
+            var currentNation = this.data.Nations.FirstOrDefault(x => x.Id == 1);
+            var newCup = new Cup
+            {
+                Participants = DataConstants.BulgarianCup.Participants,
+                Game = currentGame,
+                GameId = currentGame.Id,
+                Name = DataConstants.BulgarianCup.Name,
+                Rounds = DataConstants.BulgarianCup.Rounds,
+                Nation = currentNation,
+                NationId = currentNation.Id,
+                YearOrder = currentGame.CurrentYearOrder
+            };
+
+            this.data.Cups.Add(newCup);
+            this.data.SaveChanges();
+        }
+        public void GenerateCupParticipants(Game currentGame)
+        {
+            RemoveAllTeamsFromCup(currentGame);
+            var currentCup = this.data.Cups.FirstOrDefault(x => x.GameId == currentGame.Id && x.YearOrder == currentGame.CurrentYearOrder);
+            var teamsParticipants = this.data.VirtualTeams.Where(x => x.League.Nation.Name == "Bulgaria" && x.GameId == currentGame.Id).ToList();
 
             foreach (var team in teamsParticipants)
             {
@@ -118,16 +137,22 @@
             this.data.SaveChanges();
         }
 
-        public async Task<Cup> GetCurrentCup() => await Task.Run(() => this.data.Cups.First());
+        public Cup GetCurrentCup(Game currentGame)
+        {
+            return this.data.Cups.FirstOrDefault(x => x.GameId == currentGame.Id && x.YearOrder == currentGame.CurrentYearOrder);
+        }
+
         public async Task<VirtualTeam> GetWinner(Game game)
         {
             var cup = this.data.Cups.FirstOrDefault();
             var finalMatch = this.data.Fixtures.OrderByDescending(x => x.Id).FirstOrDefault(x => x.GameId == game.Id && x.CupId == cup.Id);
             var winner = this.data.VirtualTeams.FirstOrDefault(x => x.Id == finalMatch.WinnerTeamId);
             winner.Cups += 1;
-            this.data.SaveChanges();    
+            this.data.SaveChanges();
             return await Task.Run(() => winner);
         }
         public async Task<List<Fixture>> GetCupFixtures(Game CurrentGame) => await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.CupId != null).ToList());
+
+
     }
 }

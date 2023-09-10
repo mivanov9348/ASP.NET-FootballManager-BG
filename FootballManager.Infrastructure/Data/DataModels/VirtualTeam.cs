@@ -12,9 +12,9 @@
         public int? LeagueId { get; set; }
         public League League { get; set; }
         public int? CupId { get; set; }
-        public Cup Cup { get; set; }
+        public Cup Cup { get; set; } 
         public int? EuropeanCupId { get; set; }
-        public EuropeanCup EuropeanCup { get; set; }
+        public ContinentalCup EuropeanCup { get; set; }
         public int Matches { get; set; }
         public int Wins { get; set; }
         public int Draws { get; set; }
