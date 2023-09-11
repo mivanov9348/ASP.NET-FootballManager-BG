@@ -49,7 +49,7 @@
                 var cup = serviceAggregator.cupService.GetCurrentCup(currentGame);
                 newDrawModel.IsCupDraw = isCupDraw;
                 newDrawModel.NumberOfTeams = DataConstants.BulgarianCup.Participants;
-                var draw = serviceAggregator.drawService.CreateNationalCupEliminationDraw(currentGame, newDrawModel, cup);
+                var draw = serviceAggregator.drawService.CreateDomesticCupEliminationDraw(currentGame, newDrawModel, cup);
                 var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
                 drawModel.IsCupDraw = false;
                 return View("EliminationDraw");
@@ -80,11 +80,12 @@
         }
         public IActionResult SaveDraw(int drawId)
         {
-            // CurrentUser();
-            // var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
-            // var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
-
-
+            CurrentUser();
+            var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
+            var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
+            var currentDates = this.serviceAggregator.calendarService.GetCurrentDate(currentGame);         
+        
+            serviceAggregator.drawService.SaveDraw(currentDraw);
 
             return RedirectToAction("Index", "Inbox");
         }

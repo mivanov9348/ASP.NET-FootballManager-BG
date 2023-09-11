@@ -8,7 +8,7 @@
     {
         (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) GetCurrentDrawDay(Game currentGame);
         Draw CreateContinentalCupEliminationDraw(Game currentGame,DrawViewModel model, ContinentalCup currentCup);
-        Draw CreateNationalCupEliminationDraw(Game currentGame, DrawViewModel model, Cup currentCup);
+        Draw CreateDomesticCupEliminationDraw(Game currentGame, DrawViewModel model, Cup currentCup);
 
         Draw CreateGroupDraw(GroupDrawViewModel model, Game currentGame);
         VirtualTeam DrawTeam(Draw currentDraw);
@@ -17,5 +17,6 @@
         Draw GetDrawById(int id);
         List<VirtualTeam> GetRemainingTeams(Draw currentDraw);
         void FillEliminationFixtures(Draw currentDraw, VirtualTeam drawedTeam);
+        void SaveDraw(Draw currentDraw);
     }
 }

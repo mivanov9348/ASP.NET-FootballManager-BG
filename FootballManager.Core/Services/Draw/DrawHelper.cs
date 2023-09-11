@@ -4,8 +4,10 @@
     using FootballManager.Core.Models.Draw;
     using FootballManager.Core.Services.Fixture;
     using FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     internal class DrawHelper
     {
@@ -17,15 +19,35 @@
             this.rnd = new Random();
         }
 
-        internal Draw CreateDraw(Game currentGame, List<VirtualTeam> currentCupTeams, List<Fixture> currentFixtures)
-        {            
+
+        internal Draw CreateContinentalCupDraw(Game currentGame, List<Fixture> currentFixtures, ContinentalCup currentCup)
+        {
+            var currentTeams = this.data.VirtualTeams.Where(x => x.EuropeanCupId == currentCup.Id).ToList();
+            var newDraw = new Draw
+            {
+                Teams = currentTeams,
+                Game = currentGame,
+                GameId = currentGame.Id,
+                Fixtures = currentFixtures,
+                ContinentalCupId = currentCup.Id,
+                IsDrawStarted = true
+            };
+
+            this.data.Draws.Add(newDraw);
+            this.data.SaveChanges();
+            return newDraw;
+        }
+
+        internal Draw CreateDomesticCupDraw(Game currentGame, List<VirtualTeam> currentCupTeams, List<Fixture> currentFixtures, Cup currentCup)
+        {
             var newDraw = new Draw
             {
                 Teams = currentCupTeams,
                 Game = currentGame,
                 GameId = currentGame.Id,
                 Fixtures = currentFixtures,
-                IsDrawStarted = true                
+                CupId = currentCup.Id,
+                IsDrawStarted = true
             };
 
             this.data.Draws.Add(newDraw);
@@ -36,14 +58,18 @@
         internal List<Fixture> FillFixtures(List<VirtualTeam> allTeams, DrawViewModel model)
         {
             var fixtures = new List<Fixture>();
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == allTeams.First().GameId);
 
             for (int i = 0; i < model.NumberOfTeams / 2; i++)
             {
-                var newFixture = new Fixture();
+                var newFixture = new Fixture
+                {
+                    GameId = currentGame.Id
+                };
                 fixtures.Add(newFixture);
             }
             this.data.Fixtures.AddRange(fixtures);
-
+            this.data.SaveChanges();
             return fixtures;
         }
 
@@ -57,9 +83,13 @@
                 while (IsExist(team, teams))
                 {
                     team = allTeams[rnd.Next(0, allTeams.Count)];
+                    
                 }
+
+                team.isDrawed = false;
                 teams.Add(team);
             }
+            this.data.SaveChanges();
             return teams;
         }
 

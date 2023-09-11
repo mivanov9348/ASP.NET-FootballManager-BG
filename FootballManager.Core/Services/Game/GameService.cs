@@ -80,6 +80,9 @@
                 this.data.Weeks.RemoveRange(this.data.Weeks.Where(x => x.GameId == userGame.Id).ToList());
                 this.data.Months.RemoveRange(this.data.Months.Where(x => x.GameId == userGame.Id).ToList());
                 this.data.Years.RemoveRange(this.data.Years.Where(x => x.GameId == userGame.Id).ToList());
+                this.data.Cups.RemoveRange(this.data.Cups.Where(x => x.GameId == userGame.Id).ToList());
+                this.data.Draws.RemoveRange(this.data.Draws.Where(x => x.GameId == userGame.Id).ToList());
+
             }
             this.data.SaveChanges();
         }

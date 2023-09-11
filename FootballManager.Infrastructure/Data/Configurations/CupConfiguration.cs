@@ -30,7 +30,9 @@
                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(x => x.Draws)
-                    .WithMany(x => x.DomesticCups);
+                   .WithOne(x => x.Cup)
+                   .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

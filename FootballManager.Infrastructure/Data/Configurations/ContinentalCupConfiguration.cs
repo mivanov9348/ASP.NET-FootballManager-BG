@@ -26,7 +26,9 @@
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(x => x.Draws)
-                    .WithMany(x => x.ContinentalCups);
+                    .WithOne(x => x.ContinentalCup)
+                    .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

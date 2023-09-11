@@ -126,12 +126,8 @@
 
         public MenuViewModel GetMenuViewModel(Game currentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.CurrentDayOrder
-                                                               && x.GameId == currentGame.Id
-                                                               && x.Month.MonthOrder == currentGame.CurrentMonthOrder
-                                                               && x.Year.YearOrder == currentGame.CurrentYearOrder);
-
-            var isGameDay = currentDay.IsLeagueDay || currentDay.IsCupDay;
+            var currentDate = calendarService.GetCurrentDate(currentGame);
+            var isGameDay = currentDate.day.IsLeagueDay || currentDate.day.IsCupDay;
             (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = drawService.GetCurrentDrawDay(currentGame);
 
             return new MenuViewModel
@@ -139,10 +135,10 @@
                 CurrentDay = currentGame.CurrentDayOrder,
                 CurrentMonth = currentGame.CurrentMonthOrder,
                 CurrentYear = currentGame.CurrentYearOrder,
-                IsDrawDay = currentDay.IsDrawDay,
+                IsDrawDay = currentDate.day.IsDrawDay,
                 IsGameDay = isGameDay,
-                IsLeagueDay = currentDay.IsLeagueDay,
-                IsPlayed = currentDay.IsPlayed,
+                IsLeagueDay = currentDate.day.IsLeagueDay,
+                IsPlayed = currentDate.day.IsPlayed,
                 IsChampionsCupDraw = isChampionsCupDraw,
                 IsCupDraw = isCupDraw,
                 IsEuropeanCupDraw = isEuropeanCupDraw,

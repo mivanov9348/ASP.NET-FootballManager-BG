@@ -19,19 +19,21 @@ namespace FootballManager.Infrastructure.Data.Configurations
                    .WithMany(x => x.Draws)
                    .HasForeignKey(x => x.GameId);
 
+            builder.HasOne(x => x.ContinentalCup)
+                  .WithMany(x => x.Draws)
+                  .HasForeignKey(x => x.ContinentalCupId);
+
+            builder.HasOne(x => x.Cup)
+                  .WithMany(x => x.Draws)
+                  .HasForeignKey(x => x.CupId);
+
             builder.HasMany(x => x.Fixtures)
                    .WithOne(x => x.Draw)
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(x => x.Leagues)
                    .WithOne(x => x.Draw)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(x => x.ContinentalCups)
-                   .WithMany(x => x.Draws);
-
-            builder.HasMany(x => x.DomesticCups)
-           .WithMany(x => x.Draws);
+                   .OnDelete(DeleteBehavior.Restrict);            
         }
     }
 }
