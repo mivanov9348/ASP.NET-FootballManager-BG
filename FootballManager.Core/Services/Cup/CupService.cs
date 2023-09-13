@@ -41,6 +41,7 @@
             foreach (var team in teamsParticipants)
             {
                 team.IsCupParticipant = true;
+                team.CupId = currentCup.Id;
             }
             this.data.SaveChanges();
         }

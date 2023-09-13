@@ -124,9 +124,25 @@
         {
             var currentYear = this.data.Years.FirstOrDefault(x => x.YearOrder == currentGame.CurrentYearOrder && x.GameId == currentGame.Id);
             return this.data.ContinentalCups.Where(x => x.Year == currentYear.YearOrder).ToList();
-        
-        
-        
+
+
+
+        }
+
+        public Object GetEuropeanCupByObject(Object cup)
+        {
+            var currentCup = new Object();
+
+            if (cup.GetType() == typeof(ContinentalCup))
+            {
+                currentCup = (ContinentalCup)cup;               
+            }
+            if (cup.GetType() == typeof(Cup))
+            {
+                currentCup = (Cup)cup;                
+            }
+
+            return currentCup;
         }
     }
 }

@@ -7,7 +7,7 @@
         public int Id { get; set; }
         public int? NumOfGroups { get; set; }
         public int? TeamsPergroup { get; set; }
-    
+        public int? Round { get; set; }
         public bool IsDrawStarted { get; set; }
         public int? CupId { get; set; }
         public Cup Cup { get; set; }

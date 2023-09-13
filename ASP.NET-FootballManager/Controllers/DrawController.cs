@@ -3,11 +3,8 @@
     using ASP.NET_FootballManager.Data.Constant;
     using FootballManager.Core.Models.Draw;
     using FootballManager.Core.Services;
-    using FootballManager.Core.Services.Draw;
-    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
-
     public class DrawController : Controller
     {
         private ServiceAggregator serviceAggregator;
@@ -16,46 +13,80 @@
         {
             this.serviceAggregator = serviceAggregator;
         }
-
         public IActionResult Index()
         {
             CurrentUser();
             var currentGame = serviceAggregator.gameService.GetCurrentGame(userId);
             (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = serviceAggregator.drawService.GetCurrentDrawDay(currentGame);
-            var currentEuropeanCups = serviceAggregator.euroCupService.GetYearEuropeanCups(currentGame);
             var newDrawModel = new DrawViewModel();
+            var currentEuropeanCups = serviceAggregator.euroCupService.GetYearEuropeanCups(currentGame);
 
             if (isChampionsCupDraw)
             {
-                var championsCup = currentEuropeanCups.FirstOrDefault(x => x.Rank == 1);
-                newDrawModel.IsChampionsCupDraw = isChampionsCupDraw;
-                newDrawModel.NumberOfTeams = DataConstants.ChampionsCup.Participants;
-                var draw = serviceAggregator.drawService.CreateContinentalCupEliminationDraw(currentGame, newDrawModel, championsCup);
-                var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
-                return View("EliminationDraw", drawModel);
+                ProcessDraw(currentEuropeanCups.FirstOrDefault(x => x.Rank == 1), DataConstants.ChampionsCup.Participants);
+                newDrawModel.IsChampionsCupDraw = false;
             }
-            if (isEuropeanCupDraw)
+            else if (isEuropeanCupDraw)
             {
-                var EuroCup = currentEuropeanCups.FirstOrDefault(x => x.Rank == 2);
-                newDrawModel.IsEuropeanCupDraw = isEuropeanCupDraw;
-                newDrawModel.NumberOfTeams = DataConstants.EuroCup.Participants;
-                var draw = serviceAggregator.drawService.CreateContinentalCupEliminationDraw(currentGame, newDrawModel, EuroCup);
-                var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
-                drawModel.IsEuropeanCupDraw = false;
-                return View("EliminationDraw", drawModel);
+                ProcessDraw(currentEuropeanCups.FirstOrDefault(x => x.Rank == 2), DataConstants.EuroCup.Participants);
+                newDrawModel.IsEuropeanCupDraw = false;
             }
-            if (isCupDraw)
+            else if (isCupDraw)
             {
                 var cup = serviceAggregator.cupService.GetCurrentCup(currentGame);
-                newDrawModel.IsCupDraw = isCupDraw;
-                newDrawModel.NumberOfTeams = DataConstants.BulgarianCup.Participants;
-                var draw = serviceAggregator.drawService.CreateDomesticCupEliminationDraw(currentGame, newDrawModel, cup);
-                var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
-                drawModel.IsCupDraw = false;
-                return View("EliminationDraw");
+                ProcessDraw(cup, DataConstants.BulgarianCup.Participants);
+                newDrawModel.IsCupDraw = false;
             }
 
-            return RedirectToAction("Index", "Inbox");
+            void ProcessDraw(Object cup, int numberOfTeams)
+            {
+                var currentCup = serviceAggregator.euroCupService.GetEuropeanCupByObject(cup);
+                newDrawModel.NumberOfTeams = numberOfTeams;
+                var draw = serviceAggregator.drawService.CreateContinentalCupEliminationDraw(currentGame, newDrawModel, currentCup);
+                newDrawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
+            }
+
+            return View("EliminationDraw", newDrawModel);
+
+
+
+         //  CurrentUser();
+         //  var currentGame = serviceAggregator.gameService.GetCurrentGame(userId);
+         //  (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = serviceAggregator.drawService.GetCurrentDrawDay(currentGame);
+         //  var currentEuropeanCups = serviceAggregator.euroCupService.GetYearEuropeanCups(currentGame);
+         //  var newDrawModel = new DrawViewModel();
+         //
+         //  if (isChampionsCupDraw)
+         //  {
+         //      var championsCup = currentEuropeanCups.FirstOrDefault(x => x.Rank == 1);
+         //      newDrawModel.IsChampionsCupDraw = isChampionsCupDraw;
+         //      newDrawModel.NumberOfTeams = DataConstants.ChampionsCup.Participants;
+         //      var draw = serviceAggregator.drawService.CreateContinentalCupEliminationDraw(currentGame, newDrawModel, championsCup);
+         //      var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
+         //      return View("EliminationDraw", drawModel);
+         //  }
+         //  if (isEuropeanCupDraw)
+         //  {
+         //      var EuroCup = currentEuropeanCups.FirstOrDefault(x => x.Rank == 2);
+         //      newDrawModel.IsEuropeanCupDraw = isEuropeanCupDraw;
+         //      newDrawModel.NumberOfTeams = DataConstants.EuroCup.Participants;
+         //      var draw = serviceAggregator.drawService.CreateContinentalCupEliminationDraw(currentGame, newDrawModel, EuroCup);
+         //      var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
+         //      drawModel.IsEuropeanCupDraw = false;
+         //      return View("EliminationDraw", drawModel);
+         //  }
+         //  if (isCupDraw)
+         //  {
+         //      var cup = serviceAggregator.cupService.GetCurrentCup(currentGame);
+         //      newDrawModel.IsCupDraw = isCupDraw;
+         //      newDrawModel.NumberOfTeams = DataConstants.BulgarianCup.Participants;
+         //      var draw = serviceAggregator.drawService.CreateDomesticCupEliminationDraw(currentGame, newDrawModel, cup);
+         //      var drawModel = serviceAggregator.modelService.GetDrawViewModel(draw);
+         //      drawModel.IsCupDraw = false;
+         //      return View("EliminationDraw", drawModel);
+         //  }
+         //
+         //  return RedirectToAction("Index", "Inbox");
         }
 
         public IActionResult EliminationDraw(DrawViewModel model, int drawId)
@@ -83,8 +114,8 @@
             CurrentUser();
             var currentDraw = this.serviceAggregator.drawService.GetDrawById(drawId);
             var currentGame = this.serviceAggregator.gameService.GetCurrentGame(userId);
-            var currentDates = this.serviceAggregator.calendarService.GetCurrentDate(currentGame);         
-        
+            var currentDates = this.serviceAggregator.calendarService.GetCurrentDate(currentGame);
+
             serviceAggregator.drawService.SaveDraw(currentDraw);
 
             return RedirectToAction("Index", "Inbox");
@@ -138,16 +169,6 @@
             groupDrawViewModel.DrawedTeamName = drawedTeamName;
             groupDrawViewModel.DrawedGroupName = drawedleagueName;
             return View("GroupDraw", groupDrawViewModel);
-        }
-
-        public IActionResult ResetGroupDraw(GroupDrawViewModel model)
-        {
-            this.serviceAggregator.drawService.DeleteDraws();
-
-            return View("GroupDraw", new GroupDrawViewModel
-            {
-                IsDrawStarted = false
-            });
         }
 
         private void CurrentUser()

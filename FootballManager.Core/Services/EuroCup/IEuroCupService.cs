@@ -18,5 +18,6 @@
         Task<VirtualTeam> GetEuroCupWinner(Game game);
         Task<List<Fixture>> GetEuroCupFixtures(Game CurrentGame, int euroCupRank);
         List<ContinentalCup> GetYearEuropeanCups(Game currentGame);
+        Object GetEuropeanCupByObject(object cup);
     }
 }

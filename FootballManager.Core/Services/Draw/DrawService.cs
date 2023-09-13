@@ -20,6 +20,7 @@
             this.helper = new DrawHelper(data);
         }
 
+       
         //Elimination Draw
         public Draw CreateContinentalCupEliminationDraw(Game currentGame, DrawViewModel model, ContinentalCup currentCup)
         {
@@ -28,7 +29,7 @@
 
             var draw = new Draw();
 
-            var currentCupFixtures = helper.FillFixtures(allTeams, model);
+            var currentCupFixtures = helper.FillFixtures(currentDay.day, model, currentCup);
             draw = helper.CreateContinentalCupDraw(currentGame, currentCupFixtures, currentCup);
 
             return draw;
@@ -40,15 +41,12 @@
 
             var draw = new Draw();
 
-            var currentCupTeams = helper.FillTeams(allTeams, model);
-            var currentCupFixtures = helper.FillFixtures(allTeams, model);
-            draw = helper.CreateDomesticCupDraw(currentGame, currentCupTeams, currentCupFixtures, currentCup);
+            var currentCupFixtures = helper.FillFixtures(currentDay.day, model, currentCup);
+            draw = helper.CreateDomesticCupDraw(currentGame, allTeams, currentCupFixtures, currentCup);
             return draw;
         }
-
         public void FillEliminationFixtures(Draw currentDraw, VirtualTeam team)
         {
-
             foreach (var fixture in currentDraw.Fixtures)
             {
                 if (fixture.HomeTeamId == null)
@@ -68,14 +66,10 @@
                     break;
                 }
             }
-
         }
-
         //Group Draw
         public Draw CreateGroupDraw(GroupDrawViewModel model, Game currentGame)
         {
-            DeleteDraws();
-
             var allTeams = this.data.VirtualTeams.Where(x => x.IsCupParticipant == true || x.IsEuroParticipant == true).ToList();
             var numOfTeams = model.TeamsPerGroup * model.NumberOfGroups;
             var teams = new List<VirtualTeam>();
@@ -162,23 +156,6 @@
             }
             return currentDrawTeams;
         }
-        public void DeleteDraws()
-        {
-            var allDraws = this.data.Draws.ToList();
-            var allFixtures = this.data.Fixtures.Where(x => x.DrawId != null).ToList();
-            var allLeagues = this.data.Leagues.Where(x => x.DrawId != null).ToList();
-
-            foreach (var teams in this.data.VirtualTeams)
-            {
-                teams.isDrawed = false;
-            }
-            this.data.Fixtures.RemoveRange(allFixtures);
-            this.data.Leagues.RemoveRange(allLeagues);
-
-            this.data.Draws.RemoveRange(allDraws);
-            this.data.SaveChanges();
-        }
-
         public (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) GetCurrentDrawDay(Game currentGame)
         {
             var europeanTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsEuroParticipant != false).ToList();

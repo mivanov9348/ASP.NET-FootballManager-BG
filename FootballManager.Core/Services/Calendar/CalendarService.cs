@@ -253,35 +253,24 @@
         public void ContinueToNextDay(Game currentGame)
         {
             var currentDates = GetCurrentDate(currentGame);
-            var stop = false;           
             var lastDayInMonth = this.data.Days.Where(x => x.MonthId == currentDates.month.Id).OrderByDescending(x => x.DayOrder).First();
 
-            while (!stop)
+            var DayInMonthOrder = currentDates.day.DayOrder;
+
+            if (DayInMonthOrder == lastDayInMonth.DayOrder)
             {
-                var DayInMonthOrder = currentDates.day.DayOrder;
-
-                if (DayInMonthOrder == lastDayInMonth.DayOrder)
-                {
-                    var nextMonth = currentDates.month.MonthOrder + 1;
-                    var currentMonth = this.data.Months.FirstOrDefault(x => x.MonthOrder == nextMonth && x.GameId == currentGame.Id && x.YearId == currentDates.year.Id);
-                    currentGame.CurrentMonthOrder = currentMonth.MonthOrder;
-                    this.data.SaveChanges();
-                }
-                currentDates = GetCurrentDate(currentGame);
-                var nextDayOrder = currentDates.day.DayOrder + 1;
-                var nextDay = this.data.Days.FirstOrDefault(x => x.MonthId == currentDates.month.Id && x.DayOrder == nextDayOrder);
-
-                currentGame.CurrentDayOrder = nextDay.DayOrder;
-
-                if (nextDay.IsLeagueDay || nextDay.IsDrawDay || nextDay.IsCupDay)
-                {
-                    stop = true;
-                   
-                }
-
+                var nextMonth = currentDates.month.MonthOrder + 1;
+                var currentMonth = this.data.Months.FirstOrDefault(x => x.MonthOrder == nextMonth && x.GameId == currentGame.Id && x.YearId == currentDates.year.Id);
+                currentGame.CurrentMonthOrder = currentMonth.MonthOrder;
                 this.data.SaveChanges();
             }
-           
+            currentDates = GetCurrentDate(currentGame);
+            var nextDayOrder = currentDates.day.DayOrder + 1;
+            var nextDay = this.data.Days.FirstOrDefault(x => x.MonthId == currentDates.month.Id && x.DayOrder == nextDayOrder);
+
+            currentGame.CurrentDayOrder = nextDay.DayOrder;
+
+            this.data.SaveChanges();
         }
 
 
