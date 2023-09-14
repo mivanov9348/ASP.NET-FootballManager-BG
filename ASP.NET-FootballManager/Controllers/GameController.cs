@@ -61,7 +61,7 @@
             serviceAggregator.teamService.ResetTeams(CurrentGame);
             serviceAggregator.inboxService.NewSeasonNews(CurrentGame);
 
-            return RedirectToAction("Inbox", "Menu");
+            return RedirectToAction("Index", "Menu");
         }
         public async Task<IActionResult> EndSeason(EndSeasonViewModel esvm)
         {

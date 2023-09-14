@@ -16,20 +16,21 @@
     using FootballManager.Core.Models.Player;
     using Microsoft.Extensions.Options;
     using static ASP.NET_FootballManager.Data.Constant.DataConstants;
+    using FootballManager.Core.Services.Draw.Common;
 
     public class ModelService : IModelService
     {
         private readonly FootballManagerDbContext data;
         private readonly ICalendarService calendarService;
-        private readonly IDrawService drawService;
         private readonly IMatchService matchService;
+        private readonly ICommonDrawService commonDrawService;
 
-        public ModelService(FootballManagerDbContext data, ICalendarService calendarService, IDrawService drawService, IMatchService matchService)
+        public ModelService(FootballManagerDbContext data, ICalendarService calendarService, IMatchService matchService, ICommonDrawService commonDrawService)
         {
             this.data = data;
             this.calendarService = calendarService;
-            this.drawService = drawService;
             this.matchService = matchService;
+            this.commonDrawService = commonDrawService;
         }
         public CalendarViewModel GetCalendarViewModel(Month CurrentMonth)
         {
@@ -55,7 +56,7 @@
         }
         public DrawViewModel GetDrawViewModel(Draw currentDraw)
         {
-            var remainingTeams = drawService.GetRemainingTeams(currentDraw);
+            var remainingTeams = commonDrawService.GetRemainingTeams(currentDraw);
 
             var newViewModel = new DrawViewModel
             {
@@ -70,7 +71,7 @@
         }
         public GroupDrawViewModel GetGroupDrawViewModel(Draw currentDraw)
         {
-            var remainingTeams = drawService.GetRemainingTeams(currentDraw);
+            var remainingTeams = commonDrawService.GetRemainingTeams(currentDraw);
             var allNations = this.data.Nations.ToList();
             var allTeams = this.data.Teams.ToList();
 
@@ -128,7 +129,7 @@
         {
             var currentDate = calendarService.GetCurrentDate(currentGame);
             var isGameDay = currentDate.day.IsLeagueDay || currentDate.day.IsCupDay;
-            (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = drawService.GetCurrentDrawDay(currentGame);
+            (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = commonDrawService.GetCurrentDrawDay(currentGame);
 
             return new MenuViewModel
             {

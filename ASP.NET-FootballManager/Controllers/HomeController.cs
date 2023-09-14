@@ -110,7 +110,7 @@
             else
             {
                 await StartGame();
-                return RedirectToAction("Index", "Inbox");
+                return RedirectToAction("Index", "Menu");
             }
         }
         private async Task SendMessageToHTML(string message)

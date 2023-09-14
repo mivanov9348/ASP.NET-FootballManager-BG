@@ -13,7 +13,9 @@
     using ASP.NET_FootballManager.Services.Validation;
     using FootballManager.Core.Services.Attribute;
     using FootballManager.Core.Services.Calendar;
-    using FootballManager.Core.Services.Draw;
+    using FootballManager.Core.Services.Draw.Common;
+    using FootballManager.Core.Services.Draw.EliminationDraw;
+    using FootballManager.Core.Services.Draw.GroupDraw;
     using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.Model;
     using FootballManager.Core.Services.Player.PlayerData;
@@ -35,20 +37,22 @@
         public readonly ITransferService transferService;
         public readonly IGameOptionService gameOptionsService;
         public readonly IPlayerDataService playerDataService;
-        public readonly IPlayerGeneratorService playerGeneratorService;        
+        public readonly IPlayerGeneratorService playerGeneratorService;
         public readonly IPlayerSorterService playerSorterService;
         public readonly IPlayerStatsService playerStatsService;
-        public readonly IDrawService drawService;
         public readonly ICalendarService calendarService;
         public readonly IModelService modelService;
         public readonly IPlayerAttributeService attributeService;
+        public readonly IEliminationDrawService eliminationDrawService;
+        public readonly IGroupDrawService groupDrawService;
+        public readonly ICommonDrawService commonDrawService;
         public ServiceAggregator(
             IGameService gameService,
             IManagerService managerService,
             IValidationService validationService,
             ITeamService teamService,
             IInboxService inboxService,
-            IFixtureService fixtureService,     
+            IFixtureService fixtureService,
             IEuroCupService euroCupService,
             ICupService cupService,
             ILeagueService leagueService,
@@ -59,10 +63,12 @@
             IPlayerGeneratorService playerGeneratorService,
             IPlayerSorterService playerSorterService,
             IPlayerStatsService playerStatsService,
-            IDrawService drawService,
             ICalendarService calendarService,
             IModelService modelService,
-            IPlayerAttributeService attributeService
+            IPlayerAttributeService attributeService,
+            IEliminationDrawService eliminationDrawService,
+            IGroupDrawService groupDrawService,
+            ICommonDrawService commonDrawService
             )
         {
             this.managerService = managerService;
@@ -70,7 +76,7 @@
             this.gameService = gameService;
             this.teamService = teamService;
             this.inboxService = inboxService;
-            this.fixtureService = fixtureService;        
+            this.fixtureService = fixtureService;
             this.euroCupService = euroCupService;
             this.cupService = cupService;
             this.leagueService = leagueService;
@@ -83,10 +89,12 @@
             this.playerStatsService = playerStatsService;
             this.playerSorterService = playerSorterService;
             this.playerDataService = playerDataService;
-            this.drawService = drawService;
             this.calendarService = calendarService;
             this.modelService = modelService;
             this.attributeService = attributeService;
+            this.groupDrawService = groupDrawService;
+            this.eliminationDrawService = eliminationDrawService;
+            this.commonDrawService = commonDrawService;
         }
     }
 }

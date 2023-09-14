@@ -14,7 +14,9 @@
     using FootballManager.Core.Services;
     using FootballManager.Core.Services.Attribute;
     using FootballManager.Core.Services.Calendar;
-    using FootballManager.Core.Services.Draw;
+    using FootballManager.Core.Services.Draw.Common;
+    using FootballManager.Core.Services.Draw.EliminationDraw;
+    using FootballManager.Core.Services.Draw.GroupDraw;
     using FootballManager.Core.Services.GameOption;
     using FootballManager.Core.Services.Model;
     using FootballManager.Core.Services.Player.PlayerData;
@@ -46,10 +48,14 @@
             services.AddScoped<IPlayerGeneratorService, PlayerGeneratorService>();          
             services.AddScoped<IPlayerSorterService, PlayerSorterService>();
             services.AddScoped<IPlayerStatsService, PlayerStatsService>();
-            services.AddScoped<IDrawService,DrawService>();
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IModelService, ModelService>();
-            services.AddScoped<ServiceAggregator>();        
+            services.AddScoped<ServiceAggregator>();
+            services.AddScoped<IEliminationDrawService, EliminationDrawService>();
+            services.AddScoped<IGroupDrawService, GroupDrawService>();
+            services.AddScoped<ICommonDrawService, CommonDrawService>();
+
+
 
             return services;
         }
