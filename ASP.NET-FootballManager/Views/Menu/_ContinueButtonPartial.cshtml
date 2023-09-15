@@ -1,0 +1,35 @@
+﻿@using FootballManager.Core.Models.Menu;
+@model MenuViewModel
+
+<hr class="solid-hr" />
+
+@if (Model.IsLeagueDay)
+{
+    @if (!Model.IsPlayed)
+    {
+        <a asp-action="Index" asp-controller="Home" class="menu-item">CONTINUE</a>
+    }
+    else
+    {
+        <a asp-action="Index" asp-controller="Home" class="menu-item">Match Day</a>
+    }
+}
+@if (Model.IsDrawDay)
+{
+    @if (Model.IsChampionsCupDraw)
+    {
+        <a asp-action="Index" asp-controller="Home" class="menu-item">Champions Cup Draw</a>
+    }
+    else if (Model.IsEuropeanCupDraw)
+    {
+        <a asp-action="Index" asp-controller="Home" class="menu-item">European Cup Draw</a>
+    }
+    else if (Model.IsCupDraw)
+    {
+        <a asp-action="Index" asp-controller="Home" class="menu-item">Cup Draw</a>
+    }
+}
+@if (!Model.IsDrawDay && !Model.IsGameDay)
+{
+    <a asp-action="NextDay" asp-controller="Calendar" class="menu-item">CONTINUE</a>
+}

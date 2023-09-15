@@ -130,6 +130,8 @@
             var currentDate = calendarService.GetCurrentDate(currentGame);
             var isGameDay = currentDate.day.IsLeagueDay || currentDate.day.IsCupDay;
             (bool isChampionsCupDraw, bool isEuropeanCupDraw, bool isCupDraw) = commonDrawService.GetCurrentDrawDay(currentGame);
+            var lastMessage = this.data.Inboxes.First(x => x.GameId == currentGame.Id);
+            var inboxView= GetInboxViewModel(lastMessage,currentGame.Id);
 
             return new MenuViewModel
             {
@@ -143,6 +145,7 @@
                 IsChampionsCupDraw = isChampionsCupDraw,
                 IsCupDraw = isCupDraw,
                 IsEuropeanCupDraw = isEuropeanCupDraw,
+                inboxViewModel = inboxView
             };
         }
 

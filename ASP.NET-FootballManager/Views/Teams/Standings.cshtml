@@ -1,5 +1,6 @@
 ﻿@using FootballManager.Core.Models.Team;
 @model StandingsViewModel
+<partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
 
 <style>
     body {
@@ -7,7 +8,6 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
-        font-family: 'OLD SPORT 02 ATHLETIC NCV';
     }
 
         body::before {
@@ -57,15 +57,13 @@
     }
 
     .select {
-        margin-left: 45px;
-        margin-top: 10px;
+        margin-top: -20px;
+        text-align: center;
     }
 
     .Title {
-        margin-top: 20px;
         color: white;
         font-size: 50px;
-        font-family: fantasy;
         text-align: center;
     }
 
@@ -77,9 +75,9 @@
 
 <body>
 
+
     <div class="Title">
         <p>STANDINGS</p>
-        <hr style="margin-left:100px;" />
     </div>
 
     <div class="select">
@@ -91,12 +89,15 @@
                     <option value="@league.Id">@league.Name</option>
                 }
             </select>
-
+            <br />
             <input type="submit" value="Select" asp-action="Standings" />
-
+            <hr style="margin-left:100px;color:white;" />
 
         </form>
+
     </div>
+    <partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
+
     <div class="teams">
         <table>
             <tr>

@@ -177,9 +177,13 @@
     <link rel="stylesheet" href="/path/to/your/stylesheet.css">
 </head>
 <body>
+
     <form method="post">
         <div class="overlay"></div>
+
         <div class="calendar">
+            <partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
+
             <header>
                 <div class="nav-buttons">
 
@@ -192,6 +196,7 @@
                     </div>
 
                 </div>
+
                 <hr class="divider">
             </header>
             <div class="day-names">

@@ -31,9 +31,8 @@
         left: 0;
         width: 100%;
         z-index: 1000;
-        display: flex; /* Use flexbox to arrange the <p> elements horizontally */
-        justify-content: center; /* Distribute space between <p> elements */
-        opacity: 0.9;
+        display: flex;
+        justify-content: center;
     }
 
         #header p {
@@ -42,16 +41,14 @@
         }
 
     .menu-container {
-        margin-top: 50px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 200vh;
+        height: 900px;
         opacity: 0.9;
     }
 
-    /* Style for each menu item */
     .menu-item {
         font-size: 30px;
         text-align: center;
@@ -66,36 +63,36 @@
         width: 100%;
         text-decoration: none;
     }
-  
-        /* Add space between menu items */
+
         .menu-item + .menu-item {
             margin-top: 10px;
         }
 
-        /* Hover effect for menu items */
         .menu-item:hover {
             background-color: #555;
             color: white;
         }
+
 
     .line {
         width: 30%;
         height: 2px;
         margin: 5px 0;
         border: none;
-        background-color: red !important; /* Add !important to ensure it takes precedence */
+        background-color: red !important;
     }
 </style>
 
 <body>
+
     <div id="header">
-        <p>Year: 1 | Month:1 | Day: 1</p>
-    </div>   
+        <p>Year: @Model.CurrentYear | Month: @Model.CurrentMonth | Day: @Model.CurrentDay</p>
+    </div>
+
+    <partial name="_InboxPartial.cshtml" />
+
     <div class="menu-container">
-        <hr class="line" />
-        <a asp-action="Index" asp-controller="Home" class="menu-item">CONTINUE</a>
-        <hr class="line" />
-        <a asp-action="Index" asp-controller="Inbox" class="menu-item">Inbox</a>
+        <partial name="_ContinueButtonPartial" />
         <hr class="line" />
         <a asp-action="Index" asp-controller="Calendar" class="menu-item">CALENDAR</a>
         <hr class="line" />
@@ -111,6 +108,7 @@
         <hr class="line" />
         <a asp-action="Logout" asp-controller="Account" class="menu-item">LOGOUT</a>
         <hr class="line" />
-
     </div>
+    <partial name="_StandingsPartial.cshtml" />
+
 </body>

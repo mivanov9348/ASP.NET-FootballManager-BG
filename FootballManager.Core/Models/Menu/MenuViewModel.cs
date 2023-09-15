@@ -1,4 +1,6 @@
-﻿namespace FootballManager.Core.Models.Menu
+﻿using FootballManager.Core.Models.Inbox;
+
+namespace FootballManager.Core.Models.Menu
 {
     public class MenuViewModel
     {
@@ -12,6 +14,7 @@
         public bool IsLeagueDay { get; set; }
         public bool IsGameDay { get; set; }
         public bool IsPlayed { get; set; }
-       
+        public InboxViewModel inboxViewModel { get; set; }
+
     }
 }
