@@ -1,0 +1,266 @@
+﻿@using FootballManager.Core.Models.Calendar;
+@model CalendarViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    /* Reset some default styles */
+    body, p {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-image: url("/Images/Wallpapers/Calendar.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    .overlay {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: -1;
+    }
+
+    .calendar {
+        position: relative;
+        padding: 20px;
+        color: white;
+    }
+
+    /* Header styles */
+    .year-label {
+        font-size: 40px;
+        text-align: center;
+    }
+
+    .divider {
+        border: none;
+        border-top: 1px solid white;
+        margin-top: 10px;
+    }
+
+    /* Day panel styles */
+    .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .day-panel {
+        border: 1px solid white;
+        background-color: rgba(0, 0, 0, 0.7);
+        text-align: center;
+        padding: 10px;
+        height: 80px;
+    }
+
+    /* Competition type label styles */
+    .league-day .competition-label {
+        color: red;
+        font-weight: bolder;
+    }
+
+    .cup-day .competition-label {
+        color: yellow;
+        font-weight: bolder;
+    }
+
+    .eurocup-day .competition-label {
+        color: ghostwhite;
+        font-weight: bolder;
+    }
+
+    .played-day .competition-label {
+        color: rgb(255, 64, 64);
+    }
+
+    /* Day label styles */
+    .day-label {
+        color: white;
+        font-size: 20px;
+    }
+
+    .day-names {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        text-align: center;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .day-name {
+        color: white;
+    }
+
+    .overlay {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8); /* Increase opacity */
+        z-index: -1;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .nav-button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: white;
+    }
+
+        .nav-button:focus {
+            outline: none;
+        }
+
+    .day-panel {
+        position: relative;
+    }
+
+        .day-panel:hover {
+            border: 3px solid blue;
+        }
+
+    .day-image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        background-size: cover;
+        background-repeat: no-repeat;
+        z-index: -1;
+    }
+
+    .current-day {
+        border: 2px solid yellow;
+    }
+
+    .select {
+        text-decoration: none;
+        color: white;
+    }
+
+        .select:hover {
+            color: inherit;
+            text-decoration: none;
+        }
+
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="/path/to/your/stylesheet.css">
+</head>
+<body>
+
+    <form method="post">
+        <div class="overlay"></div>
+
+        <div class="calendar">
+            <partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
+
+            <header>
+                <div class="nav-buttons">
+
+                    <div class="month-info">
+                        <label class="year-label">Year @Model.Year</label>
+                        <br>
+                        <button class="nav-button" id="prevMonthButton" asp-action="PreviousMonth" asp-route-monthId="@Model.MonthId">&#9664;</button>
+                        <label class="month-name">@Model.MonthName</label>
+                        <button class="nav-button" id="nextMonthButton" asp-action="NextMonth" asp-route-monthId="@Model.MonthId">&#9654;</button>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+            </header>
+            <div class="day-names">
+                <div class="day-name">Monday</div>
+                <div class="day-name">Tuesday</div>
+                <div class="day-name">Wednesday</div>
+                <div class="day-name">Thursday</div>
+                <div class="day-name">Friday</div>
+                <div class="day-name">Saturday</div>
+                <div class="day-name">Sunday</div>
+            </div>
+            <div class="days">
+                @for (var i = 1; i < Model.StartOffsetDays; i++)
+                {
+                    <div class="day-panel" style="background-color:dimgrey"></div>
+                }
+
+                @foreach (var day in Model.Days)
+                {
+                    <div class="day-panel @(day.DayOrder == Model.CurrentDayOrder ? "current-day" : "")">
+
+                        @if (day.IsLeagueDay)
+                        {
+                            <a class="select" asp-action="Standings" asp-controller="Teams">
+                                <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgarianleague.jpg)"></div>
+                                <p class="day-label">@day.DayOrder</p>
+                                <p class="competition-label">League day</p>
+                            </a>
+                        }
+                        else if (day.IsCupDay)
+                        {
+                            <a class="select" asp-action="CupsFixture" asp-controller="Fixtures">
+                                <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/bulgariancup.jpg)"></div>
+                                <p class="day-label">@day.DayOrder</p>
+                                <p class="competition-label">Cup day</p>
+                            </a>
+                        }
+                        else if (day.IsEuroCupDay)
+                        {
+                            <a class="select" asp-action="CupFixture" asp-controller="Fixtures">
+                                <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/europeanleague.jpg)"></div>
+                                <p class="day-label">@day.DayOrder</p>
+                                <p class="competition-label">Eurocup day</p>
+                            </a>
+                        }
+                        else if (day.IsDrawDay)
+                        {
+                            <div class="day-image-overlay" style="background-image: url(/Images/Wallpapers/drawday.jpg)"></div>
+                            <p class="day-label">@day.DayOrder</p>
+                            <p class="competition-label">Draw Day</p>
+                        }
+                        else
+                        {
+                            <p class="day-label">@day.DayOrder</p>
+                        }
+                    </div>
+                }
+                @for (var i = Model.EndOffsetDays; i <= 7; i++)
+                {
+                    <div class="day-panel" style="background-color:dimgrey"></div>
+                }
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

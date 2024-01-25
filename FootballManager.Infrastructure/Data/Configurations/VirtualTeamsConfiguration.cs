@@ -1,6 +1,6 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     public class VirtualTeamsConfiguration : IEntityTypeConfiguration<VirtualTeam>
@@ -40,6 +40,12 @@
             builder.HasMany(x => x.AwayMatches)
               .WithOne(c => c.AwayTeam)
               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.AllDraws)
+                   .WithMany(c => c.Teams);
+
+           
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+﻿namespace FootballManager.Infrastructure.Data.DataModels
 {
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
@@ -8,7 +8,7 @@
         public int Id { get; set; }
 
         [Required]
-        [StringLength(30)]       
+        [StringLength(30)]
         public string Name { get; set; }
 
         [Required]

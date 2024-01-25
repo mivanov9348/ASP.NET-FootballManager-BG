@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+﻿namespace FootballManager.Infrastructure.Data.DataModels
 {
     using System.ComponentModel.DataAnnotations;
     public class Position
@@ -11,6 +11,7 @@
         [Required]
         [StringLength(2)]
         public string Abbr { get; set; }
+        public int Order { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
 
     }

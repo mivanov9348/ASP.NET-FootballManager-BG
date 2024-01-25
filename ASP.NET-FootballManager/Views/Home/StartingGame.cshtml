@@ -1,0 +1,157 @@
+﻿@using FootballManager.Core.Models.Home;
+@model StartingGameViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Game</title>
+    <!-- Include SignalR JavaScript library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+    <style>
+        body {
+            background-image: url("/Images/Wallpapers/AddManager.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        }
+
+            body::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: fit-content;
+                background-color: rgba(0, 0, 0, 0.1);
+                z-index: -1;
+            }
+
+        .container {
+            text-align: center;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: gold;
+        }
+
+        img {
+            height: 180px;
+            width: auto;
+        }
+
+        input[type="submit"] {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #loading-bar {
+            background-color: rgba(0, 0, 0, 0.2);
+            height: 20px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #loading-progress {
+            background-color: #4CAF50;
+            height: 100%;
+            width: 0;
+        }
+
+        #messageDiv {
+            margin-top: 10px;
+            color: white;
+            font-weight: bolder;
+        }
+    </style>
+</head>
+<body>
+    <form method="get">
+        <div class="container">
+            <h1>Manager</h1>
+            <hr />
+            <h1>@Model.ManagerName</h1>
+            <img src="~/Images/Managers/@(Model.ManagerImage).png" />
+            <hr />
+            <img src="~/Images/Team/@Model.ManagerTeamImage" />
+            <h4>@Model.ManagerTeam</h4>
+            <hr />
+            <input type="submit" value="Start Game" id="startGameBtn" asp-action="StartingGame" asp-route-id="1" />
+            <hr />
+            <div id="loading-bar">
+                <div id="loading-progress"></div>
+            </div>
+            <!-- Message div -->
+            <div id="messageDiv"></div>
+        </div>
+
+        <script>
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/gameHub")
+                .build();
+
+            const loadingBar = document.getElementById("loading-bar");
+            const loadingProgress = document.getElementById("loading-progress");
+            let progress = 0;
+
+            connection.on("ReceiveMessage", function (message) {
+                const messageDiv = document.getElementById("messageDiv");
+                const newMessageElement = document.createElement("p"); // Wrap each message in a <p> element
+
+                messageDiv.childNodes.forEach(node => {
+                    const previousMessageElement = document.createElement("del");
+                    previousMessageElement.innerHTML = node.innerHTML;
+                    newMessageElement.appendChild(previousMessageElement);
+                });
+
+                const currentMessageElement = document.createElement("p");
+                currentMessageElement.textContent = message;
+                newMessageElement.appendChild(currentMessageElement);
+
+                messageDiv.innerHTML = "";
+                messageDiv.appendChild(newMessageElement);
+
+                // Update loading bar based on received messages
+                progress += 7;
+                loadingProgress.style.width = progress + "%";
+            });
+
+            connection.onclose(function (error) {
+                console.log("Connection closed with error: " + error);
+            });
+
+            connection.start().then(function () {
+                console.log("Connection started");
+            }).catch(function (error) {
+                console.error("Connection error: " + error);
+            });
+
+            document.getElementById("startGameBtn").addEventListener("click", function () {
+                // Call your API endpoint to start the game
+                fetch("/api/Game/StartGame")
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Game started:", data);
+                    })
+                    .catch(error => {
+                        console.error("Error starting game:", error);
+                    });
+            });
+        </script>
+    </form>
+</body>
+</html>

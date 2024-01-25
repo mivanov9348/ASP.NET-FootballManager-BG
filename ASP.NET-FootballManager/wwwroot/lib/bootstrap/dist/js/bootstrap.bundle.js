@@ -138,7 +138,10 @@
       const value = config[property];
       const valueType = value && isElement$1(value) ? 'element' : toType(value);
 
-      if (!new RegExp(expectedTypes).test(valueType)) {
+      if (!new RegExp(expectedTypes).
+
+
+(valueType)) {
         throw new TypeError(`${componentName.toUpperCase()}: Option "${property}" provided type "${valueType}" but expected type "${expectedTypes}".`);
       }
     });

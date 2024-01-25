@@ -1,15 +1,17 @@
 ﻿namespace FootballManager.Core.Models.Sorting
 {
-    public enum PlayerSorting
+    public enum PlayerStatsSorting
     {
         FirstName = 0,
-        TeamName = 1,
-        CityName = 2,
-        Goals = 3,
-        Passes = 4,
-        Attack = 5,
-        Defense = 6,
-        Overall = 7,
-        Price = 8
+        Position = 1,
+        Age = 2,
+        TeamName = 3,
+        CityName = 4,
+        Appearance = 5,
+        Goals = 6,
+        Passes = 7,
+        Tacklings = 8,
+        GoalsConceding = 9,
+        Overall = 10
     }
 }

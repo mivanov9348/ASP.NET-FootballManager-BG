@@ -1,6 +1,6 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;   
     public class FixtureConfiguration : IEntityTypeConfiguration<Fixture>
@@ -22,6 +22,11 @@
             builder.HasOne(x => x.League)
                    .WithMany(x => x.Fixtures)
                    .HasForeignKey(x => x.LeagueId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Draw)
+                   .WithMany(x => x.Fixtures)
+                   .HasForeignKey(x => x.DrawId)
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(x => x.Matches)

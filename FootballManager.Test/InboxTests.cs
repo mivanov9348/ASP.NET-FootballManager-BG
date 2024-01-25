@@ -38,7 +38,7 @@ namespace FootballManager.Test
 
             serviceProvider.GetService<IInboxService>();
 
-            Create(options);
+          
         }
 
         [Test]
@@ -53,22 +53,7 @@ namespace FootballManager.Test
             var fullMess = await service.GetFullMessage(inbox1.Id, game);
         }
 
-        private void Create(DbContextOptions<FootballManagerDbContext> options)
-        {
-            service = serviceProvider.GetService<IInboxService>();
-
-            using (var context = new FootballManagerDbContext(options))
-            {
-                game = new Game();
-                context.Games.Add(game);
-                inbox1 = new Inbox { Game = game, GameId = game.Id, MessageReview = "1", FullMessage = "2" };
-                context.Inboxes.Add(inbox1);
-
-                context.SaveChanges();
-            }
-
-        }
-
+     
         [TearDown]
         public void Dispose()
         {

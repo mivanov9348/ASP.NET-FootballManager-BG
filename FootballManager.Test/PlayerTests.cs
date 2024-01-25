@@ -2,7 +2,6 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Services.Player;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +17,7 @@
         private DbContextOptions<FootballManagerDbContext> options;
         private ServiceProvider serviceProvider;
 
+<<<<<<< HEAD
         [SetUp]
         public void Setup()
         {
@@ -108,6 +108,9 @@
             {
             }
         }
+=======
+      
+>>>>>>> 1aede7b505d42a4d334ef6003d735f73c6c43338
         public VirtualTeam NewTeam(Game currentgame)
         {
             using (var context = new FootballManagerDbContext(options))
@@ -146,9 +149,6 @@
                     TeamId = team.Id,
                     IsStarting11 = true,
                     Age = 20,
-                    Attack = 50,
-                    Defense = 60,
-                    Speed = 70,
                     LeagueId = 1,
                     CityId = 1,
                     GameId = currentGame.Id,

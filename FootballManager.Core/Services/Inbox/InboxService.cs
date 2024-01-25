@@ -1,71 +1,50 @@
 ﻿namespace ASP.NET_FootballManager.Services.Inbox
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Models.Menu;
+    using FootballManager.Infrastructure.Data.MessagesConstants;
+    using System;
     using System.Text;
-
     public class InboxService : IInboxService
     {
+        private Random rnd;
         private readonly FootballManagerDbContext data;
-
+        private readonly InboxMessages.Messages inboxMessages;
         public InboxService(FootballManagerDbContext data)
         {
             this.data = data;
+            this.inboxMessages = new InboxMessages.Messages();
+            this.rnd = new Random();
         }
         public void CreateManagerNews(Manager currentManager, Game currentGame)
         {
             var messageReview = $"{currentGame.Team.Name} appoint {currentGame.Manager.FirstName} {currentGame.Manager.LastName} as manager!";
-            var fullMessage = $"Welcome to the new club! Season {currentGame.Season} started! Good luck!";
+            var fullMessage = $"Welcome to the new club! Season {currentGame.CurrentYearOrder} started! Good luck!";
+            var messageTitle = "New Manager";
+            var root = $"Managers/{currentManager.ImageId}.png";
+            CreateInbox(currentGame, fullMessage, messageTitle, root);
 
-            var newSeasonNews = new Inbox
-            {
-                Day = currentGame.Day,
-                Year = currentGame.Year,
-                Game = currentGame,
-                GameId = currentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage,
-                NewsImage = $"Faces/Manager.png"
-            };
-
-            AddAndSave(newSeasonNews);
         }
         public void BuyPlayerNews(Player currentPlayer, Game currentGame)
         {
             var team = this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId);
             var position = this.data.Positions.FirstOrDefault(x => x.Id == currentPlayer.PositionId);
 
-            var messageReview = $"{team.Name} confirm transfer!";
-            var fullMessage = $"{currentPlayer.FirstName} {currentPlayer.LastName} is a new {team.Name} player. {currentPlayer.FirstName} {currentPlayer.LastName} is a  {currentPlayer.Age} years old, play as {position.Name}.";
+            var randomMessageFunc = inboxMessages.NewPlayer[rnd.Next(0, inboxMessages.NewPlayer.Count())];
+            string randomMessage = randomMessageFunc(team.Name, currentPlayer.FirstName, currentPlayer.LastName, currentPlayer.Age, currentPlayer.Position.Name, currentPlayer.Price);
+            string messageTitle = "New Player";
+            string root = $"Faces/{currentPlayer.ProfileImage}";
+            CreateInbox(currentGame, randomMessage, messageTitle, root);
 
-            var inbox = new Inbox
-            {
-                Day = currentGame.Day,
-                Year = currentGame.Year,
-                Game = currentGame,
-                GameId = currentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage,
-                NewsImage = $"Faces/{currentPlayer.ProfileImage}"
-            };
-            AddAndSave(inbox);
         }
         public void NewSeasonNews(Game currentGame)
         {
-            var messageReview = $"Season {currentGame.Season} started!";
-            var fullMessage = $"Season {currentGame.Season} started! Good luck!";
+            var randomMessageFunc = inboxMessages.NewSeasonStart[rnd.Next(0, inboxMessages.NewSeasonStart.Count())];
+            string randomMessage = randomMessageFunc(currentGame.Team.Name, currentGame.CurrentYearOrder);
+            string messageTitle = "Welcome to the New Season";
 
-            var newSeasonNews = new Inbox
-            {
-                Day = currentGame.Day,
-                Year = currentGame.Year,
-                Game = currentGame,
-                GameId = currentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage
-            };
-
-            AddAndSave(newSeasonNews);
+            CreateInbox(currentGame, randomMessage, messageTitle, null);
         }
         public void MatchFinishedNews(Game CurrentGame, Fixture currentFixture)
         {
@@ -77,34 +56,26 @@
 
             if (currentFixture.HomeTeamGoal > currentFixture.AwayTeamGoal)
             {
-                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} ";
-                fullMessage = $"{homeTeamName} wins over {awayTeamName} with {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} in round {currentFixture.Round}.";
+                var randomMessageFunc = inboxMessages.FinishMatch[rnd.Next(0, inboxMessages.FinishMatch.Count())];
+                fullMessage = randomMessageFunc(homeTeamName, awayTeamName, currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture.Round);
             }
             if (currentFixture.HomeTeamGoal < currentFixture.AwayTeamGoal)
             {
-                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal} ";
-                fullMessage = $"{awayTeamName} wins over {homeTeamName} with {currentFixture.AwayTeamGoal}:{currentFixture.HomeTeamGoal} in round {currentFixture.Round}.";
+                var randomMessageFunc = inboxMessages.FinishMatch[rnd.Next(0, inboxMessages.FinishMatch.Count())];
+                fullMessage = randomMessageFunc(awayTeamName, homeTeamName, currentFixture.AwayTeamGoal, currentFixture.HomeTeamGoal, currentFixture.Round);
             }
             if (currentFixture.HomeTeamGoal == currentFixture.AwayTeamGoal)
             {
-                messageReview = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal}";
-                fullMessage = $"{homeTeamName} finished draw with {awayTeamName} in round {currentFixture.Round}.";
+                var randomMessageFunc = inboxMessages.DrawMatch[rnd.Next(0, inboxMessages.DrawMatch.Count())];
+                fullMessage = randomMessageFunc(homeTeamName, awayTeamName, currentFixture.HomeTeamGoal, currentFixture.AwayTeamGoal, currentFixture.Round);
             }
 
-            var matchNews = new Inbox
-            {
-                Day = CurrentGame.Day,
-                Year = CurrentGame.Year,
-                Game = CurrentGame,
-                GameId = CurrentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage,
-                NewsImage = $"Team/{playerTeam.ImageUrl}"
-            };
+            var messageTitle = $"{homeTeamName} - {awayTeamName} {currentFixture.HomeTeamGoal}:{currentFixture.AwayTeamGoal}";
 
-            AddAndSave(matchNews);
+            CreateInbox(CurrentGame, fullMessage, messageTitle, null);
+
         }
-        public async Task<List<Inbox>> GetInboxMessages(int gameId) => await Task.Run(() => this.data.Inboxes.Where(x => x.GameId == gameId).ToList());
+        public List<Inbox> GetInboxMessages(int gameId) => this.data.Inboxes.Where(x => x.GameId == gameId).ToList();
         public async Task<Inbox> GetFullMessage(int id, Game CurrentGame)
         {
             if (id == 0)
@@ -123,20 +94,11 @@
             var player = this.data.Players.FirstOrDefault(x => x.Id == playerId);
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
 
-            var messageReview = $"{team.Name} sell player!";
-            var fullMessage = $"{team.Name} sell {player.FirstName} {player.LastName}, a {player.Age} years old {position.Name}. {team.Name} will receive {player.Price} coins for the deal!";
-
-            var inbox = new Inbox
-            {
-                Day = currentGame.Day,
-                Year = currentGame.Year,
-                Game = currentGame,
-                GameId = currentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage,
-                NewsImage = $"Faces/{player.ProfileImage}"
-            };
-            AddAndSave(inbox);
+            var randomMessageFunc = inboxMessages.SellPlayer[rnd.Next(0, inboxMessages.SellPlayer.Count())];
+            string randomMessage = randomMessageFunc(team.Name, player.FirstName, player.LastName, player.Age, player.Position.Name, player.Price);
+            string messageTitle = "Sell Player";
+            string root = $"Faces/{player.ProfileImage}";
+            CreateInbox(currentGame, randomMessage, messageTitle, root);
         }
         public void CupMatchesInfo(List<Fixture> dayFixtures, Game CurrentGame)
         {
@@ -150,25 +112,26 @@
 
             var messageReview = "Results..";
             var fullMessage = sb.ToString().TrimEnd();
+            var messageTitle = "Cup Results";
 
-            var MatchesInfo = new Inbox
+            CreateInbox(CurrentGame, fullMessage, messageTitle, null);
+
+        }        
+        public void CreateInbox(Game currentGame, string fullMessage, string messageTitle, string imageRoot)
+        {
+            var newInbox = new Inbox
             {
-                Day = CurrentGame.Day,
-                Year = CurrentGame.Year,
-                Game = CurrentGame,
-                GameId = CurrentGame.Id,
-                MessageReview = messageReview,
-                FullMessage = fullMessage
+                Day = currentGame.CurrentDayOrder,
+                Year = currentGame.CurrentYearOrder,
+                Game = currentGame,
+                GameId = currentGame.Id,
+                MessageTitle = messageTitle,
+                FullMessage = fullMessage,
+                NewsImage = imageRoot
             };
 
-            AddAndSave(MatchesInfo);
-
-        }
-        private void AddAndSave(Inbox inbox)
-        {
-            this.data.Inboxes.Add(inbox);
+            this.data.Inboxes.Add(newInbox);
             this.data.SaveChanges();
-        }
-
+        }        
     }
 }

@@ -1,16 +1,15 @@
 ﻿namespace ASP.NET_FootballManager.Services.Fixture
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
+
     public interface IFixtureService
     {
-        void GenerateLeagueFixtures(Game game);
-        void GenerateCupFixtures(Game game);
-        void GenerateEuroFixtures(Game game);
-        void AddFixtureToDay(Game game);
+        void GenerateLeagueFixtures(Game game);        
+        void AddLeagueFixtureToDay(Game game);
         void ShuffleTeams(List<VirtualTeam> currl);
         void DeleteFixtures(Game game);
         Task<List<Fixture>> GetFixture(int id, int round,Game CurrentGame);    
-        Task<int> GetAllRounds(int leagueId);
+        Task<int> GetAllRounds(int? leagueId);
 
 
     }

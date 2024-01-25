@@ -1,11 +1,10 @@
-﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+﻿namespace FootballManager.Infrastructure.Data.DataModels
 {
     public class Inbox
     {
 
         public int Id { get; set; }
-
-        public string MessageReview { get; set; }
+        public string MessageTitle { get; set; }      
 
         public string FullMessage { get; set; }
 

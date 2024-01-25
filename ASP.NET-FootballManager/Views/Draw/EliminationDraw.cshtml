@@ -1,0 +1,164 @@
+﻿@using FootballManager.Core.Models.Draw;
+@model DrawViewModel
+
+@{
+    var num = 0;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url("/Images/Wallpapers/EliminationDraw.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .overlay {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .tables-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+            /* Adjust the width for each table */
+            .tables-row table {
+                width: calc(25% - 10px); /* Four tables per row */
+                margin: 5px;
+            }
+
+        form {
+            text-align: center;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .teams-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .teams-section input[type="text"] {
+                width: 80%;
+                padding: 5px;
+                font-size: 14px;
+            }
+
+        .teams-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+            .teams-list .team {
+                width: calc(25% - 10px);
+                margin: 5px;
+                font-size: 12px;
+            }
+
+        .team-container {
+            width: calc(8.33% - 10px); /* 12 teams per row */
+            margin: 5px;
+            font-size: 12px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .drawButton {
+            text-align: center;
+        }
+
+            .drawButton:hover {
+                color: dimgrey;
+            }
+
+        .resetButton {
+            background-color: red;
+            color: white;
+        }
+
+        .FinalizeButton {
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        <h1 class="title">Elimination Draw</h1>
+
+
+        <div class="teams-list">
+            @foreach (var item in @Model.RemainingTeams)
+            {
+                <div class="team-container">@item.Name</div>
+            }
+
+        </div>
+        <hr />
+        @if (Model.IsDrawStarted)
+        {
+            <input type="submit" value="Draw Теам" class="drawButton" asp-action="EliminationDraw" asp-route-drawId="@Model.CurrentDrawId" />
+        }
+        else
+        {
+            <input type="submit" value="To Main Menu" class="drawButton" asp-action="SaveDraw" asp-route-drawId="@Model.CurrentDrawId" />
+        }
+        <table>
+            <tr>
+                <th>Num</th>
+                <th>Home Team</th>
+                <th>Away Team</th>
+            </tr>
+            @foreach (var fixture in @Model.AllFixtures)
+            {
+                num++;
+                <tr>
+                    <th>@num</th>
+                    <th>@fixture.HomeTeamName</th>
+                    <th>@fixture.AwayTeamName</th>
+                </tr>
+
+            }
+        </table>
+
+
+    </form>
+</body>
+</html>

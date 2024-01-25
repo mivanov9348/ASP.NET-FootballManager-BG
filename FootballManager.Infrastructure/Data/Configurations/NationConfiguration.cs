@@ -1,6 +1,6 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     public class NationConfiguration : IEntityTypeConfiguration<Nation>
@@ -16,10 +16,7 @@
             builder.HasMany(x => x.Teams)
              .WithOne(x => x.Nation)
              .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(x => x.Managers)
-             .WithOne(x => x.Nation)
-             .OnDelete(DeleteBehavior.Restrict);
+       
 
             builder.HasMany(x => x.Players)
              .WithOne(x => x.Nation)

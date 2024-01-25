@@ -1,7 +1,7 @@
 ﻿namespace ASP.NET_FootballManager.Models
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System.ComponentModel.DataAnnotations;
+    using FootballManager.Infrastructure.Data.DataModels;
 
     public class NewManagerViewModel
     {
@@ -23,8 +23,9 @@
 
         [Required]
         public int TeamId { get; set; }
+        public int ImageId { get; set; }
 
         public ICollection<Nation> Nations { get; set; } = new HashSet<Nation>();
-        public ICollection<Team> Teams { get; set; } = new HashSet<Team>();
+        public List<Team> Teams { get; set; } = new List<Team>();
     }
 }

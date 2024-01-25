@@ -1,0 +1,190 @@
+﻿@using FootballManager.Core.Models.Draw;
+@model GroupDrawViewModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .tables-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+            /* Adjust the width for each table */
+            .tables-row table {
+                width: calc(25% - 10px); /* Four tables per row */
+                margin: 5px;
+            }
+
+        form {
+            text-align: center;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .teams-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .teams-section input[type="text"] {
+                width: 80%;
+                padding: 5px;
+                font-size: 14px;
+            }
+
+        .teams-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+            .teams-list .team {
+                width: calc(25% - 10px);
+                margin: 5px;
+                font-size: 12px;
+            }
+
+        .team-container {
+            width: calc(8.33% - 10px); /* 12 teams per row */
+            margin: 5px;
+            font-size: 12px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .drawButton {
+            text-align: center;
+        }
+
+            .drawButton:hover {
+                color: dimgrey;
+            }
+
+        .resetButton {
+            background-color: red;
+            color: white;
+        }
+
+        .drawText {
+            text-align: center;
+            font-weight: bolder;
+            font-style: italic;
+        }
+
+        .autoCompleteButton{
+            background-color:blue;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+            <hr />
+        @if (!Model.IsDrawStarted)
+        {
+            <select id="groupSelect" asp-for="@Model.NumberOfGroups">
+                <option value="">Groups:</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="16">16</option>
+            </select>
+            <select id="teamsSelect" asp-for="@Model.TeamsPerGroup">
+                <option value="">Teams Per Group:</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="8">8</option>
+            </select>
+            <input type="submit" value="Select" asp-action="GroupDraw" />
+            <hr />
+        }
+        <div class="teams-list">
+            @foreach (var team in Model.RemainingTeams)
+            {
+                <div class="team-container">@team.Name</div>
+            }
+        </div>
+        <hr />
+        @if (Model.IsDrawStarted)
+        {
+            <form method="post">
+                <input type="submit" value="Draw" class="drawButton" asp-action="DrawAGroupTeam" asp-route-drawId="@Model.DrawId" />
+                <input type="submit" hidden value="Auto Complete" class="autoCompleteButton" asp-action="AutoCompleteGroupDraw" asp-route-drawId="@Model.DrawId"  />
+                <input type="submit" value="Reset" class="resetButton" asp-action="ResetGroupDraw" />
+            </form>
+            <p class="drawText"><span style="color:red">@Model.DrawedTeamName</span> is draw in <span style="color:green">@Model.DrawedGroupName</span></p>
+
+            <hr />
+        }
+        <div id="tablesContainer" class="tables-row">
+            @foreach (var league in @Model.Leagues)
+            {
+                <table>
+                    <tr>
+                        <th colspan="3">@league.Name</th>
+                    </tr>
+                    <tr>
+                        <th>Num</th>
+                        <th>Team Name</th>
+                        <th>Nation</th>
+                    </tr>
+
+
+                    @foreach (var team in league.VirtualTeams)
+                    {
+
+                        <tr>
+                            <th>1</th>
+                            <th>@(team.Name != null ? team.Name : "")</th>
+                            @if (team.Team != null)
+                            {
+                                <th>@(team.Team.Nation.Abbr != null ? team.Team.Nation.Abbr : "")</th>
+                            }
+                            else
+                            {
+                                <th></th>
+                            }
+                        </tr>
+                    }
+                    @for (int i = 0; i < (Model.TeamsPerGroup - league.VirtualTeams.Count); i++)
+                    {
+                        <tr>
+                            <th>1</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </form>
+ 
+</body>
+</html>

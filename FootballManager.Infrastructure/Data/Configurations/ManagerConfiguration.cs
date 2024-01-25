@@ -1,6 +1,6 @@
 ﻿namespace FootballManager.Infrastructure.Data.Configurations
 {  
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,10 +9,6 @@
         public void Configure(EntityTypeBuilder<Manager> builder)
         {
             builder.HasKey(x => x.Id);
-
-            builder.HasOne(x => x.Nation)
-              .WithMany(x => x.Managers)
-              .HasForeignKey(x => x.NationId);
 
             builder.HasOne(x => x.CurrentTeam)
               .WithMany(x => x.Managers)

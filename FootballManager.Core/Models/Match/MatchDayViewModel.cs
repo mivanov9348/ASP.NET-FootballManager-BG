@@ -1,6 +1,7 @@
 ﻿namespace FootballManager.Core.Models.Match
 {
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
+
     public class MatchDayViewModel
     {
         public VirtualTeam CurrentTeam { get; set; }

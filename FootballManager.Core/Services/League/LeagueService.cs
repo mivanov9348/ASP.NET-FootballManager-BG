@@ -1,16 +1,20 @@
 ﻿namespace ASP.NET_FootballManager.Services.League
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Services;
+    using FootballManager.Core.Services.Player.PlayerStats;
     using System.Collections.Generic;
-    using Data.Constant;
+
     public class LeagueService : ILeagueService
     {
         private readonly FootballManagerDbContext data;
+        private readonly IPlayerStatsService playerStatsService;
         private Random rnd;
-        public LeagueService(FootballManagerDbContext data)
+        public LeagueService(FootballManagerDbContext data, IPlayerStatsService playerStatsService)
         {
             this.rnd = new Random();
+            this.playerStatsService = playerStatsService;
             this.data = data;
         }
         public async Task<List<League>> GetAllLeagues() => await Task.Run(() => this.data.Leagues.ToList());
@@ -48,27 +52,50 @@
                 var awayTeamGoal = GetTeamGoal(fixt.AwayTeamId);
                 SetFixtureGoal(fixt, homeTeamGoal, awayTeamGoal);
                 GetGoalScorers(fixt.HomeTeam, homeTeamGoal, fixt);
+                GetGoalConceded(fixt.AwayTeam, homeTeamGoal);
                 GetGoalScorers(fixt.AwayTeam, awayTeamGoal, fixt);
+                GetGoalConceded(fixt.HomeTeam, awayTeamGoal);
                 CheckWinner(homeTeamGoal, awayTeamGoal, fixt);
             }
         }
+
+        private void GetGoalConceded(VirtualTeam team, int goals)
+        {
+            var currentGoalkeeper = this.data.Players.FirstOrDefault(x => x.TeamId == team.Id && x.Position.Order == 1 && x.IsStarting11 == true);
+            currentGoalkeeper.PlayerStats.GoalsConceded += goals;
+            this.data.SaveChanges();
+        }
+
         private void SetFixtureGoal(Fixture fixt, int homeTeamGoal, int awayTeamGoal)
         {
             fixt.HomeTeamGoal = homeTeamGoal;
             fixt.AwayTeamGoal = awayTeamGoal;
             this.data.SaveChanges();
         }
-        private int GetTeamGoal(int teamId)
+        private int GetTeamGoal(int? teamId)
         {
             var currTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId);
-            var goals = rnd.Next(0, currTeam.Overall / 10);
-            return goals;
+            var currTeamPlayers = this.data.Players.Where(x => x.TeamId == teamId).ToList();
+            double averageAttacking = 0;
+
+            foreach (var player in currTeamPlayers)
+            {
+                var currentPlAttr = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
+                double currentAttStats = currentPlAttr.Finishing + currentPlAttr.BallControll + currentPlAttr.Dribbling + currentPlAttr.Stamina + currentPlAttr.Strength;
+                averageAttacking += currentAttStats;
+            }
+            averageAttacking /= 11;
+            var goals = (averageAttacking + currTeam.Overall) / 10;
+            var randomGoal = rnd.Next(0, Math.Min(10, (int)Math.Ceiling(goals)));
+            return randomGoal;
         }
         public void CheckWinner(int homeGoals, int awayGoals, Fixture currentFixt)
         {
             var homeTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.HomeTeamId);
             var awayTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == currentFixt.AwayTeamId);
-            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentFixt.Day.CurrentDay && x.Year == currentFixt.Day.Year);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentFixt.Day.DayOrder && x.Year == currentFixt.Day.Year);
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == currentFixt.GameId);
+            var currentOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == currentGame.GameOptionId);
 
             currentFixt.IsPlayed = true;
             currentDay.IsPlayed = true;
@@ -87,7 +114,7 @@
             {
                 homeTeam.Wins += 1;
                 homeTeam.Points += 3;
-                homeTeam.Budget += DataConstants.Prize.WinCoins;
+                homeTeam.Budget += currentOptions.WinCoins;
                 awayTeam.Loses += 1;
             }
 
@@ -95,17 +122,17 @@
             {
                 homeTeam.Draws += 1;
                 homeTeam.Points += 1;
-                homeTeam.Budget += DataConstants.Prize.DrawCoins;
+                homeTeam.Budget += currentOptions.DrawCoins;
                 awayTeam.Draws += 1;
                 awayTeam.Points += 1;
-                awayTeam.Budget += DataConstants.Prize.DrawCoins;
+                awayTeam.Budget += currentOptions.DrawCoins;
             }
 
             if (homeGoals < awayGoals)
             {
                 awayTeam.Wins += 1;
                 awayTeam.Points += 3;
-                awayTeam.Budget += DataConstants.Prize.WinCoins;
+                awayTeam.Budget += currentOptions.WinCoins;
                 homeTeam.Loses += 1;
             }
 
@@ -118,7 +145,8 @@
             for (int i = 0; i < Goals; i++)
             {
                 var player = playersWithoutGk[rnd.Next(0, playersWithoutGk.Count)];
-                player.Goals += 1;
+                var currentPlayerStats = this.playerStatsService.GetPlayerStatsByPlayer(player);
+                currentPlayerStats.Goals += 1;
             }
 
             this.data.SaveChanges();
@@ -126,8 +154,8 @@
         public async Task PromotedRelegated(Game CurrentGame)
         {
             var leagues = this.data.Leagues.ToList();
-            var championsCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 1);
-            var euroCup = this.data.EuropeanCups.FirstOrDefault(x => x.Rank == 2);
+            var championsCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 1);
+            var euroCup = this.data.ContinentalCups.FirstOrDefault(x => x.Rank == 2);
 
             foreach (var league in leagues)
             {

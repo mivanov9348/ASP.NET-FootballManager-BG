@@ -1,0 +1,135 @@
+﻿@using FootballManager.Core.Models.Team;
+@model StandingsViewModel
+<partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
+
+<style>
+    body {
+        background-image: url("/Images/Wallpapers/Standings.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+    .teams {
+        text-align: center;
+        margin-top: 20px;
+        color: white;
+        font-size: 20px;
+        margin-left: 90px;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+        .teams table {
+            box-shadow: 0px 0px 10px white;
+            border: 5px ridge white;
+            width: 100%;
+        }
+
+        .teams th {
+            color: peru;
+        }
+
+        .teams table tr:nth-child(2) {
+            color: green;
+        }
+
+        .teams table tr:nth-last-child(-n+2) {
+            color: red;
+        }
+
+    table, th, td {
+        border: 1px solid;
+    }
+
+    input {
+        font-weight: bolder;
+    }
+
+    .select {
+        margin-top: -20px;
+        text-align: center;
+    }
+
+    .Title {
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+
+</style>
+
+@{
+    var num = 0;
+}
+
+<body>
+
+
+    <div class="Title">
+        <p>STANDINGS</p>
+    </div>
+
+    <div class="select">
+        <form method="get">
+            <select class="select" asp-for="@Model.LeagueId">
+                <option style="color:red;font-weight:bolder">Select League</option>
+                @foreach (var league in @Model.Leagues)
+                {
+                    <option value="@league.Id">@league.Name</option>
+                }
+            </select>
+            <br />
+            <input type="submit" value="Select" asp-action="Standings" />
+            <hr style="margin-left:100px;color:white;" />
+
+        </form>
+
+    </div>
+    <partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
+
+    <div class="teams">
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>M</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>GS</th>
+                <th>GA</th>
+                <th>GD</th>
+                <th>P</th>
+            </tr>
+            @foreach (var item in @Model.VirtualTeams)
+            {
+                num++;
+
+                <tr style="width:100px">
+                    <td>@num</td>
+                    <td>@item.Name</td>
+                    <td>@item.Matches</td>
+                    <td>@item.Wins</td>
+                    <td>@item.Draws</td>
+                    <td>@item.Loses</td>
+                    <td>@item.GoalScored</td>
+                    <td>@item.GoalAgainst</td>
+                    <td>@item.GoalDifference</td>
+                    <td>@item.Points</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+</body>

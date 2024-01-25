@@ -4,6 +4,5 @@
     public interface ISeeder
     {
         Task SeedAsync(FootballManagerDbContext dbContext, IServiceProvider serviceProvider);
-
     }
 }

@@ -1,19 +1,29 @@
 ﻿namespace ASP.NET_FootballManager.Services.Match
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using System;
     using System.Collections.Generic;
-    using System.Text; 
-    using FootballManager.Core.Models.Match;
+    using System.Text;
+    using FootballManager.Core.Services.PlayerProbability;
+    using FootballManager.Infrastructure.Data.DataModels;
+    using FootballManager.Core.Services.Player.PlayerStats;
+    using FootballManager.Infrastructure.Data.MessagesConstants;
+
     public class MatchService : IMatchService
     {
         private readonly FootballManagerDbContext data;
+        private readonly MatchMessages.Messages messages;
+        private readonly IPlayerProbability playerProbability;
+        private readonly IPlayerStatsService playerStats;
+        private readonly GameOption currentOption;
         private Random rnd;
-        public MatchService(FootballManagerDbContext data)
+        public MatchService(FootballManagerDbContext data, IPlayerProbability playerProbability, IPlayerStatsService playerStats)
         {
             rnd = new Random();
             this.data = data;
+            this.messages = new MatchMessages.Messages();
+            this.playerProbability = playerProbability;
+            this.playerStats = playerStats;
         }
         public async Task<Fixture> GetCurrentFixture(List<Fixture> dayFixtures, Game currentGame)
         {
@@ -25,7 +35,8 @@
         }
         public async Task<List<Fixture>> GetFixturesByDay(Game CurrentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == CurrentGame.Day && x.GameId == CurrentGame.Id && x.Year == CurrentGame.Year);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == CurrentGame.CurrentDayOrder && x.GameId == CurrentGame.Id && 
+            x.Year.YearOrder == CurrentGame.CurrentYearOrder);
             if (currentDay == null)
             {
                 return null;
@@ -33,7 +44,7 @@
             return await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == CurrentGame.Id && x.DayId == currentDay.Id).ToList());
 
         }
-        public async Task<List<Player>> GetStarting11(int teamId) => await Task.Run(() => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList());
+        public List<Player> GetStarting11(int? teamId) => this.data.Players.Where(x => x.TeamId == teamId && x.IsStarting11 == true).ToList();
         public (bool isValid, string error) ValidateTactics(VirtualTeam currentTeam)
         {
             var allStartingPlayers = this.data.Players.Where(x => x.TeamId == currentTeam.Id && x.IsStarting11 == true).ToList();
@@ -93,87 +104,66 @@
         public void PlayerAction(VirtualTeam team, Player player, Match match)
         {
             var position = this.data.Positions.FirstOrDefault(x => x.Id == player.PositionId);
-            bool isTurn = false;
-            int attackNum = rnd.Next(1, player.Attack);
-            int defNum = rnd.Next(1, player.Defense);
+            var playerAttributes = this.data.PlayerAttributes.FirstOrDefault(x => x.PlayerId == player.Id);
+            var playerStats = this.playerStats.GetPlayerStatsByPlayer(player);
 
-            if (position.Name == "Goalkeeper")
+            var otherTeam = new VirtualTeam();
+            if (match.CurrentFixture.HomeTeam == team)
             {
-                if (defNum >= attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) save the ball!";
-                }
+                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == match.CurrentFixture.AwayTeamId);
+            }
+            else
+            {
+                otherTeam = this.data.VirtualTeams.FirstOrDefault(x => x.Id == match.CurrentFixture.HomeTeamId);
+            }
+            
+            bool changePossesion = false;
 
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) Pass the ball!";
-                    player.Passes += 1;
-                }
+            var maxProbability = playerProbability.CompareProbabilities(playerAttributes);
+            var isAGoal = false;
+
+            switch (maxProbability)
+            {
+                case "Tackling":
+                    (string message, bool retainsPossession, bool isGoal) randomTacklingMessage = messages.TacklingMessages[rnd.Next(0, messages.TacklingMessages.Count)];
+                    match.SituationText = string.Format(randomTacklingMessage.message, $"{player.FirstName} {player.LastName}");
+                    changePossesion = randomTacklingMessage.retainsPossession;
+                    playerStats.Tacklings += 1;
+                    break;
+                case "Dribbling":
+                    (string message, bool retainsPossession, bool isGoal) randomDribblingMessage = messages.DribblingMessages[rnd.Next(0, messages.DribblingMessages.Count)];
+                    match.SituationText = string.Format(randomDribblingMessage.message, $"{player.FirstName} {player.LastName}");
+                    changePossesion = randomDribblingMessage.retainsPossession;
+                    break;
+                case "Shooting":
+                    (string message, bool retainsPossession, bool isGoal) randomShootingMessage = messages.HeadingMessages[rnd.Next(0, messages.HeadingMessages.Count)];
+                    match.SituationText = string.Format(randomShootingMessage.message, $"{player.FirstName} {player.LastName}");
+                    changePossesion = randomShootingMessage.retainsPossession;
+                    isAGoal = randomShootingMessage.isGoal;
+                    break;
+                case "Heading":
+                    (string message, bool retainsPossession, bool isGoal) randomHeadingMessage = messages.HeadingMessages[rnd.Next(0, messages.HeadingMessages.Count)];
+                    match.SituationText = string.Format(randomHeadingMessage.message, $"{player.FirstName} {player.LastName}");
+                    changePossesion = randomHeadingMessage.retainsPossession;
+                    isAGoal = randomHeadingMessage.isGoal;
+                    break;
+                case "Passing":
+                    (string message, bool retainsPossession, bool isGoal) randomPassingMessage = messages.PassingMessages[rnd.Next(0, messages.PassingMessages.Count)];
+                    match.SituationText = string.Format(randomPassingMessage.message, $"{player.FirstName} {player.LastName}");
+                    changePossesion = randomPassingMessage.retainsPossession;
+                    playerStats.Passes += 1;
+                    break;
+                default:
+                    break;
             }
 
-            if (position.Name == "Defender")
+            if (isAGoal)
             {
-                if (defNum > attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball!";
-                    player.Passes += 1;
-                }
-
-                if (defNum == attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) lose the ball!";
-                    isTurn = true;
-                }
-
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) SCORE!!!";
-                    Goal(player, match, team);
-                    isTurn = true;
-                }
+                Goal(player, match, team);
+                Conceded(otherTeam);
             }
 
-            if (position.Name == "Midlefielder")
-            {
-                if (defNum > attackNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball";
-                    player.Passes += 1;
-                }
-                if (attackNum == defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) lose the ball!";
-                    isTurn = true;
-                }
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) SCORE!!!";
-                    Goal(player, match, team);
-                    isTurn = true;
-                }
-            }
-
-            if (position.Name == "Striker")
-            {
-
-                if (attackNum < defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) lose the ball!";
-                    isTurn = true;
-                }
-                if (attackNum == defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) pass the ball!";
-                    player.Passes += 1;
-                }
-                if (attackNum > defNum)
-                {
-                    match.SituationText = $"{player.FirstName} {player.LastName} ({team.Name}) SCORE!!!";
-                    Goal(player, match, team);
-                    isTurn = true;
-                }
-            }
-            if (isTurn)
+            if (!changePossesion)
             {
                 ChangeTurn(match);
             }
@@ -181,7 +171,9 @@
         }
         private void Goal(Player player, Match match, VirtualTeam team)
         {
-            player.Goals++;
+            var currentPlayerStats = this.playerStats.GetPlayerStatsByPlayer(player);
+            currentPlayerStats.Goals++;
+
             var isHomeTeam = match.CurrentFixture.HomeTeamId == team.Id;
             if (isHomeTeam)
             {
@@ -191,6 +183,13 @@
             {
                 match.CurrentFixture.AwayTeamGoal += 1;
             }
+            this.data.SaveChanges();
+        }
+        private void Conceded(VirtualTeam team)
+        {
+            var goalKeeper = this.data.Players.FirstOrDefault(x => x.TeamId == team.Id && x.Position.Order == 1 && x.IsStarting11 == true);
+            var goalkeeperStats = this.data.PlayerStats.FirstOrDefault(x => x.PlayerId == goalKeeper.Id);
+            goalkeeperStats.GoalsConceded += 1;
             this.data.SaveChanges();
         }
         private void ChangeTurn(Match match)
@@ -206,24 +205,12 @@
         }
         public void Time(Match match)
         {
-            match.Minute += rnd.Next(1, Data.Constant.DataConstants.Match.Timespan);
+            var currentGame = this.data.Games.FirstOrDefault(x => x.Id == match.GameId);
+            var currentOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == currentGame.GameOptionId);
+
+            match.Minute += rnd.Next(1, currentOptions.TimeInterval);
             this.data.SaveChanges();
-        }
-        public async Task<MatchViewModel> GetMatchModel(Match match, Fixture fixture, Player player)
-        {
-            return new MatchViewModel
-            {
-                CurrentMatch = match,
-                HomeTeam = fixture.HomeTeam,
-                AwayTeam = fixture.AwayTeam,
-                HomeTeamName = fixture.HomeTeamName,
-                AwayTeamName = fixture.AwayTeamName,
-                Positions = this.data.Positions.ToList(),
-                HomeTeamPlayers = await GetStarting11(fixture.HomeTeamId),
-                AwayTeamPlayers = await GetStarting11(fixture.AwayTeamId),
-                CurrentPlayerName = player.FirstName + " " + player.LastName
-            };
-        }
+        }     
         public void EndMatch(Match match)
         {
             match.isEnd = true;
@@ -232,7 +219,7 @@
         }
         public async Task<List<Fixture>> GetResults(Game currentGame)
         {
-            var currentDay = this.data.Days.FirstOrDefault(x => x.CurrentDay == currentGame.Day - 1 && x.GameId == currentGame.Id && x.Year == currentGame.Year);
+            var currentDay = this.data.Days.FirstOrDefault(x => x.DayOrder == currentGame.CurrentDayOrder - 1 && x.GameId == currentGame.Id && x.Year.YearOrder == currentGame.CurrentYearOrder);
             return await Task.Run(() => this.data.Fixtures.Where(x => x.GameId == currentGame.Id && x.DayId == currentDay.Id).ToList());
         }
         public void DeleteMatches(Game CurrentGame)
@@ -245,6 +232,6 @@
             }
             this.data.SaveChanges();
         }
-               
+
     }
 }

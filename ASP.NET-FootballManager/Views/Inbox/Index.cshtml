@@ -1,0 +1,164 @@
+﻿@using FootballManager.Core.Models.Inbox;
+@model InboxViewModel
+  <partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
+<style>
+
+    body {
+        background-image: url("/Images/Wallpapers/Inbox.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        margin: 0; 
+        padding: 0;
+        position: relative; 
+    }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+    .title {
+        text-align: center;
+        color:white;
+    }
+
+    /* Basic layout styles */
+    .inbox-container {
+        margin-top: 10px;
+        margin-left: 100px;
+        display: flex;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .inbox-sidebar {
+        flex: 0 0 20%;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+    }
+
+    .selected-news {
+        flex: 1;
+        padding: 20px;
+        border-left: 1px solid #ddd;
+        color: wheat;
+        background-color: rgba(0, 0, 0, 0.5);
+        text-align:center;
+    }
+
+    /* Inbox header styles */
+    .inbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    /* Search bar styles */
+    .search-bar {
+        display: flex;
+        align-items: center;
+    }
+
+        .search-bar input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-bar button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    /* Message item styles */
+    .message-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+        .message-item.unread {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+
+    /* Sidebar news list styles */
+    .news-list {
+        list-style: none;
+        padding: 0;
+        text-align: center;
+    }
+
+    .news-item {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: dimgrey;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+        .news-item a {
+            text-decoration: none;
+            color: wheat;
+            font-weight: bold;
+        }
+
+        .news-item:hover {
+            background-color: black;
+        }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Inbox</title>
+</head>
+<body>
+    <form method="post">
+        <h2 class="title">Inbox</h2>
+        <hr />
+        <div class="inbox-container">
+            <div class="inbox-sidebar">
+                <div class="news-list">
+                    @foreach (var inbox in Model.News)
+                    {
+                        <p style="color:wheat">Season: @inbox.Year Day: @inbox.Day</p>
+                        <div class="news-item"><a asp-action="OpenNews" asp-route-newsId="@inbox.Id">@inbox.MessageTitle</a></div>
+                        <hr style="color:white" />
+                    }
+                </div>
+            </div>
+
+            <div class="selected-news">
+                <h2>@Model.MessageTitle</h2>
+                <hr />
+                 <img src="/Images/@Model.ImageUrl" width="auto" height="180" />
+                 <hr />               
+                <p>@Model.FullMessage</p>
+                <hr />               
+            </div>
+        </div>
+    </form>
+</body>
+</html>

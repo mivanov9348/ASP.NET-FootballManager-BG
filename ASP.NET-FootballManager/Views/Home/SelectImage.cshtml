@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Manager Image</title>
+    <style>
+       body {
+        background-image: url("/Images/Wallpapers/NewManager.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }   
+
+        .image-selection {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color:gold;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .image-item {
+            position: relative;
+            border: 2px solid black;
+        }
+
+            .image-item img {
+                max-width: 100%;
+                border: 2px solid transparent;
+                cursor: pointer;
+                transition: border-color 0.3s ease-in-out;
+                height: 250px;
+                width: auto;
+            }
+
+                .image-item img:hover {
+                    border-color: #007bff;
+                }
+
+        .select-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+            .select-button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+
+<body>
+    <form method="get">
+        <div class="image-selection">
+            <h1>Choose Manager</h1>
+            <hr />
+            <div class="image-grid">
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="1"><img src="~/Images/Managers/1.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="2"><img src="~/Images/Managers/2.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="3"><img src="~/Images/Managers/3.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="4"><img src="~/Images/Managers/4.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="5"><img src="~/Images/Managers/5.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="6"><img src="~/Images/Managers/6.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="7"><img src="~/Images/Managers/7.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="8"><img src="~/Images/Managers/8.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="9"><img src="~/Images/Managers/9.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="10"><img src="~/Images/Managers/10.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="11"><img src="~/Images/Managers/11.png" alt="Manager 1"></a></div>
+                <div class="image-item"><a asp-action="AddImage" asp-route-imageId="11"><img src="~/Images/Managers/12.png" alt="Manager 1"></a></div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

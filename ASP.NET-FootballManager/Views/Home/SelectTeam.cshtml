@@ -1,0 +1,81 @@
+﻿@model NewManagerViewModel
+
+<style>
+
+    body {
+        background-color: black;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+    .FormInput {
+        color: white;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    label {
+        text-align: center;
+        color: red;
+        margin-left: 500px;
+        font-size: 50px;
+    }
+
+    input {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+
+    .SubmitBtn {
+        color: black;
+    }
+
+        .SubmitBtn:hover {
+            box-shadow: 0px 0px 20px white;
+        }
+
+    #TeamImage {
+        height: 180px;
+        width: auto;
+    }
+</style>
+
+<body>
+
+    <label>Choose Team</label>
+    <form method="get">
+        <div class="FormInput">
+            <hr />            
+            <select asp-for="@Model.TeamId" onchange="updateTeamImage()">
+                <option value="0" data-imageurl="Arda.jpg">Select Team</option>
+                @foreach (var team in @Model.Teams)
+                {
+                    <option value="@team.Id" data-imageurl="@team.ImageUrl">@team.Name</option>
+                }
+            </select>
+
+            <hr />
+            <img id="TeamImage" src="" alt="Team Image" />
+            <hr />
+            <input class="SubmitBtn" id="SubmitBtn" type="submit" asp-action="Index" value="Back" />
+            <input class="SubmitBtn" id="SubmitBtn" type="submit" asp-action="SelectImage" value="Next" />
+            <br />
+            <hr />
+          
+        </div>
+    </form>
+</body>
+<script>
+    function updateTeamImage() {
+        var selectElement = document.querySelector('select');
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var teamImage = document.getElementById('TeamImage');
+
+        // Retrieve the image URL from the data-imageurl attribute
+        var imageUrl = selectedOption.getAttribute('data-imageurl');
+
+        // Construct the full image URL
+        var fullImageUrl = '/Images/Team/' + imageUrl;
+        teamImage.src = fullImageUrl;
+    }
+</script>

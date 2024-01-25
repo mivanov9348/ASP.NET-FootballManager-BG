@@ -1,9 +1,9 @@
-﻿using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace FootballManager.Infrastructure.Data.Configurations
+﻿namespace FootballManager.Infrastructure.Data.Configurations
 {
+    using FootballManager.Infrastructure.Data.DataModels;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+   
     public class PlayerConfiguration : IEntityTypeConfiguration<Player>
     {
         public void Configure(EntityTypeBuilder<Player> builder)
@@ -29,6 +29,14 @@ namespace FootballManager.Infrastructure.Data.Configurations
             builder.HasOne(x => x.League)
               .WithMany(x => x.Players)
               .HasForeignKey(x => x.LeagueId);
+
+            builder.HasOne(p => p.PlayerAttributes)
+                   .WithOne(a => a.Player)
+                   .HasForeignKey<PlayerAttribute>(a => a.PlayerId);
+
+            builder.HasOne(p => p.PlayerStats)
+                  .WithOne(a => a.Player)
+                  .HasForeignKey<PlayerStats>(a => a.PlayerId);
         }
     }
 }

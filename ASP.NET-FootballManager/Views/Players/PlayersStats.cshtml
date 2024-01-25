@@ -1,0 +1,215 @@
+﻿@using FootballManager.Core.Models.Player
+@using FootballManager.Infrastructure.Data.DataModels;
+@model PlayersViewModel
+<partial name="~/Views/Menu/_ToMainMenuPartial.cshtml" />
+
+<style>
+    body {
+        background-image: url("/Images/Wallpapers/PlayersStats.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: 'OLD SPORT 02 ATHLETIC NCV';
+    }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+    .players {
+        text-align: center;
+        margin-top: 30px;
+        color: white;
+        font-size: 20px;
+        margin-left: -20px;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+        .players table {
+            box-shadow: 0px 0px 10px white;
+            border: 5px ridge white;
+            width: 100%;
+            table-layout: auto;
+        }
+
+        .players th {
+            color: peru;
+        }
+
+    .select {
+        margin-left: 150px;
+        margin-top: -10px;
+        font-weight: bolder;
+    }
+
+    table, th, td {
+        border: 1px solid;
+    }
+
+    .Title {
+        margin-top: 30px;
+        color: white;
+        font-size: 50px;
+        font-family: fantasy;
+        text-align: center;
+    }
+
+    .playerStatsLink {
+        text-decoration: none;
+        color: white;
+    }
+
+        .playerStatsLink:hover {
+            color: blue;
+        }
+
+    .SelectCompetition {
+        font-size: 15px;
+        margin-left: 520px;
+    }
+
+    .attributes {
+        color: lightskyblue;
+    }
+
+    .playerImage {
+        width: 30px; /* Adjust the size as needed */
+        height: 30px;
+        margin-right: 5px; /* Add spacing between the image and name */
+        border-radius: 50%; /* Make the image circular */
+    }
+</style>
+
+@{
+    var num = 0;
+    var allAttr = Model.AllPlayerAttributes;
+    var allStats = Model.AllPlayerStats;
+}
+
+<body>
+
+    <div class="Title">
+        <p>PLAYERS STATS</p>
+        <hr style="margin-left:80px;" />
+    </div>
+
+    <form method="get">
+        <div class="SelectCompetition">
+            <input type="submit" asp-action="PlayersStats" asp-route-id="1" value="Bulgarian Teams" />
+            <input type="submit" asp-action="PlayersStats" asp-route-id="2" value="European Teams" />
+        </div>
+    </form>
+
+    <form method="get" class="select">
+        <select asp-for="PlayerSorting">
+            <option style="color:red">Sort By</option>
+            <option value="0">Name</option>
+            <option value="1">Position</option>
+            <option value="2">Age</option>
+            <option value="3">Team</option>
+            <option value="4">City</option>
+            <option value="5">Appearance</option>
+            <option value="6">Goal</option>
+            <option value="7">Passes</option>
+            <option value="8">Tacklings</option>
+            <option value="9">Goal Conceded</option>
+            <option value="10">Overall</option>
+        </select>
+
+        <input type="submit" value="Sort" asp-action="PlayersStats" />
+
+        <div class="players">
+            <table>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Pos</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Nat</th>
+                    <th scope="col">Team</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Ono</th>
+                    <th scope="col">Ref</th>
+                    <th scope="col">Fin</th>
+                    <th scope="col">Pas</th>
+                    <th scope="col">Hdn</th>
+                    <th scope="col">Tck</th>
+                    <th scope="col">Pos</th>
+                    <th scope="col">Pac</th>
+                    <th scope="col">Sta</th>
+                    <th scope="col">Str</th>
+                    <th scope="col">Drb</th>
+                    <th scope="col">Bcr</th>
+                    <th scope="col">OVR</th>
+                    <th scope="col">App</th>
+                    <th scope="col">Gls</th>
+                    <th scope="col">Pass</th>
+                    <th scope="col">Tck</th>
+                    <th scope="col">Gcd</th>
+                </tr>
+                @foreach (var player in @Model.Players)
+                {
+                    num++;
+                    var currAttr = allAttr.FirstOrDefault(x => x.PlayerId == player.Id);
+                    var currStats = allStats.FirstOrDefault(x => x.PlayerId == player.Id);
+                    <tr>
+                        <th scope="row">@num</th>
+                        <td>
+                            <a class="playerStatsLink" asp-action="PlayerDetails" asp-route-id="@player.Id">
+                                <img src="~/Images/Faces/@player.ProfileImage" alt="Player Image" class="playerImage" />
+                                @player.FirstName @player.LastName
+                            </a>
+                        </td>
+                        <td>@player.Position.Abbr</td>
+                        <td>@player.Age</td>
+                        <td>@player.Nation.Abbr</td>
+                        <td>@player.Team.Name</td>
+                        <td>@player.City.Name</td>
+                        <td class="attributes">@currAttr.OneOnOne</td>
+                        <td class="attributes">@currAttr.Reflexes</td>
+                        <td class="attributes">@currAttr.Finishing</td>
+                        <td class="attributes">@currAttr.Passing</td>
+                        <td class="attributes">@currAttr.Heading</td>
+                        <td class="attributes">@currAttr.Tackling</td>
+                        <td class="attributes">@currAttr.Positioning</td>
+                        <td class="attributes">@currAttr.Pace</td>
+                        <td class="attributes">@currAttr.Stamina</td>
+                        <td class="attributes">@currAttr.Strength</td>
+                        <td class="attributes">@currAttr.Dribbling</td>
+                        <td class="attributes">@currAttr.BallControll</td>
+                        <td>@player.Overall</td>
+                        <td>@currStats.Appearance</td>
+                        <td>@currStats.Goals</td>
+                        <td>@currStats.Passes</td>
+                        <td>@currStats.Tacklings</td>
+                        <td>@currStats.GoalsConceded</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <!-- Pagination controls -->
+        <div class="pagination">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+
+                    @for (int i = 1; i <= @Model.PageCounts; i++)
+                    {
+                        <form method="get" asp-action="Page">
+                            <input type="hidden" name="pageNum" value="@i" />
+                            <input type="submit" value="@i" />
+                        </form>
+                    }
+                </ul>
+            </nav>
+        </div>
+
+
+    </form>
+</body>

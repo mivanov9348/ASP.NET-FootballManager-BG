@@ -1,8 +1,7 @@
 ﻿namespace FootballManager.Infrastructure.Seeding.SeedingModels
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-
+    using FootballManager.Infrastructure.Data.DataModels;
     public class TeamsSeeder : ISeeder
     {
         public TeamsSeeder()
@@ -179,6 +178,9 @@
                    new Team() { Name = "Hajduk Split", CityId=null, NationId = dbContext.Nations.FirstOrDefault(x=>x.Name=="Croatia")?.Id??null, CupId = null,EuropeanCupId=null,LeagueId=null, IsEuroParticipant=true,IsPlayable=false, ImageUrl="Barcelona.jpg" },
                    new Team() { Name = "Rapid Wien", CityId=null, NationId = dbContext.Nations.FirstOrDefault(x=>x.Name=="Austria")?.Id??null, CupId = null,EuropeanCupId=null,LeagueId=null, IsEuroParticipant=true,IsPlayable=false, ImageUrl="Barcelona.jpg" },
                    new Team() { Name = "Genk", CityId=null, NationId = dbContext.Nations.FirstOrDefault(x=>x.Name=="Belgium")?.Id??null, CupId = null,EuropeanCupId=null,LeagueId=null, IsEuroParticipant=true,IsPlayable=false, ImageUrl="Barcelona.jpg" },
+                   new Team() { Name = "Newcastle United", CityId=null, NationId = dbContext.Nations.FirstOrDefault(x=>x.Name=="England")?.Id??null, CupId = null,EuropeanCupId=null,LeagueId=null, IsEuroParticipant=true,IsPlayable=false, ImageUrl="Newcastle United.jpg" },
+                   new Team() { Name = "Lazio", CityId=null, NationId = dbContext.Nations.FirstOrDefault(x=>x.Name=="Italy")?.Id??null, CupId = null,EuropeanCupId=null,LeagueId=null, IsEuroParticipant=true,IsPlayable=false, ImageUrl="Newcastle United.jpg" },
+
                };
 
                 await dbContext.Teams.AddRangeAsync(europeanTeams);

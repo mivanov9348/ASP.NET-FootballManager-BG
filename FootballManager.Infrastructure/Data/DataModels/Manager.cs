@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+﻿namespace FootballManager.Infrastructure.Data.DataModels
 {
     using Microsoft.AspNetCore.Identity;
     using System.ComponentModel.DataAnnotations;
@@ -14,8 +14,8 @@
         [Required]
         public string LastName { get; set; }
         public DateTime BornDate { get; set; }
-        public int NationId { get; set; }
-        public Nation Nation { get; set; }
+        public int ImageId { get; set; }
+
         public int? CurrentTeamId { get; set; }
         public Team CurrentTeam { get; set; }
 

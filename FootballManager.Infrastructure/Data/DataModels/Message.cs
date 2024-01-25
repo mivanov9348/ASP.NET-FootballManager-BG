@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_FootballManager.Infrastructure.Data.DataModels
+﻿namespace FootballManager.Infrastructure.Data.DataModels
 {
     public class Message
     {

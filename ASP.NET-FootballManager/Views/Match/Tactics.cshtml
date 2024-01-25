@@ -71,11 +71,9 @@
                     <tr class="table-info">
                         <th scope="row">@item.Position.Abbr</th>
                         <td>@item.FirstName @item.LastName</td>
-                        <td>@item.Attack</td>
-                        <td>@item.Defense</td>
-                        <td style="color:red">@item.Overall</td>
-                        <td>@item.Goals</td>
-                        <td>@item.Passes</td>
+                        <td></td>
+                        <td></td>
+                        <td style="color:red">@item.Overall</td>             
                         <td><input type="submit" asp-action="RemoveFromStartingEleven" class="RemoveBtn" value="CHANGE" asp-route-id="@item.Id" /></td>
                     </tr>
                 }
@@ -104,11 +102,9 @@
                     <tr class="table-info">
                         <th scope="row">@item.Position.Abbr</th>
                         <td>@item.FirstName @item.LastName</td>
-                        <td>@item.Attack</td>
-                        <td>@item.Defense</td>
-                        <td style="color:red">@item.Overall</td>
-                        <td>@item.Goals</td>
-                        <td>@item.Passes</td>
+                        <td></td>
+                        <td></td>
+                        <td style="color:red">@item.Overall</td>                      
                         <td><input type="submit" class="RemoveBtn" asp-action="AddToStartingEleven" value="Add" asp-route-id="@item.Id" /></td>
                     </tr>
                 }

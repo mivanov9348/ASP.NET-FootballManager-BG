@@ -4,6 +4,7 @@
     using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
     using ASP.NET_FootballManager.Services.Cup;
     using ASP.NET_FootballManager.Services.League;
+    using FootballManager.Infrastructure.Data.DataModels.Calendar;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;

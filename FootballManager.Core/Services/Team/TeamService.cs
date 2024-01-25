@@ -1,8 +1,8 @@
 ﻿namespace ASP.NET_FootballManager.Services.Team
 {
     using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Core.Models.Team;
+    using FootballManager.Infrastructure.Data.DataModels;
+
     public class TeamService : ITeamService
     {
         private readonly FootballManagerDbContext data;
@@ -13,6 +13,8 @@
         public List<VirtualTeam> GenerateTeams(Game game)
         {
             var allTeam = this.data.Teams.ToList();
+
+            var curentGameOptions = this.data.GameOptions.FirstOrDefault(x => x.Id == game.GameOptionId);
 
             var virtualTeams = allTeam.Select(x => new VirtualTeam
             {
@@ -29,7 +31,8 @@
                 Cup = x.Cup,
                 EuropeanCup = x.EuropeanCup,
                 IsEuroParticipant = x.IsEuroParticipant,
-                IsCupParticipant = x.IsCupParticipant
+                IsCupParticipant = x.IsCupParticipant,
+                Budget = curentGameOptions.StartingCoins
 
             }).ToList();
 
@@ -46,21 +49,10 @@
             team.Overall = 0;
             var teamPlayers = this.data.Players.Where(x => x.TeamId == team.Id).ToList();
             var overallSum = teamPlayers.Sum(x => x.Overall);
-            team.Overall = overallSum / teamPlayers.Count;
+            team.Overall = Convert.ToInt32(overallSum) / teamPlayers.Count;
 
             this.data.SaveChanges();
-        }
-        public TeamViewModel GetTeamViewModel(List<Player> currPlayers, VirtualTeam currentTeam)
-        {
-            return new TeamViewModel
-            {
-                Positions = this.data.Positions.ToList(),
-                Cities = this.data.Cities.ToList(),
-                Players = currPlayers,
-                CurrentTeam = currentTeam,
-                Nations = this.data.Nations.ToList()
-            };
-        }
+        }      
         public void ResetTeams(Game currentGame)
         {
             var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id);
@@ -81,8 +73,10 @@
         public async Task<List<VirtualTeam>> GetAllVirtualTeams(Game currentGame) => await Task.Run(() => this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id).ToList());
         public async Task<List<Team>> GetAllTeams() => await Task.Run(() => this.data.Teams.ToList());
         public async Task<VirtualTeam> GetCurrentTeam(Game currentGame) => await Task.Run(() => this.data.VirtualTeams.FirstOrDefault(x => x.TeamId == currentGame.TeamId));
-        public async Task<Team> GetOriginalTeam(VirtualTeam currentVirtual,Game CurrentGame) => await Task.Run(() => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId));
-        public async Task<VirtualTeam> GetTeamById(int teamId) => await Task.Run(() => this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId));
+        public async Task<Team> GetOriginalTeam(VirtualTeam currentVirtual, Game CurrentGame) => await Task.Run(() => this.data.Teams.FirstOrDefault(x => x.Id == currentVirtual.TeamId));
+        public async Task<VirtualTeam> GetTeamById(int? teamId) => await Task.Run(() => this.data.VirtualTeams.FirstOrDefault(x => x.Id == teamId));
         public async Task<List<Team>> GetAllPlayableTeams() => await Task.Run(() => this.data.Teams.Where(x => x.IsPlayable == true).ToList());
+
+        public Team GetManagerTeam(Manager currentManager) => this.data.Teams.FirstOrDefault(x => x.Id == currentManager.CurrentTeamId);
     }
 }

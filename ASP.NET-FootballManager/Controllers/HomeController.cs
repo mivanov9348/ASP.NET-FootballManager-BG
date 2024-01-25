@@ -1,70 +1,38 @@
 ﻿namespace ASP.NET_FootballManager.Controllers
 {
-    using ASP.NET_FootballManager.Services.Game;
-    using ASP.NET_FootballManager.Services.Manager;
-    using ASP.NET_FootballManager.Services.Validation;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
     using System.Security.Claims;
     using ASP.NET_FootballManager.Models;
-    using ASP.NET_FootballManager.Services.Common;
-    using ASP.NET_FootballManager.Services.Team;
-    using ASP.NET_FootballManager.Services.Player;
-    using ASP.NET_FootballManager.Services.Inbox;
-    using ASP.NET_FootballManager.Services.Fixture;
-    using ASP.NET_FootballManager.Services.EuroCup;
-    using ASP.NET_FootballManager.Services.Cup;
+    using FootballManager.Core.Services;
+    using FootballManager.Core.Models.Home;
+    using System.Linq;
+    using Microsoft.AspNetCore.SignalR;
+    using ASP.NET_FootballManager.Hub;
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ICommonService commonService;
-        private readonly IValidationService validationService;
-        private readonly IManagerService managerService;
-        private readonly IGameService gameService;
-        private readonly ITeamService teamService;
-        private readonly IPlayerService playerService;
-        private readonly IInboxService inboxService;
-        private readonly IFixtureService fixtureService;
-        private readonly IDayService dayService;
-        private readonly IEuroCupService euroCupService;
-        private readonly ICupService cupService;
-        private string UserId;       
+        private readonly ServiceAggregator serviceAggregator;
+        private readonly IHubContext<GameHub> hubContext;
+        private string userId;
         public HomeController(ILogger<HomeController> logger,
-            IGameService gameService,
-            IManagerService managerService,
-            ICommonService commonService,
-            IValidationService validationService,
-            ITeamService teamService,
-            IPlayerService playerService,
-            IInboxService inboxService,
-            IFixtureService fixtureService,
-            IDayService dayService,
-            IEuroCupService euroCupService,
-            ICupService cupService)
+            ServiceAggregator serviceAggregator, IHubContext<GameHub> hubContext)
         {
             _logger = logger;
-            this.managerService = managerService;
-            this.commonService = commonService;
-            this.validationService = validationService;
-            this.gameService = gameService;
-            this.teamService = teamService;
-            this.playerService = playerService;
-            this.inboxService = inboxService;
-            this.fixtureService = fixtureService;
-            this.dayService = dayService;
-            this.euroCupService = euroCupService;
-            this.cupService = cupService;           
+            this.serviceAggregator = serviceAggregator;
+            this.hubContext = hubContext;
         }
         public IActionResult Index()
         {
             CurrentUser();
 
-            if (UserId == null)
+            if (userId == null)
             {
                 return View();
             }
 
-            bool isExistGame = gameService.isExistGame(UserId);
+            bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
             if (isExistGame)
             {
                 return View(new GameViewModel { ExistGame = true });
@@ -74,86 +42,141 @@
         public async Task<IActionResult> NewGame(int id)
         {
             CurrentUser();
-            bool isExistGame = gameService.isExistGame(UserId);
+            serviceAggregator.gameService.isExistGame(userId);
+            bool isExistGame = serviceAggregator.gameService.isExistGame(userId);
 
             if (isExistGame)
             {
-                if (id == 1)
-                {
-                    gameService.ResetSave(UserId);
-                    return View(new NewManagerViewModel
-                    {
-                        Nations = await commonService.GetAllNations(),
-                        Teams = await teamService.GetAllPlayableTeams()
-                    });
-                }
                 return RedirectToAction("ExistingGame");
             }
 
             return View(new NewManagerViewModel
             {
-                Nations = await commonService.GetAllNations(),
-                Teams = await teamService.GetAllPlayableTeams()
+                Nations =  serviceAggregator.gameService.GetAllNations(),
+                Teams = await serviceAggregator.teamService.GetAllPlayableTeams()
             });
         }
-        public async Task<IActionResult> StartGame(NewManagerViewModel ngvm)
+
+        public async Task<IActionResult> ExistingGame(int id)
+        {
+            if (id == 1)
+            {
+                CurrentUser();
+                serviceAggregator.gameService.ResetSave(userId);
+                //serviceAggregator.managerService.DeleteCurrentManager(userId);
+                return View("NewGame", new NewManagerViewModel
+                {
+                    Teams = await this.serviceAggregator.teamService.GetAllPlayableTeams()
+                });
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> SelectImage(NewManagerViewModel model)
         {
             CurrentUser();
-            bool isExistGame = gameService.isExistGame(UserId);
+            var currentManager = serviceAggregator.managerService.CreateNewManager(model, userId);
 
-            if (isExistGame)
+            return View(new NewManagerViewModel
             {
-                managerService.DeleteCurrentManager(UserId);
-            }
+                Teams = await serviceAggregator.teamService.GetAllPlayableTeams()
+            });
+        }
 
-            (bool isValid, string ErrorMessage) = validationService.NewManagerValidator(ngvm);
+        public async Task<IActionResult> AddImage(NewManagerViewModel model, int imageId)
+        {
+            CurrentUser();
+            var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
+            serviceAggregator.managerService.AddImageToManager(model, userId);
+            return RedirectToAction("StartingGame");
+        }
+        public async Task<ActionResult> StartingGame(int id)
+        {
+            CurrentUser();
 
-            if (isValid)
-            {              
-                //CreateManager               
-                var currentManager = managerService.CreateNewManager(ngvm, UserId);
-                var currentGame = gameService.CreateNewGame(currentManager);
-                //CalculateDaysForSeason              
-                dayService.CalculateDays(currentGame);
-                fixtureService.AddFixtureToDay(currentGame);
-                //NewManagerNews                
-                inboxService.CreateManagerNews(currentManager, currentGame);
-                //GenerateTeamsForGame             
-                var teams = teamService.GenerateTeams(currentGame).ToList();
-                //GenerateCup               
-                cupService.GenerateCupParticipants(currentGame);
-                fixtureService.GenerateCupFixtures(currentGame);
-                //GenerateEuroCup
-                euroCupService.DistributionEuroParticipant(currentGame);
-                fixtureService.GenerateEuroFixtures(currentGame);
-                //GeneratePlayersAndTeamOverall
-                teams.ForEach(x => playerService.GeneratePlayers(currentGame, x));
-                playerService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
-                playerService.CalculatingPlayersPrice(currentGame);
-                teams.ForEach(x => teamService.CalculateTeamOverall(x));
-                //GenerateLeagueFixtures
-                fixtureService.GenerateLeagueFixtures(currentGame);
-                return RedirectToAction("Inbox", "Menu");
+            var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
+            var team = serviceAggregator.teamService.GetManagerTeam(currentManager);
+
+            if (id == 0)
+            {
+                return View(new StartingGameViewModel
+                {
+                    ManagerName = $"{currentManager.FirstName} {currentManager.LastName}",
+                    ManagerImage = currentManager.ImageId,
+                    ManagerTeam = team.Name,
+                    ManagerTeamImage = team.ImageUrl
+                }); ;
             }
             else
             {
-                ViewData["Error"] = ErrorMessage;
-                return View("NewGame", new NewManagerViewModel
-                {
-                    Nations = await commonService.GetAllNations(),
-                    Teams = await teamService.GetAllTeams()
-                });
+                await StartGame();
+                return RedirectToAction("Index", "Menu");
             }
         }
-        public IActionResult ExistingGame()
+        private async Task SendMessageToHTML(string message)
         {
-            return View();
+            await hubContext.Clients.All.SendAsync("ReceiveMessage", message);
         }
+        private async Task StartGame()
+        {
+            CurrentUser();
+
+            //CreateOptions
+            var optionsExist = serviceAggregator.gameOptionsService.IsOptionsSet(userId);
+            if (!optionsExist)
+            {
+                serviceAggregator.gameOptionsService.SaveSampleOptions(userId);
+                await SendMessageToHTML("Options have been created.");
+            }
+            //GetCurrentManager
+            var currentManager = serviceAggregator.managerService.GetCurrentManager(userId);
+            //CreateGame
+            await SendMessageToHTML("Creating New Game...");
+            var currentGame = serviceAggregator.gameService.CreateNewGame(currentManager, userId);
+            //CreateCalendarYear
+            await SendMessageToHTML("Creating Season Year...");
+            var year = serviceAggregator.calendarService.GenerateYear(currentGame);
+            await SendMessageToHTML("Generate Calendar...");
+            serviceAggregator.calendarService.GenerateMonths(currentGame, year);
+            await SendMessageToHTML("Set Week Plan...");
+            await serviceAggregator.calendarService.SetWeekPlan(currentGame, year);
+            //GenerateTeamsForGame
+            await SendMessageToHTML("Generating teams...");
+            var teams = serviceAggregator.teamService.GenerateTeams(currentGame).ToList();
+            //GeneratePlayersAndTeamOverall
+            await SendMessageToHTML("Generating players...");
+         // teams.ForEach(x => serviceAggregator.playerGeneratorService.GeneratePlayers(currentGame, x));
+         // await SendMessageToHTML("Generating free agents...");
+         // serviceAggregator.playerGeneratorService.CreateFreeAgents(currentGame, 30, 40, 40, 70);
+         // await SendMessageToHTML("Calculating players prices...");
+         // serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
+         // await SendMessageToHTML("Calculating players overall...");
+         // teams.ForEach(x => serviceAggregator.teamService.CalculateTeamOverall(x));
+            //CreateAndFillEuropeanCompetitions
+            await SendMessageToHTML("Creating European Competitions...");
+            serviceAggregator.euroCupService.CreateChampionsCup(currentGame, year);
+            serviceAggregator.euroCupService.CreateEuroCup(currentGame, year);
+            serviceAggregator.euroCupService.RemoveEuropeanParticipants(currentGame);
+            serviceAggregator.euroCupService.FillChampionsCupParticipants(currentGame);
+            serviceAggregator.euroCupService.FillEuroCupParticipants(currentGame);
+            //GenerateCup               
+            await SendMessageToHTML("Generating Bulgaria Cup...");
+            serviceAggregator.cupService.CreateCups(currentGame);
+            serviceAggregator.cupService.GenerateCupParticipants(currentGame);
+            //GenerateLeagueFixtures
+            await SendMessageToHTML("Generating fixtures...");
+            serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
+            serviceAggregator.fixtureService.AddLeagueFixtureToDay(currentGame);
+            //NewManagerNews
+            await SendMessageToHTML("Writing the news and starting the game...");
+            serviceAggregator.inboxService.CreateManagerNews(currentManager, currentGame);
+        }
+
         private void CurrentUser()
         {
             if (this.User.Identity.IsAuthenticated != false)
             {
-                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
         }
 
@@ -161,6 +184,6 @@
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }    
+        }
     }
 }
