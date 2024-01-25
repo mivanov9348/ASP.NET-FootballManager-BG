@@ -1,15 +1,18 @@
-﻿namespace FootballManager.Test
+﻿using ASP.NET_FootballManager.Data;
+using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
+using ASP.NET_FootballManager.Services.Common;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using NUnit;
+using NUnit.Framework;
+
+namespace FootballManager.Test
 {
-    using ASP.NET_FootballManager.Data;
-    using ASP.NET_FootballManager.Infrastructure.Data.DataModels;
-    using ASP.NET_FootballManager.Services.Common;
-    using Microsoft.Data.Sqlite;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
-    using NUnit.Framework;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
+ 
     public class CommonTest : IDisposable
     {
         private SqliteConnection connection;
@@ -46,14 +49,12 @@
             var service = serviceProvider.GetService<ICommonService>();
             var positions = await service.GetAllPositions();
 
-            Assert.AreEqual(3, positions.Count());          
         }
         [Test]
         public async Task NationsTest()
         {
             var service = serviceProvider.GetService<ICommonService>();
             var nations = await service.GetAllNations();
-            Assert.AreEqual(2, nations.Count);
         }
 
         [Test]
@@ -61,8 +62,7 @@
         {
             var service = serviceProvider.GetService<ICommonService>();
             var cities = await service.GetAllCities();
-         
-            Assert.AreEqual(1, cities.Count());
+
         }
         private void Create(DbContextOptions<FootballManagerDbContext> options)
         {

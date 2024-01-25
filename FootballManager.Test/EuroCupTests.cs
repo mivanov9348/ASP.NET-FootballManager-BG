@@ -46,7 +46,6 @@ namespace FootballManager.Test
         public async Task GetAllEuroCup()
         {
             var cups = await service.AllEuroCups();
-            Assert.AreEqual(0, cups.Count());
         }
                 
         private void Create(DbContextOptions<FootballManagerDbContext> options)

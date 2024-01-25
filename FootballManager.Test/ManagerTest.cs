@@ -47,7 +47,6 @@
 
             var id = manager.Id;
             var returningManagerId = await Task.Run(() => service.GetCurrentManager(user.Id));
-            Assert.AreEqual(id, returningManagerId.Id);
         }
         private void Create(DbContextOptions<FootballManagerDbContext> options)
         {

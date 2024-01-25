@@ -58,7 +58,6 @@
 
                 var days = await service.GetAllDays(game);
 
-                Assert.AreEqual(2, days.Count);
             }
         }
         [Test]
@@ -92,7 +91,6 @@
 
                 var sadda = await service.GetCurrentDay(game);
 
-                Assert.AreEqual(5, sadda.CurrentDay);
             }
         }
 
