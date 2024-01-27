@@ -1,7 +1,7 @@
 ﻿namespace FootballManager.Core.Models.League
 {
-    using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Core.Models.Menu;
+    using FootballManager.Infrastructure.Data.DataModels;
 
     public class FixturesViewModel
     {

@@ -2,7 +2,6 @@
 {
     using ASP.NET_FootballManager.Data;
     using ASP.NET_FootballManager.Data.Constant;
-    using FootballManager.Core.Models.Calendar;
     using FootballManager.Infrastructure.Data.DataModels;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
     using FootballManager.Infrastructure.Data.Enums;
@@ -272,7 +271,6 @@
 
             this.data.SaveChanges();
         }
-
 
     }
 }

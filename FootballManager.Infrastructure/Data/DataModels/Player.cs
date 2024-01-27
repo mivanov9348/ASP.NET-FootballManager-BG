@@ -1,6 +1,5 @@
 ﻿namespace FootballManager.Infrastructure.Data.DataModels
 {
-    using FootballManager.Infrastructure.Data.DataModels;
     using System.ComponentModel.DataAnnotations;
     public class Player
     {

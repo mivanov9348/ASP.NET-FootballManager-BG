@@ -1,6 +1,7 @@
 ﻿namespace FootballManager.Core.Models.League
 {
     using FootballManager.Infrastructure.Data.DataModels;
+
     public class LeagueViewModel
     {
         public int Id { get; set; }

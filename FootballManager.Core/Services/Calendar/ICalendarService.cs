@@ -1,8 +1,8 @@
 ﻿namespace FootballManager.Core.Services.Calendar
 {
     using FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Core.Models.Calendar;
     using FootballManager.Infrastructure.Data.DataModels.Calendar;
+
     public interface ICalendarService
     {
         Year GenerateYear(Game currentGame);

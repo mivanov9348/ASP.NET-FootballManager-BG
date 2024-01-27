@@ -1,8 +1,6 @@
 ﻿namespace ASP.NET_FootballManager.Services.Transfer
 {
-    using ASP.NET_FootballManager.Models;
     using FootballManager.Infrastructure.Data.DataModels;
-    using FootballManager.Core.Models.Player;
 
     public interface ITransferService
     {
