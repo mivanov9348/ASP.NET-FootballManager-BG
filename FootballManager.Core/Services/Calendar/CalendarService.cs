@@ -23,10 +23,16 @@
         public (Year year, Month month, Day day) GetCurrentDate(Game currentGame)
         {
             var currentYear = this.data.Years.FirstOrDefault(x => x.YearOrder == currentGame.CurrentYearOrder);
+            if (currentYear == null) throw new InvalidOperationException("Year not found");
+
             var currentMonth = this.data.Months.FirstOrDefault(x => x.YearId == currentYear.Id && x.MonthOrder == currentGame.CurrentMonthOrder);
+            if (currentMonth == null) throw new InvalidOperationException("Month not found");
+
             var currentDay = this.data.Days.FirstOrDefault(x => x.MonthId == currentMonth.Id && x.DayOrder == currentGame.CurrentDayOrder);
+            if (currentDay == null) throw new InvalidOperationException("Day not found");
 
             return (currentYear, currentMonth, currentDay);
+
         }
         public Year GenerateYear(Game currentGame)
         {
