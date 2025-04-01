@@ -4,28 +4,51 @@
     using FootballManager.Infrastructure.Data.DataModels;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
+
     public class InboxController : Controller
     {
-        private readonly ServiceAggregator serviceAggregator;
+        private readonly ServiceAggregator _serviceAggregator;
+
         public InboxController(ServiceAggregator serviceAggregator)
         {
-            this.serviceAggregator = serviceAggregator;
+            _serviceAggregator = serviceAggregator ?? throw new ArgumentNullException(nameof(serviceAggregator));
         }
+
         public async Task<IActionResult> Index(int id)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var currentMessage = await serviceAggregator.inboxService.GetFullMessage(id, CurrentGame);
-            var inboxViewModel = serviceAggregator.modelService.GetInboxViewModel(currentMessage, CurrentGame.Id);
+            var gameInfo = GetCurrentGameInfo();
+            if (gameInfo is null)
+                return Unauthorized();
 
+            var (_, _, currentGame, _) = gameInfo.Value; // Разпакетиране след проверка за null
+            var inboxViewModel = await GetInboxViewModel(id, currentGame);
             return View(inboxViewModel);
         }
+
         public async Task<IActionResult> OpenNews(int newsId)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var currentMessage = await serviceAggregator.inboxService.GetFullMessage(newsId, CurrentGame);
-            var inboxViewModel = serviceAggregator.modelService.GetInboxViewModel(currentMessage, CurrentGame.Id);
+            var gameInfo = GetCurrentGameInfo();
+            if (gameInfo is null)
+                return Unauthorized();
 
+            var (_, _, currentGame, _) = gameInfo.Value; // Разпакетиране след проверка за null
+            var inboxViewModel = await GetInboxViewModel(newsId, currentGame);
             return View("Index", inboxViewModel);
+        }
+
+        private (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam)? GetCurrentGameInfo()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            return _serviceAggregator.gameService.CurrentGameInfo(userId);
+        }
+
+        private async Task<object> GetInboxViewModel(int messageId, Game currentGame)
+        {
+            var currentMessage = await _serviceAggregator.inboxService.GetFullMessage(messageId, currentGame);
+            return _serviceAggregator.modelService.GetInboxViewModel(currentMessage, currentGame.Id);
         }
     }
 }

@@ -8,29 +8,70 @@
     using FootballManager.Infrastructure.Data.DataModels;
 
     public class GameController : Controller
-    {       
-        private readonly ServiceAggregator serviceAggregator;
+    {
+        private readonly ServiceAggregator _serviceAggregator;
+
         public GameController(ServiceAggregator serviceAggregator)
         {
-            this.serviceAggregator = serviceAggregator;            
+            _serviceAggregator = serviceAggregator ?? throw new ArgumentNullException(nameof(serviceAggregator));
         }
+
         public async Task<IActionResult> SeasonStats(EndSeasonViewModel esvm)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var goalScorer = await serviceAggregator.playerDataService.GetLeagueGoalscorer(CurrentGame, esvm.LeagueId);
-            var teams = await serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
-            var league = await serviceAggregator.leagueService.GetLeague(esvm.LeagueId);
-            var euroCup = await serviceAggregator.euroCupService.GetEuropeanCup(esvm.EuroCupId);
-            var cup =  serviceAggregator.cupService.GetCurrentCup(CurrentGame);
-            var cupWinner = await serviceAggregator.cupService.GetWinner(CurrentGame);
-            var championsCupWinner = await serviceAggregator.euroCupService.GetChampionsCupWinner(CurrentGame);
-            var euroCupWinner = await serviceAggregator.euroCupService.GetEuroCupWinner(CurrentGame);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var (userIdResult, currentManager, currentGame, currentTeam) = _serviceAggregator.gameService.CurrentGameInfo(userId);
+
+            var model = await BuildEndSeasonViewModel(esvm, currentGame);
+            return View(model);
+        }
+
+        public async Task<IActionResult> NewSeason()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var (userIdResult, currentManager, currentGame, currentTeam) = _serviceAggregator.gameService.CurrentGameInfo(userId);
+
+            await ResetAndGenerateNewSeason(currentGame);
+            return RedirectToAction("Index", "Menu");
+        }
+
+        public async Task<IActionResult> EndSeason(EndSeasonViewModel esvm)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var (userIdResult, currentManager, currentGame, currentTeam) = _serviceAggregator.gameService.CurrentGameInfo(userId);
+            var teams = await _serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, currentGame);
 
             return View(new EndSeasonViewModel
             {
+                Leagues = await _serviceAggregator.leagueService.GetAllLeagues(),
+                Teams = teams
+            });
+        }
+
+        private async Task<EndSeasonViewModel> BuildEndSeasonViewModel(EndSeasonViewModel esvm, Game currentGame)
+        {
+            var goalScorer = await _serviceAggregator.playerDataService.GetLeagueGoalscorer(currentGame, esvm.LeagueId);
+            var teams = await _serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, currentGame);
+            var league = await _serviceAggregator.leagueService.GetLeague(esvm.LeagueId);
+            var euroCup = await _serviceAggregator.euroCupService.GetEuropeanCup(esvm.EuroCupId);
+            var cup = _serviceAggregator.cupService.GetCurrentCup(currentGame);
+            var cupWinner = await _serviceAggregator.cupService.GetWinner(currentGame);
+            var championsCupWinner = await _serviceAggregator.euroCupService.GetChampionsCupWinner(currentGame);
+            var euroCupWinner = await _serviceAggregator.euroCupService.GetEuroCupWinner(currentGame);
+
+            return new EndSeasonViewModel
+            {
                 GoalScorer = goalScorer,
-                Leagues = await serviceAggregator.leagueService.GetAllLeagues(),
-                EuroCups = await serviceAggregator.euroCupService.AllEuroCups(),
+                Leagues = await _serviceAggregator.leagueService.GetAllLeagues(),
+                EuroCups = await _serviceAggregator.euroCupService.AllEuroCups(),
                 EuroCup = euroCup,
                 Teams = teams,
                 League = league,
@@ -38,41 +79,30 @@
                 CupWinner = cupWinner,
                 EuroCupWinner = euroCupWinner,
                 ChampionsCupWinner = championsCupWinner
-            });
+            };
         }
-        public async Task<IActionResult> NewSeason()
+
+        private async Task ResetAndGenerateNewSeason(Game currentGame)
         {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) =  serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await _serviceAggregator.leagueService.PromotedRelegated(currentGame);
+            _serviceAggregator.gameService.ResetGame(currentGame);
+            _serviceAggregator.fixtureService.AddLeagueFixtureToDay(currentGame);
+            _serviceAggregator.matchService.DeleteMatches(currentGame);
+            _serviceAggregator.fixtureService.DeleteFixtures(currentGame);
+            _serviceAggregator.fixtureService.GenerateLeagueFixtures(currentGame);
+            _serviceAggregator.cupService.GenerateCupParticipants(currentGame);
 
-            await serviceAggregator.leagueService.PromotedRelegated(CurrentGame);
-            serviceAggregator.gameService.ResetGame(CurrentGame);
-            //serviceAggregator.dayService.CalculateDays(CurrentGame);
-            serviceAggregator.fixtureService.AddLeagueFixtureToDay(CurrentGame);
-            serviceAggregator.matchService.DeleteMatches(CurrentGame);
-            serviceAggregator.fixtureService.DeleteFixtures(CurrentGame);
-            serviceAggregator.fixtureService.GenerateLeagueFixtures(CurrentGame);
-            serviceAggregator.cupService.GenerateCupParticipants(CurrentGame);
-      
+            _serviceAggregator.playerGeneratorService.CreateFreeAgents(
+                currentGame,
+                DataConstants.FreeAgentsEachClub.gk,
+                DataConstants.FreeAgentsEachClub.df,
+                DataConstants.FreeAgentsEachClub.mf,
+                DataConstants.FreeAgentsEachClub.st);
 
-            serviceAggregator.playerGeneratorService.CreateFreeAgents(CurrentGame, DataConstants.FreeAgentsEachClub.gk, DataConstants.FreeAgentsEachClub.df, DataConstants.FreeAgentsEachClub.mf, DataConstants.FreeAgentsEachClub.st);
-            serviceAggregator.playerStatsService.CalculatingPlayersPrice(CurrentGame);
-           // playerService.UpdateAttributes(CurrentGame);
-            serviceAggregator.playerStatsService.ResetPlayerStats(CurrentGame);
-            serviceAggregator.teamService.ResetTeams(CurrentGame);
-            serviceAggregator.inboxService.NewSeasonNews(CurrentGame);
-
-            return RedirectToAction("Index", "Menu");
+            _serviceAggregator.playerStatsService.CalculatingPlayersPrice(currentGame);
+            _serviceAggregator.playerStatsService.ResetPlayerStats(currentGame);
+            _serviceAggregator.teamService.ResetTeams(currentGame);
+            _serviceAggregator.inboxService.NewSeasonNews(currentGame);
         }
-        public async Task<IActionResult> EndSeason(EndSeasonViewModel esvm)
-        {
-            (string UserId, Manager currentManager, Game CurrentGame, VirtualTeam currentTeam) = serviceAggregator.gameService.CurrentGameInfo(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var teams = await serviceAggregator.leagueService.GetStandingsByLeague(esvm.LeagueId, CurrentGame);
-
-            return View(new EndSeasonViewModel
-            {
-                Leagues = await serviceAggregator.leagueService.GetAllLeagues(),
-                Teams = teams
-            });
-        }        
     }
 }
