@@ -29,9 +29,11 @@
         }
         public void FillPlayersByPosition(int count, Game game, VirtualTeam team, int positionOrder)
         {
+            var positionType = this.data.Positions.FirstOrDefault(x => x.Order == positionOrder);
+            var newPlayers = new List<Player>();
+
             for (int i = 0; i < count; i++)
             {
-                var positionType = this.data.Positions.FirstOrDefault(x => x.Order == positionOrder);
                 (string firstName, string lastName) = this.playerStatsService.getPlayerNames(team);
                 (City city, int age, Nation nation) = this.playerStatsService.getPlayerInfo(team);
 
@@ -46,7 +48,7 @@
                     NationId = nation.Id,
                     LeagueId = team.LeagueId,
                     Position = positionType,
-                    PositionId = positionType.Id,                    
+                    PositionId = positionType.Id,
                     Team = team,
                     TeamId = team.Id,
                     Game = game,
@@ -54,7 +56,8 @@
                     IsStarting11 = true,
                     FreeAgent = false
                 };
-                this.data.Players.Add(newPlayer);
+
+                newPlayers.Add(newPlayer);
                 this.playerStatsService.GetProfileImage(newPlayer);
 
                 var playerAttributes = playerAttributeService.CalculatePlayerAttributes(newPlayer);
@@ -64,31 +67,20 @@
                 newPlayer.PlayerStatsId = playerStats.Id;
 
                 playerAttributeService.CalculateOverall(newPlayer);
+            }
 
-                this.data.SaveChanges();
-            }   
+            this.data.Players.AddRange(newPlayers);
+            this.data.SaveChanges();
         }
         public void CreateFreeAgents(Game game, int gk, int df, int mf, int st)
         {
             var freeAgentsTeam = this.data.VirtualTeams.FirstOrDefault(x => x.IsPlayable == false && x.Name == "FreeAgents");
             playerDataService.RemovePlayers(freeAgentsTeam);
 
-            for (int i = 0; i < gk; i++)
-            {
-                FillFreeAgents(1, freeAgentsTeam);
-            }
-            for (int i = 0; i < df; i++)
-            {
-                FillFreeAgents(2, freeAgentsTeam);
-            }
-            for (int i = 0; i < mf; i++)
-            {
-                FillFreeAgents(3, freeAgentsTeam);
-            }
-            for (int i = 0; i < st; i++)
-            {
-                FillFreeAgents(4, freeAgentsTeam);
-            }
+            for (int i = 0; i < gk; i++) FillFreeAgents(DataConstants.PositionOrder.Goalkeeper, freeAgentsTeam);
+            for (int i = 0; i < df; i++) FillFreeAgents(DataConstants.PositionOrder.Defender, freeAgentsTeam);
+            for (int i = 0; i < mf; i++) FillFreeAgents(DataConstants.PositionOrder.Midlefielder, freeAgentsTeam);
+            for (int i = 0; i < st; i++) FillFreeAgents(DataConstants.PositionOrder.Forward, freeAgentsTeam);
         }
         public void FillFreeAgents(int positionOrder, VirtualTeam team)
         {
