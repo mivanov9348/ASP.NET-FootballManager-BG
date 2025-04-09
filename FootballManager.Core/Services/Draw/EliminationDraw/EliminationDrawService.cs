@@ -22,26 +22,24 @@
 
         public Draw CreateContinentalCupEliminationDraw(Game currentGame, DrawViewModel model, ContinentalCup currentCup)
         {
-            var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsEuroParticipant && x.isDrawed == false).ToList();
+            var allTeams = data.VirtualTeams
+                .Where(x => x.GameId == currentGame.Id && x.IsEuroParticipant && !x.isDrawed)
+                .ToList();
             var currentDay = calendarService.GetCurrentDate(currentGame);
 
-            var draw = new Draw();
-
             var currentCupFixtures = commonDrawService.FillFixtures(currentDay.day, model, currentCup);
-            draw = commonDrawService.CreateContinentalCupDraw(currentGame, currentCupFixtures, currentCup);
-
-            return draw;
+            return commonDrawService.CreateContinentalCupDraw(currentGame, currentCupFixtures, currentCup);
         }
+
         public Draw CreateDomesticCupEliminationDraw(Game currentGame, DrawViewModel model, Cup currentCup)
         {
-            var allTeams = this.data.VirtualTeams.Where(x => x.GameId == currentGame.Id && x.IsCupParticipant && x.isDrawed == false).ToList();
+            var allTeams = data.VirtualTeams
+                .Where(x => x.GameId == currentGame.Id && x.IsCupParticipant && !x.isDrawed)
+                .ToList();
             var currentDay = calendarService.GetCurrentDate(currentGame);
 
-            var draw = new Draw();
-
             var currentCupFixtures = commonDrawService.FillFixtures(currentDay.day, model, currentCup);
-            draw = commonDrawService.CreateDomesticCupDraw(currentGame, allTeams, currentCupFixtures, currentCup);
-            return draw;
+            return commonDrawService.CreateDomesticCupDraw(currentGame, allTeams, currentCupFixtures, currentCup);
         }
         public void FillEliminationFixtures(Draw currentDraw, VirtualTeam team)
         {

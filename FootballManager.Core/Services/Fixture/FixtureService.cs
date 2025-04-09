@@ -17,58 +17,69 @@
         }
         public void GenerateLeagueFixtures(Game game)
         {
-            var allLeagues = this.data.Leagues.ToList();
-            var leagueDays = this.data.Days.Where(x => x.IsLeagueDay == true && x.GameId == game.Id && x.Year.YearOrder == game.CurrentYearOrder).ToList();
+            var allLeagues = data.Leagues.ToList();
+            var leagueDays = data.Days
+                .Where(x => x.IsLeagueDay && x.GameId == game.Id && x.Year.YearOrder == game.CurrentYearOrder)
+                .ToList();
 
             foreach (var league in allLeagues)
             {
-                var currL = this.data.Leagues.FirstOrDefault(x => x.Id == league.Id);
-                var teams = this.data.VirtualTeams.Where(x => x.LeagueId == currL.Id && x.GameId == game.Id).ToList();
+                var teams = data.VirtualTeams
+                    .Where(x => x.LeagueId == league.Id && x.GameId == game.Id)
+                    .ToList();
                 ShuffleTeams(teams);
-                var numOfMatches = teams.Count / 2 * (teams.Count - 1);
-                int numFixt = 0;
-                var round = 1;
 
-                while (numFixt < numOfMatches)
+                int teamCount = teams.Count;
+                int totalMatches = teamCount / 2 * (teamCount - 1);
+                int fixtureCount = 0;
+                int round = 1;
+
+                while (fixtureCount < totalMatches)
                 {
-                    for (int i = 0; i < teams.Count() / 2; i += 1)
+                    for (int i = 0; i < teamCount / 2; i++)
                     {
+                        var homeTeam = teams[i];
+                        var awayTeam = teams[teamCount - 1 - i];
 
-                        var htId = teams[i].Id;
-                        var atId = teams[(teams.Count() - 1 - i)].Id;
-                        var ht = this.data.VirtualTeams.FirstOrDefault(x => x.Id == htId);
-                        var at = this.data.VirtualTeams.FirstOrDefault(x => x.Id == atId);
-
-                        var newFixt = new Fixture
+                        var newFixture = new Fixture
                         {
                             GameId = game.Id,
                             Round = round,
-                            HomeTeam = ht,
-                            AwayTeam = at,
-                            HomeTeamName = ht.Name,
-                            AwayTeamName = at.Name,
+                            HomeTeam = homeTeam,
+                            AwayTeam = awayTeam,
+                            HomeTeamName = homeTeam.Name,
+                            AwayTeamName = awayTeam.Name,
                             CompetitionName = league.Name,
                             HomeTeamGoal = 0,
                             AwayTeamGoal = 0,
-                            LeagueId = currL.Id,
-                            League = currL,
-                            HomeTeamId = htId,
-                            AwayTeamId = atId
+                            LeagueId = league.Id,
+                            League = league,
+                            HomeTeamId = homeTeam.Id,
+                            AwayTeamId = awayTeam.Id
                         };
 
-                        this.data.Fixtures.Add(newFixt);
-                        numFixt++;
+                        data.Fixtures.Add(newFixture);
+                        fixtureCount++;
                     }
+
                     round++;
-                    for (int i = teams.Count - 1; i > 1; i--)
-                    {
-                        VirtualTeam temp = teams[i - 1];
-                        teams[i - 1] = teams[i];
-                        teams[i] = temp;
-                    }
+                    RotateTeams(teams);
                 }
             }
-            this.data.SaveChanges();
+
+            data.SaveChanges();
+        }
+
+        private void RotateTeams(List<VirtualTeam> teams)
+        {
+            if (teams.Count <= 2) return;
+
+            var lastTeam = teams[^1];
+            for (int i = teams.Count - 1; i > 1; i--)
+            {
+                teams[i] = teams[i - 1];
+            }
+            teams[1] = lastTeam;
         }
         public void GenerateCupFixtures(Game game)
         {
